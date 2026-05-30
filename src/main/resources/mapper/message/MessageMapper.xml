@@ -85,6 +85,7 @@
             </if>
         </where>
         ORDER BY MESSAGE_ID DESC
+        OFFSET #{offset} ROWS FETCH NEXT #{safePageSize} ROWS ONLY
     </select>
 
     <select id="countMessages" parameterType="com.nh.nsight.messaging.message.dto.MessageSearchCondition" resultType="long">

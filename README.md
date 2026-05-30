@@ -71,6 +71,11 @@ curl -X POST http://localhost:8080/api/v1/messages \
 | URL | 설명 |
 |---|---|
 | `/messages` | 메시지 등록 화면 |
+| `/files` | 파일 업·다운로드 관리 화면 |
+| `/api/v1/files` | 파일 업로드 / 목록 / 다운로드 API |
+| `/api/v1/files/storage-location` | 파일 저장 루트·경로 규칙 조회 API |
+
+로컬 저장 경로 기본값: `./data/nsight-files/yyyy/MM/dd/{uuid}.{ext}`
 | `/api/v1/messages` | 메시지 목록 조회 / 등록 API |
 | `/api/v1/messages/{messageId}` | 메시지 상세 조회 / 수정 / 삭제 API |
 | `/actuator/health` | Health Check |

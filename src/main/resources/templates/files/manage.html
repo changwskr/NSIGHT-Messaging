@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>NSIGHT 파일 관리</title>
+    <link rel="stylesheet" href="/css/nsight.css"/>
+</head>
+<body>
+<header class="topbar">
+    <div>
+        <h1>NSIGHT 파일 업·다운로드</h1>
+        <p>파일 업로드 · 다운로드 · 목록 · 삭제 관리</p>
+    </div>
+    <div class="topbar-right">
+        <nav class="nav-links">
+            <a href="/messages">메시지 관리</a>
+            <a href="/files" class="active">파일 관리</a>
+        </nav>
+        <div class="badge">FILE-MGMT</div>
+    </div>
+</header>
+
+<div id="statusBar" class="status-bar hidden" role="status"></div>
+
+<section class="card full storage-info-card">
+    <div class="card-title">
+        <h2>파일 저장 위치</h2>
+        <p>업로드된 파일은 아래 경로 규칙에 따라 서버 로컬 디스크에 저장됩니다.</p>
+    </div>
+    <dl class="storage-info-grid">
+        <dt>저장 루트 (절대경로)</dt>
+        <dd><code id="pageStorageBase" th:text="${storageBasePath}">-</code></dd>
+        <dt>설정값 (application.yml)</dt>
+        <dd><code th:text="${storageConfiguredPath}">-</code></dd>
+        <dt>저장 경로 규칙</dt>
+        <dd><code th:text="${storagePathPattern}">-</code></dd>
+        <dt>최대 파일 크기</dt>
+        <dd th:text="${maxFileSizeLabel}">-</dd>
+        <dt>허용 확장자</dt>
+        <dd th:text="${allowedExtensions}">-</dd>
+    </dl>
+</section>
+
+<main class="crud-layout">
+    <section class="card form-card">
+        <div class="card-title row-title">
+            <div>
+                <h2>파일 업로드</h2>
+                <p>허용 확장자·최대 10MB. 저장 후 목록에서 다운로드할 수 있습니다.</p>
+            </div>
+            <span class="mode-badge create">UPLOAD</span>
+        </div>
+
+        <form id="uploadForm" class="grid-form">
+            <label>
+                업무 구분
+                <select name="bizCategory" required>
+                    <option value="GENERAL">GENERAL</option>
+                    <option value="NOTICE">NOTICE</option>
+                    <option value="MANUAL">MANUAL</option>
+                    <option value="ATTACHMENT">ATTACHMENT</option>
+                </select>
+            </label>
+            <label>
+                파일 선택
+                <input type="file" name="file" id="fileInput" required/>
+            </label>
+            <label class="wide">
+                설명
+                <input name="description" maxlength="500" placeholder="파일 설명 (선택)"/>
+            </label>
+            <div class="actions wide">
+                <button type="submit" id="uploadBtn">업로드</button>
+                <button type="button" class="secondary" id="resetUploadBtn">초기화</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="card">
+        <div class="card-title">
+            <h2>파일 상세</h2>
+            <p>목록에서 [상세]를 선택하면 메타 정보가 표시됩니다.</p>
+        </div>
+        <div id="detailMeta" class="detail-meta hidden">
+            <div><span class="meta-label">파일 ID</span><strong id="metaFileId">-</strong></div>
+            <div class="wide-meta"><span class="meta-label">저장 전체 경로</span><strong id="metaStorageFull" class="path-text">-</strong></div>
+            <div class="wide-meta"><span class="meta-label">저장 상대 경로</span><strong id="metaStorageRelative" class="path-text">-</strong></div>
+            <div><span class="meta-label">크기</span><strong id="metaFileSize">-</strong></div>
+            <div><span class="meta-label">등록자</span><strong id="metaCreatedBy">-</strong></div>
+            <div><span class="meta-label">등록일시</span><strong id="metaCreatedAt">-</strong></div>
+            <div><span class="meta-label">사용 여부</span><strong id="metaUseYn">-</strong></div>
+            <div><span class="meta-label">다운로드</span><strong><a id="metaDownloadLink" href="#" target="_blank" rel="noopener">다운로드</a></strong></div>
+        </div>
+        <pre id="resultBox" class="result-box">업로드하거나 목록에서 [상세]를 선택하세요.</pre>
+    </section>
+</main>
+
+<section class="card full">
+    <div class="card-title row-title">
+        <div>
+            <h2>파일 목록</h2>
+            <p id="listSummary">전체 0건</p>
+        </div>
+        <div class="filters">
+            <input type="search" id="filterName" placeholder="파일명 검색"/>
+            <select id="filterCategory">
+                <option value="">전체 구분</option>
+                <option value="GENERAL">GENERAL</option>
+                <option value="NOTICE">NOTICE</option>
+                <option value="MANUAL">MANUAL</option>
+                <option value="ATTACHMENT">ATTACHMENT</option>
+            </select>
+            <select id="filterUseYn">
+                <option value="">사용 여부</option>
+                <option value="Y">Y</option>
+                <option value="N">N</option>
+            </select>
+            <button type="button" class="secondary" id="reloadBtn">조회</button>
+        </div>
+    </div>
+    <div class="table-wrap">
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>파일명</th>
+                <th>구분</th>
+                <th>크기</th>
+                <th>타입</th>
+                <th>저장 위치</th>
+                <th>사용</th>
+                <th>등록일시</th>
+                <th class="col-actions">작업</th>
+            </tr>
+            </thead>
+            <tbody id="fileTableBody">
+            <tr><td colspan="9" class="empty-row">조회 중...</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<div id="deleteModal" class="modal hidden" aria-hidden="true">
+    <div class="modal-backdrop" data-close="true"></div>
+    <div class="modal-panel" role="dialog">
+        <h3>파일 삭제</h3>
+        <p id="deleteModalText">선택한 파일을 삭제하시겠습니까?</p>
+        <div class="modal-actions">
+            <button type="button" class="danger" id="confirmDeleteBtn">삭제</button>
+            <button type="button" class="secondary" data-close="true">취소</button>
+        </div>
+    </div>
+</div>
+
+<script src="/js/file-crud.js"></script>
+</body>
+</html>

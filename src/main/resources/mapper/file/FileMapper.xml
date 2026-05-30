@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nh.nsight.messaging.file.mapper.FileMapper">
+
+    <resultMap id="FileResultMap" type="com.nh.nsight.messaging.file.thing.FileDocument">
+        <id property="fileId" column="FILE_ID"/>
+        <result property="originalName" column="ORIGINAL_NAME"/>
+        <result property="storedName" column="STORED_NAME"/>
+        <result property="contentType" column="CONTENT_TYPE"/>
+        <result property="fileSize" column="FILE_SIZE"/>
+        <result property="storagePath" column="STORAGE_PATH"/>
+        <result property="bizCategory" column="BIZ_CATEGORY"/>
+        <result property="description" column="DESCRIPTION"/>
+        <result property="useYn" column="USE_YN"/>
+        <result property="createdBy" column="CREATED_BY"/>
+        <result property="createdAt" column="CREATED_AT"/>
+        <result property="updatedBy" column="UPDATED_BY"/>
+        <result property="updatedAt" column="UPDATED_AT"/>
+    </resultMap>
+
+    <insert id="insertFile" parameterType="com.nh.nsight.messaging.file.thing.FileDocument"
+            useGeneratedKeys="true" keyProperty="fileId">
+        INSERT INTO TB_MSG_FILE
+        (
+            ORIGINAL_NAME,
+            STORED_NAME,
+            CONTENT_TYPE,
+            FILE_SIZE,
+            STORAGE_PATH,
+            BIZ_CATEGORY,
+            DESCRIPTION,
+            USE_YN,
+            CREATED_BY,
+            CREATED_AT,
+            UPDATED_BY,
+            UPDATED_AT
+        )
+        VALUES
+        (
+            #{originalName},
+            #{storedName},
+            #{contentType},
+            #{fileSize},
+            #{storagePath},
+            #{bizCategory},
+            #{description},
+            #{useYn},
+            #{createdBy},
+            CURRENT_TIMESTAMP,
+            #{updatedBy},
+            CURRENT_TIMESTAMP
+        )
+    </insert>
+
+    <select id="selectById" parameterType="long" resultMap="FileResultMap">
+        SELECT *
+        FROM TB_MSG_FILE
+        WHERE FILE_ID = #{fileId}
+    </select>
+
+    <select id="selectFiles" parameterType="com.nh.nsight.messaging.file.dto.FileSearchCondition" resultMap="FileResultMap">
+        SELECT *
+        FROM TB_MSG_FILE
+        <where>
+            <if test="originalName != null and originalName != ''">
+                AND UPPER(ORIGINAL_NAME) LIKE '%' || UPPER(#{originalName}) || '%'
+            </if>
+            <if test="bizCategory != null and bizCategory != ''">
+                AND BIZ_CATEGORY = #{bizCategory}
+            </if>
+            <if test="useYn != null and useYn != ''">
+                AND USE_YN = #{useYn}
+            </if>
+        </where>
+        ORDER BY FILE_ID DESC
+    </select>
+
+    <select id="countFiles" parameterType="com.nh.nsight.messaging.file.dto.FileSearchCondition" resultType="long">
+        SELECT COUNT(*)
+        FROM TB_MSG_FILE
+        <where>
+            <if test="originalName != null and originalName != ''">
+                AND UPPER(ORIGINAL_NAME) LIKE '%' || UPPER(#{originalName}) || '%'
+            </if>
+            <if test="bizCategory != null and bizCategory != ''">
+                AND BIZ_CATEGORY = #{bizCategory}
+            </if>
+            <if test="useYn != null and useYn != ''">
+                AND USE_YN = #{useYn}
+            </if>
+        </where>
+    </select>
+
+    <update id="updateUseYn">
+        UPDATE TB_MSG_FILE
+        SET USE_YN = #{useYn},
+            UPDATED_BY = #{updatedBy},
+            UPDATED_AT = CURRENT_TIMESTAMP
+        WHERE FILE_ID = #{fileId}
+    </update>
+
+    <delete id="deleteById" parameterType="long">
+        DELETE FROM TB_MSG_FILE
+        WHERE FILE_ID = #{fileId}
+    </delete>
+</mapper>

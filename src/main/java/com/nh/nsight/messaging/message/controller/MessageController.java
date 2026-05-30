@@ -59,11 +59,20 @@ public class MessageController {
     public StandardResponse<List<MessageResponse>> searchMessages(
             @RequestParam(required = false) String messageType,
             @RequestParam(required = false) String channelCode,
-            @RequestParam(required = false) String useYn
+            @RequestParam(required = false) String useYn,
+            @RequestParam(defaultValue = "1") int pageNo,
+            @RequestParam(defaultValue = "3") int pageSize
     ) {
-        MessageSearchCondition condition = new MessageSearchCondition(messageType, channelCode, useYn);
+        MessageSearchCondition condition = new MessageSearchCondition(messageType, channelCode, useYn, pageNo, pageSize);
         List<MessageResponse> response = messageFacade.searchMessages(condition);
         long totalCount = messageFacade.countMessages(condition);
-        return StandardResponse.successPage("MSG-LIST-001", "messageList", response, 1, response.size(), totalCount);
+        return StandardResponse.successPage(
+                "MSG-LIST-001",
+                "messageList",
+                response,
+                condition.getSafePageNo(),
+                condition.getSafePageSize(),
+                totalCount
+        );
     }
 }

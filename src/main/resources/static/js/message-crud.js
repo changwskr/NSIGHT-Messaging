@@ -18,12 +18,16 @@ const filterUseYn = document.getElementById('filterUseYn');
 const deleteModal = document.getElementById('deleteModal');
 const deleteModalText = document.getElementById('deleteModalText');
 const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+const messagePagination = document.getElementById('messagePagination');
+const PAGE_SIZE = 3;
 
 const formFields = () => form.querySelectorAll('input:not([type=hidden]), select, textarea');
 
 let pendingDeleteId = null;
 let formMode = 'create';
 let selectedMessageId = null;
+let currentPage = 1;
+let totalCount = 0;
 
 function guid() {
     const now = new Date();
@@ -152,7 +156,7 @@ function resetForm() {
     setFormMode('create');
     hideStatus();
     resultBox.textContent = '목록에서 [상세]를 누르거나 저장하면 내용이 표시됩니다.';
-    loadMessages();
+    loadMessages(1);
 }
 
 function formToPayload() {
@@ -201,11 +205,80 @@ async function apiFetch(url, options = {}) {
     return res.json();
 }
 
-async function loadMessages() {
+function getTotalPages() {
+    return Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
+}
+
+function renderPagination(pageNo) {
+    const totalPages = getTotalPages();
+    const current = Math.min(Math.max(1, pageNo), totalPages);
+    const pages = buildPageNumbers(current, totalPages);
+
+    let html = `
+        <button type="button" class="page-btn" data-page="prev" ${current <= 1 ? 'disabled' : ''}>이전</button>
+    `;
+
+    pages.forEach(item => {
+        if (item === '...') {
+            html += '<span class="page-ellipsis">...</span>';
+            return;
+        }
+        html += `<button type="button" class="page-btn ${item === current ? 'active' : ''}" data-page="${item}">${item}</button>`;
+    });
+
+    html += `
+        <button type="button" class="page-btn" data-page="next" ${current >= totalPages ? 'disabled' : ''}>다음</button>
+        <span class="page-info">${current} / ${totalPages} 페이지</span>
+    `;
+    messagePagination.innerHTML = html;
+}
+
+function buildPageNumbers(current, totalPages) {
+    if (totalPages <= 7) {
+        return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+    const pages = [1];
+    if (current > 3) pages.push('...');
+    for (let p = Math.max(2, current - 1); p <= Math.min(totalPages - 1, current + 1); p++) {
+        pages.push(p);
+    }
+    if (current < totalPages - 2) pages.push('...');
+    pages.push(totalPages);
+    return pages;
+}
+
+messagePagination.addEventListener('click', (event) => {
+    const btn = event.target.closest('button[data-page]');
+    if (!btn || btn.disabled) return;
+
+    const value = btn.dataset.page;
+    if (value === 'prev') {
+        loadMessages(currentPage - 1);
+        return;
+    }
+    if (value === 'next') {
+        loadMessages(currentPage + 1);
+        return;
+    }
+    loadMessages(Number(value));
+});
+
+async function loadMessages(page = currentPage) {
+    const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
+    if (page > totalPages && totalCount > 0) {
+        page = totalPages;
+    }
+    if (page < 1) {
+        page = 1;
+    }
+    currentPage = page;
+
     const params = new URLSearchParams();
     if (filterType.value) params.append('messageType', filterType.value);
     if (filterChannel.value) params.append('channelCode', filterChannel.value);
     if (filterUseYn.value) params.append('useYn', filterUseYn.value);
+    params.append('pageNo', String(currentPage));
+    params.append('pageSize', String(PAGE_SIZE));
 
     try {
         const data = await apiFetch(`${API_BASE}?${params.toString()}`, { method: 'GET' });
@@ -214,11 +287,20 @@ async function loadMessages() {
             return;
         }
         const rows = data?.body?.response || [];
-        const total = data?.control?.totalCount ?? rows.length;
-        listSummary.textContent = `전체 ${total}건`;
+        totalCount = data?.control?.totalCount ?? 0;
+        const pageNo = data?.control?.pageNo ?? currentPage;
+        const pageSize = data?.control?.pageSize ?? PAGE_SIZE;
+        currentPage = pageNo;
+        const pages = Math.max(1, Math.ceil(totalCount / pageSize));
+        listSummary.textContent = `전체 ${totalCount}건 · 페이지당 ${pageSize}건`;
 
         if (rows.length === 0) {
+            if (totalCount > 0 && currentPage > 1) {
+                await loadMessages(currentPage - 1);
+                return;
+            }
             tableBody.innerHTML = '<tr><td colspan="9" class="empty-row">조회 결과가 없습니다.</td></tr>';
+            renderPagination(1);
             return;
         }
 
@@ -239,6 +321,7 @@ async function loadMessages() {
                 </td>
             </tr>
         `).join('');
+        renderPagination(pageNo);
     } catch (e) {
         showStatus('목록 조회 실패: ' + e.message, 'error');
     }
@@ -341,7 +424,7 @@ confirmDeleteBtn.addEventListener('click', async () => {
         }
         showStatus('메시지가 삭제되었습니다.', 'success');
         if (String(messageIdInput.value) === String(pendingDeleteId)) resetForm();
-        await loadMessages();
+        else await loadMessages(currentPage);
     } catch (e) {
         showStatus('삭제 실패: ' + e.message, 'error');
     }
@@ -359,9 +442,9 @@ deleteModal.querySelectorAll('[data-close="true"]').forEach(el => {
 
 document.getElementById('resetBtn').addEventListener('click', resetForm);
 document.getElementById('newBtn').addEventListener('click', resetForm);
-document.getElementById('reloadBtn').addEventListener('click', loadMessages);
-filterType.addEventListener('change', loadMessages);
-filterChannel.addEventListener('change', loadMessages);
-filterUseYn.addEventListener('change', loadMessages);
+document.getElementById('reloadBtn').addEventListener('click', () => loadMessages(1));
+filterType.addEventListener('change', () => loadMessages(1));
+filterChannel.addEventListener('change', () => loadMessages(1));
+filterUseYn.addEventListener('change', () => loadMessages(1));
 
 resetForm();
