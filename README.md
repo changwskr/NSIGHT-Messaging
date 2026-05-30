@@ -1,8 +1,10 @@
-# NSIGHT 메시징 관리 서비스 프로젝트
+# NSIGHT-Messaging
+
+NSIGHT 정보계 기준 **메시징 관리 서비스** 샘플 프로젝트입니다.
 
 ## 1. 목적
 
-이 프로젝트는 NSIGHT 정보계 기준의 **메시징 관리 서비스** 샘플 프로젝트입니다. 단순 CRUD가 아니라 NSIGHT 환경설정 기준안과 Spring Boot 계층구조 기준을 반영하여 다음을 포함합니다.
+단순 CRUD가 아니라 NSIGHT 환경설정 기준안과 Spring Boot 계층구조 기준을 반영하여 다음을 포함합니다.
 
 - 메시지 등록/조회 API
 - 메시지 등록 화면 `/messages`
