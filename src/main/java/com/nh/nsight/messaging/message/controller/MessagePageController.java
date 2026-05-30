@@ -6,14 +6,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class MessagePageController {
 
-    @GetMapping("/")
-    public String root() {
-        return "redirect:/messages";
-    }
-
     @GetMapping({"/messaging", "/messaging/"})
     public String messagingAlias() {
-        return "redirect:/messages";
+        return "redirect:/home";
     }
 
     @GetMapping("/messages")

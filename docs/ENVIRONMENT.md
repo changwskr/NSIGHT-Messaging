@@ -61,13 +61,27 @@ DB Query Timeout < Spring Transaction Timeout < Proxy/WebTopSuite Timeout < L4 T
 
 ## 6. MyBatis
 
-| 설정 | 기준 |
-|---|---:|
-| default-statement-timeout | 3초 |
-| default-fetch-size | 300 |
-| Mapper XML | `classpath:/mapper/**/*.xml` |
+| 설정 | 기준 | 파일 |
+|---|---:|---|
+| config-location | 전역 설정 | `mybatis/mybatis-config.xml` |
+| mapper-locations | SQL XML | `mapper/**/*.xml` |
+| @MapperScan | 인터페이스 스캔 | `MybatisConfig.java` |
+| default-statement-timeout | 3초 | `mybatis-config.xml` |
+| default-fetch-size | 300 | `mybatis-config.xml` |
+| mapUnderscoreToCamelCase | true | `mybatis-config.xml` |
 
-## 7. JVM 옵션 예시
+상세: [MYBATIS.md](./MYBATIS.md)
+
+## 7. 로그 파일
+
+| 프로파일 | 경로 | 롤링 |
+|---|---|---|
+| local | `./logs/nsight-message-mgmt-service.log` | 일별 + 100MB, 30일, 최대 3GB |
+| prd | `/logs/msg-ap/nsight-message-mgmt-service.log` | 동일 |
+
+설정: `logging.file.path`, `logback-spring.xml` (CONSOLE + FILE)
+
+## 8. JVM 옵션 예시
 
 ```bash
 -Xms12g

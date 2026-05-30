@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>NSIGHT 메시징 관리 서비스</title>
+    <link rel="stylesheet" href="/css/nsight.css"/>
+</head>
+<body>
+<header class="topbar">
+    <div>
+        <h1>NSIGHT Message Management</h1>
+        <p>메시징 · 파일 · 트랜잭션 통합 관리 포털</p>
+    </div>
+    <div class="topbar-right">
+        <nav class="nav-links">
+            <a href="/home" class="active">메인</a>
+            <a href="/messages">메시지 관리</a>
+            <a href="/files">파일 관리</a>
+            <a href="/transactionmgr">트랜잭션 관리</a>
+            <a href="/home/logout">로그아웃</a>
+        </nav>
+        <div class="badge" th:text="${loginUserId} ?: 'HOME'">HOME</div>
+    </div>
+</header>
+
+<main class="home-main">
+    <section class="home-hero card">
+        <h2>서비스 메뉴</h2>
+        <p>아래 카드를 선택하여 각 관리 화면으로 이동합니다. API 호출 시 표준 전문(Header / Control / Security / Error)이 트랜잭션 로그와 파일로 기록됩니다.</p>
+    </section>
+
+    <div class="service-grid">
+        <a href="/messages" class="service-card service-card--message">
+            <span class="service-card__badge">MSG</span>
+            <h3>메시지 관리</h3>
+            <p>메시지 등록 · 조회 · 수정 · 삭제. 채널·유형·표시 기간을 관리합니다.</p>
+            <ul class="service-card__meta">
+                <li><code>/messages</code></li>
+                <li><code>/api/v1/messages</code></li>
+            </ul>
+            <span class="service-card__action">화면 열기 →</span>
+        </a>
+
+        <a href="/files" class="service-card service-card--file">
+            <span class="service-card__badge">FILE</span>
+            <h3>파일 관리</h3>
+            <p>첨부 파일 업로드 · 다운로드 · 목록 · 삭제. 로컬 저장 경로 규칙을 따릅니다.</p>
+            <ul class="service-card__meta">
+                <li><code>/files</code></li>
+                <li><code>/api/v1/files</code></li>
+            </ul>
+            <span class="service-card__action">화면 열기 →</span>
+        </a>
+
+        <a href="/transactionmgr" class="service-card service-card--tx">
+            <span class="service-card__badge">TX</span>
+            <h3>트랜잭션 관리</h3>
+            <p>표준 전문 Header / Control / Security / Error 이력 조회. GUID·결과코드 조건 검색.</p>
+            <ul class="service-card__meta">
+                <li><code>/transactionmgr</code></li>
+                <li><code>/api/v1/transaction-logs</code></li>
+            </ul>
+            <span class="service-card__action">화면 열기 →</span>
+        </a>
+    </div>
+
+    <section class="home-info card">
+        <h3>운영·연계 정보</h3>
+        <dl class="home-info-dl">
+            <dt>입·출력 전문 파일</dt>
+            <dd><code>./data/nsight-messages/{yyyyMMdd}/{GUID}/*-REQ.json</code> · <code>*-RES.json</code></dd>
+            <dt>첨부 파일 저장</dt>
+            <dd><code>./data/nsight-files/yyyy/MM/dd/{uuid}.{ext}</code></dd>
+            <dt>Health Check</dt>
+            <dd><a href="/actuator/health" target="_blank" rel="noopener">/actuator/health</a></dd>
+        </dl>
+    </section>
+</main>
+</body>
+</html>

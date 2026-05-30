@@ -167,6 +167,19 @@ function formToPayload() {
     return data;
 }
 
+function validateDisplayPeriod(startAt, endAt) {
+    if (!startAt || !endAt) return null;
+    const start = new Date(startAt);
+    const end = new Date(endAt);
+    if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) {
+        return '표시 시작·종료일시 형식이 올바르지 않습니다.';
+    }
+    if (end < start) {
+        return '표시 종료일시는 시작일시 이후여야 합니다.';
+    }
+    return null;
+}
+
 function fillDetailMeta(row) {
     document.getElementById('metaMessageId').textContent = row.messageId;
     document.getElementById('metaActiveNow').textContent = row.activeNow ? 'ACTIVE' : 'INACTIVE';
@@ -357,6 +370,11 @@ form.addEventListener('submit', async (event) => {
     if (formMode === 'view') return;
 
     const payload = formToPayload();
+    const periodError = validateDisplayPeriod(payload.displayStartAt, payload.displayEndAt);
+    if (periodError) {
+        showStatus(periodError, 'error');
+        return;
+    }
     const isEdit = formMode === 'edit';
     const url = isEdit ? `${API_BASE}/${messageIdInput.value}` : API_BASE;
     const method = isEdit ? 'PUT' : 'POST';

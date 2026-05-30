@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>NSIGHT 트랜잭션 관리</title>
+    <link rel="stylesheet" href="/css/nsight.css"/>
+</head>
+<body>
+<header class="topbar">
+    <div>
+        <h1>NSIGHT Transaction Manager</h1>
+        <p>표준 전문 Header / Control / Security / Error 이력 조회</p>
+    </div>
+    <div class="topbar-right">
+        <nav class="nav-links">
+            <a href="/home">메인</a>
+            <a href="/messages">메시지 관리</a>
+            <a href="/files">파일 관리</a>
+            <a href="/transactionmgr" class="active">트랜잭션 관리</a>
+            <a href="/home/logout">로그아웃</a>
+        </nav>
+        <div class="badge">TX-MGR</div>
+    </div>
+</header>
+
+<div id="statusBar" class="status-bar hidden" role="status"></div>
+
+<main class="crud-layout">
+    <section class="card form-card">
+        <div class="card-title">
+            <h2>조회 조건</h2>
+            <p>GUID, TraceId, TransactionId, ServiceId, 결과코드, 사용자로 검색합니다.</p>
+        </div>
+        <form id="searchForm" class="grid-form">
+            <label>GUID <input name="guid" id="filterGuid" placeholder="20260530-MSG-"/></label>
+            <label>Trace ID <input name="traceId" id="filterTraceId"/></label>
+            <label>Transaction ID <input name="transactionId" id="filterTransactionId" placeholder="MSG-CREATE-001"/></label>
+            <label>Service ID <input name="serviceId" id="filterServiceId" placeholder="messageCreate"/></label>
+            <label>결과 코드
+                <select name="resultCode" id="filterResultCode">
+                    <option value="">전체</option>
+                    <option value="SUCCESS">SUCCESS</option>
+                    <option value="FAIL">FAIL</option>
+                </select>
+            </label>
+            <label>User ID <input name="userId" id="filterUserId" placeholder="ARCHITECT"/></label>
+            <div class="actions wide">
+                <button type="submit">조회</button>
+                <button type="button" class="secondary" id="resetBtn">초기화</button>
+                <button type="button" class="danger" id="deleteSearchBtn">조회 결과 삭제</button>
+            </div>
+            <p class="tx-delete-hint wide">삭제 시 DB 트랜잭션 로그와 연관 입·출력 전문 파일(REQ/RES)이 함께 제거됩니다.</p>
+        </form>
+    </section>
+
+    <section class="card">
+        <div class="card-title">
+            <h2>트랜잭션 상세</h2>
+            <p>목록에서 행 또는 [상세]를 선택하면 Header · Control · Security · Error가 표시됩니다.</p>
+        </div>
+        <div id="detailBox" class="tx-detail-box">
+            <p class="tx-detail-placeholder">조회 결과에서 항목을 선택하세요.</p>
+        </div>
+    </section>
+</main>
+
+<section class="card full">
+    <div class="card-title row-title">
+        <div>
+            <h2>트랜잭션 이력</h2>
+            <p id="listSummary">전체 0건</p>
+        </div>
+    </div>
+    <div class="table-wrap">
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>GUID</th>
+                <th>Header</th>
+                <th>Control</th>
+                <th>Security</th>
+                <th>Error</th>
+                <th>URI</th>
+                <th>등록일시</th>
+                <th class="col-actions">작업</th>
+            </tr>
+            </thead>
+            <tbody id="txTableBody">
+            <tr><td colspan="9" class="empty-row">조회 중...</td></tr>
+            </tbody>
+        </table>
+    </div>
+    <nav id="txPagination" class="pagination" aria-label="트랜잭션 목록 페이지"></nav>
+</section>
+
+<div id="deleteModal" class="modal hidden" aria-hidden="true">
+    <div class="modal-backdrop" data-close="true"></div>
+    <div class="modal-panel" role="dialog" aria-labelledby="deleteModalTitle">
+        <h3 id="deleteModalTitle">트랜잭션 삭제</h3>
+        <p id="deleteModalText">선택한 트랜잭션과 연관 전문 파일을 삭제하시겠습니까?</p>
+        <div class="modal-actions">
+            <button type="button" class="danger" id="confirmDeleteBtn">삭제</button>
+            <button type="button" class="secondary" data-close="true">취소</button>
+        </div>
+    </div>
+</div>
+
+<script src="/js/transactionmgr.js"></script>
+</body>
+</html>

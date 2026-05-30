@@ -60,12 +60,9 @@ server:
     connection-timeout: 8s
 
 mybatis:
-  mapper-locations: classpath:/mapper/**/*.xml
-  type-aliases-package: com.nh.nsight.messaging.message.thing
-  configuration:
-    map-underscore-to-camel-case: true
-    default-statement-timeout: 3
-    default-fetch-size: 300
+  config-location: classpath:mybatis/mybatis-config.xml
+  mapper-locations: classpath:mapper/**/*.xml
+  type-aliases-package: com.nh.nsight.messaging.message.thing,com.nh.nsight.messaging.file.thing
 
 management:
   endpoints:
@@ -77,11 +74,13 @@ management:
       show-details: always
 
 logging:
+  file:
+    path: ./logs
   level:
     root: INFO
     com.nh.nsight.messaging: DEBUG
-  pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] guid=%X{guid:-} traceId=%X{traceId:-} userId=%X{userId:-} %logger{36} - %msg%n"
+    com.nh.nsight.messaging.message.mapper: DEBUG
+    com.nh.nsight.messaging.file.mapper: DEBUG
 
 nsight:
   ap-id: MSG-LOCAL-AP01
@@ -103,6 +102,10 @@ nsight:
     storage-path: ./data/nsight-files
     max-file-size-bytes: 10485760
     allowed-extensions: pdf,doc,docx,xls,xlsx,ppt,pptx,txt,csv,json,xml,zip,hwp,png,jpg,jpeg,gif
+  message-log:
+    enabled: true
+    storage-path: ./data/nsight-messages
+    max-body-bytes: 1048576
 
 ---
 spring:
@@ -138,11 +141,15 @@ server:
         secure: true
 
 logging:
+  file:
+    path: /logs/msg-ap
   level:
     root: INFO
     com.nh.nsight.messaging: INFO
 
 nsight:
+  message-log:
+    storage-path: /data/nsight-messages
   ap-id: ${AP_ID:MSG-C1-AP01}
   cruzapim:
     base-url: ${CRUZAPIM_BASE_URL:https://cruzapim.nh.local}

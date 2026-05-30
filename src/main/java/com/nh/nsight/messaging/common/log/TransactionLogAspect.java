@@ -1,5 +1,6 @@
 package com.nh.nsight.messaging.common.log;
 
+import com.nh.nsight.messaging.common.error.BusinessException;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -23,7 +24,13 @@ public class TransactionLogAspect {
             log.info("[TX-END] {} elapsedMs={}", signature, System.currentTimeMillis() - start);
             return result;
         } catch (Throwable ex) {
-            log.error("[TX-ERROR] {} elapsedMs={} error={}", signature, System.currentTimeMillis() - start, ex.getMessage());
+            if (ex instanceof BusinessException biz) {
+                log.warn("[TX-ERROR] {} elapsedMs={} code={} message={}",
+                        signature, System.currentTimeMillis() - start, biz.getErrorCode(), biz.getMessage());
+            } else {
+                log.error("[TX-ERROR] {} elapsedMs={} error={}",
+                        signature, System.currentTimeMillis() - start, ex.getMessage(), ex);
+            }
             throw ex;
         }
     }

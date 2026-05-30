@@ -26,6 +26,32 @@ public record StandardHeader(
         String version,
         String clientIp
 ) {
+    public static StandardHeader request(String transactionId, String serviceId) {
+        RequestContext.Context context = RequestContext.get();
+        return new StandardHeader(
+                context.guid(),
+                context.traceId(),
+                "SPAN-APP-001",
+                transactionId,
+                "IF-MSG-LOCAL-001",
+                serviceId,
+                context.requestDateTime().toString(),
+                "",
+                "WEBTOPSUITE",
+                "MSG-MGMT-SERVICE",
+                "BRANCH_TERMINAL",
+                context.terminalId(),
+                context.userId(),
+                context.branchId(),
+                context.centerId(),
+                System.getProperty("nsight.ap-id", "MSG-LOCAL-AP01"),
+                "ONLINE",
+                "REQUEST",
+                "1.0",
+                context.clientIp()
+        );
+    }
+
     public static StandardHeader response(String transactionId, String serviceId) {
         RequestContext.Context context = RequestContext.get();
         return new StandardHeader(

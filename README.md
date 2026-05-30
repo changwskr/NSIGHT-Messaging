@@ -12,7 +12,7 @@ NSIGHT 정보계 기준 **메시징 관리 서비스** 샘플 프로젝트입니
 - 표준 응답 전문 구조: Header / Body / Control / Security / Error
 - GUID / TraceId / MDC 기반 로그 추적
 - GlobalExceptionHandler 기반 표준 오류응답
-- HikariCP, MyBatis, Tomcat, Session, Transaction, Timeout 환경설정
+- HikariCP + **MyBatis** (Mapper XML / DAO), Tomcat, Session, Transaction, Timeout 환경설정
 - H2 Local DB, 운영 전환용 profile 구조
 
 ## 2. 실행 방법
@@ -25,6 +25,8 @@ mvn spring-boot:run
 접속 URL:
 
 ```text
+http://localhost:8080/home/login   (admin / 1234)
+http://localhost:8080/home
 http://localhost:8080/messages
 http://localhost:8080/h2-console
 ```
@@ -70,12 +72,28 @@ curl -X POST http://localhost:8080/api/v1/messages \
 
 | URL | 설명 |
 |---|---|
+| `/home/login` | 로그인 화면 (ID: admin, PW: 1234) |
+| `/home` | 메인 화면 (서비스 카드, 로그인 필요) |
+| `/` | 로그인 여부에 따라 `/home` 또는 `/home/login`으로 이동 |
 | `/messages` | 메시지 등록 화면 |
 | `/files` | 파일 업·다운로드 관리 화면 |
+| `/transactionmgr` | 트랜잭션 전문(Header/Control/Security/Error) 이력 조회 |
+| `/api/v1/transaction-logs` | 트랜잭션 로그 API (페이지당 3건) |
+| `DELETE /api/v1/transaction-logs/{txLogId}` | 트랜잭션 1건 + 연관 전문 파일 삭제 |
+| `DELETE /api/v1/transaction-logs?조건` | 조회 조건 일괄 삭제 (최대 500건) |
 | `/api/v1/files` | 파일 업로드 / 목록 / 다운로드 API |
 | `/api/v1/files/storage-location` | 파일 저장 루트·경로 규칙 조회 API |
 
-로컬 저장 경로 기본값: `./data/nsight-files/yyyy/MM/dd/{uuid}.{ext}`
+로컬 파일 저장 경로: `./data/nsight-files/yyyy/MM/dd/{uuid}.{ext}`
+
+입·출력 전문 파일 저장 (API 호출 시 자동):
+
+```text
+./data/nsight-messages/{yyyyMMdd}/{GUID}/{HHmmssSSS}_{METHOD}_{uri}-REQ.json   # 요청 전문
+./data/nsight-messages/{yyyyMMdd}/{GUID}/{HHmmssSSS}_{METHOD}_{uri}-RES.json   # 응답 전문(표준 JSON)
+```
+
+저장 위치 조회: `GET /api/v1/message-logs/storage-location`
 | `/api/v1/messages` | 메시지 목록 조회 / 등록 API |
 | `/api/v1/messages/{messageId}` | 메시지 상세 조회 / 수정 / 삭제 API |
 | `/actuator/health` | Health Check |
