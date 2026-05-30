@@ -1,0 +1,136 @@
+spring:
+  application:
+    name: nsight-message-mgmt-service
+  profiles:
+    active: local
+  jackson:
+    time-zone: Asia/Seoul
+    date-format: yyyy-MM-dd'T'HH:mm:ss
+  thymeleaf:
+    cache: false
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:nsightmsg;MODE=Oracle;DATABASE_TO_UPPER=false;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+    hikari:
+      pool-name: MSG-HIKARI-POOL
+      maximum-pool-size: 50
+      minimum-idle: 10
+      connection-timeout: 3000
+      validation-timeout: 3000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      keepalive-time: 300000
+      auto-commit: false
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:db/schema.sql
+      data-locations: classpath:db/data.sql
+
+server:
+  port: 8080
+  shutdown: graceful
+  servlet:
+    session:
+      timeout: 60m
+      cookie:
+        http-only: true
+        secure: false
+        same-site: Lax
+  tomcat:
+    threads:
+      max: 500
+      min-spare: 100
+    accept-count: 500
+    max-connections: 10000
+    connection-timeout: 8s
+
+mybatis:
+  mapper-locations: classpath:/mapper/**/*.xml
+  type-aliases-package: com.nh.nsight.messaging.message.thing
+  configuration:
+    map-underscore-to-camel-case: true
+    default-statement-timeout: 3
+    default-fetch-size: 300
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    root: INFO
+    com.nh.nsight.messaging: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] guid=%X{guid:-} traceId=%X{traceId:-} userId=%X{userId:-} %logger{36} - %msg%n"
+
+nsight:
+  ap-id: MSG-LOCAL-AP01
+  transaction:
+    default-timeout-seconds: 5
+    readonly-timeout-seconds: 3
+  webtop:
+    request-timeout-ms: 15000
+    connect-timeout-ms: 3000
+    read-timeout-ms: 10000
+    retry-count: 1
+  absolute-session-timeout-hours: 8
+  cruzapim:
+    base-url: http://localhost:18080/mock-cruzapim
+    connect-timeout-ms: 3000
+    read-timeout-ms: 5000
+    retry-enabled: false
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prd
+  datasource:
+    driver-class-name: oracle.jdbc.OracleDriver
+    url: jdbc:oracle:thin:@//rdw-scan.nh.local:1521/RDWPRD
+    username: MSG_APP
+    password: ${MSG_DB_PASSWORD}
+    hikari:
+      pool-name: MSG-HIKARI-POOL-PRD
+      maximum-pool-size: 50
+      minimum-idle: 10
+      connection-timeout: 3000
+      validation-timeout: 3000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      keepalive-time: 300000
+      auto-commit: false
+  h2:
+    console:
+      enabled: false
+  sql:
+    init:
+      mode: never
+
+server:
+  servlet:
+    session:
+      cookie:
+        secure: true
+
+logging:
+  level:
+    root: INFO
+    com.nh.nsight.messaging: INFO
+
+nsight:
+  ap-id: ${AP_ID:MSG-C1-AP01}
+  cruzapim:
+    base-url: ${CRUZAPIM_BASE_URL:https://cruzapim.nh.local}
