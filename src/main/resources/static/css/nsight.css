@@ -16,7 +16,8 @@ body {
 .topbar h1 { margin: 0 0 8px; font-size: 28px; }
 .topbar p { margin: 0; opacity: 0.8; }
 .badge { border: 1px solid rgba(255,255,255,0.35); padding: 10px 14px; border-radius: 18px; }
-.layout { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 20px; padding: 24px 40px; }
+.layout,
+.crud-layout { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 20px; padding: 24px 40px; }
 .card {
     background: white;
     border-radius: 18px;
@@ -62,6 +63,20 @@ button.secondary { background: #eef3fb; color: #28344c; }
     font-size: 12px;
     line-height: 1.55;
 }
+.result-box .detail-summary {
+    background: #1f2937;
+    border-color: #374151;
+    color: #d1d5db;
+}
+.result-box .detail-summary h3 { color: #f9fafb; }
+.result-box .detail-summary dt { color: #9ca3af; }
+.result-box .result-json {
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-size: 12px;
+    color: #d8e8ff;
+}
 .filters { display: flex; gap: 8px; }
 .filters select { min-width: 150px; }
 .table-wrap { overflow: auto; }
@@ -71,8 +86,111 @@ th { background: #f6f8fc; color: #46566f; }
 .pill { display: inline-block; padding: 4px 8px; border-radius: 999px; background: #eef3fb; font-weight: 700; }
 .pill.ok { background: #e7f8ef; color: #0f7a3d; }
 .pill.no { background: #fff1f1; color: #b42318; }
+.status-bar {
+    margin: 0 40px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 700;
+}
+.status-bar.hidden { display: none; }
+.status-bar.success { background: #e7f8ef; color: #0f7a3d; border: 1px solid #b7e4c7; }
+.status-bar.error { background: #fff1f1; color: #b42318; border: 1px solid #fecdca; }
+.status-bar.info { background: #eef4ff; color: #1f4fd6; border: 1px solid #c7d7fe; }
+.mode-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+}
+.mode-badge.create { background: #eef4ff; color: #1f5eff; }
+.mode-badge.edit { background: #fff7e8; color: #b54708; }
+.mode-badge.view { background: #f3f4f6; color: #36445c; }
+.detail-meta {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 18px;
+    padding: 14px;
+    border-radius: 12px;
+    background: #f6f8fc;
+    border: 1px solid #e6edf7;
+}
+.detail-meta.hidden { display: none; }
+.detail-meta .meta-label {
+    display: block;
+    font-size: 11px;
+    color: #66738a;
+    margin-bottom: 4px;
+    font-weight: 700;
+}
+.detail-meta strong { font-size: 14px; color: #172033; }
+.detail-summary {
+    margin: 0 0 14px;
+    padding: 14px;
+    border-radius: 12px;
+    background: #f6f8fc;
+    border: 1px solid #e6edf7;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #36445c;
+}
+.detail-summary h3 { margin: 0 0 8px; font-size: 16px; color: #172033; }
+.detail-summary dl {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 6px 12px;
+    margin: 0;
+}
+.detail-summary dt { font-weight: 700; color: #66738a; }
+.detail-summary dd { margin: 0; }
+.actions .hidden { display: none; }
+input[readonly] { background: #f1f4f9; color: #5b677a; }
+.col-actions { width: 180px; white-space: nowrap; }
+.btn-link {
+    border: none;
+    background: none;
+    color: #1f5eff;
+    font-weight: 700;
+    font-size: 12px;
+    padding: 0 6px 0 0;
+    cursor: pointer;
+}
+.btn-link.danger-text { color: #b42318; }
+.danger { background: #d92d20; }
+.empty-row { text-align: center; color: #66738a; padding: 24px; }
+tr.selected { background: #f5f9ff; }
+.modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.modal.hidden { display: none; }
+.modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(17, 24, 39, 0.45);
+}
+.modal-panel {
+    position: relative;
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    width: min(420px, calc(100% - 32px));
+    box-shadow: 0 20px 40px rgba(27, 44, 72, 0.18);
+}
+.modal-panel h3 { margin: 0 0 10px; }
+.modal-panel p { margin: 0 0 20px; color: #66738a; }
+.modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
 @media (max-width: 1000px) {
-    .layout { grid-template-columns: 1fr; padding: 20px; }
+    .layout,
+    .crud-layout { grid-template-columns: 1fr; padding: 20px; }
+    .status-bar { margin: 0 20px; }
     .full { margin: 0 20px 30px; }
     .topbar { padding: 24px 20px; }
 }

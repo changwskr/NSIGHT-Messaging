@@ -3,6 +3,7 @@ package com.nh.nsight.messaging.message.facade;
 import com.nh.nsight.messaging.message.dto.MessageCreateRequest;
 import com.nh.nsight.messaging.message.dto.MessageResponse;
 import com.nh.nsight.messaging.message.dto.MessageSearchCondition;
+import com.nh.nsight.messaging.message.dto.MessageUpdateRequest;
 import com.nh.nsight.messaging.message.service.MessageService;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,5 +36,15 @@ public class MessageFacade {
     @Transactional(readOnly = true, timeout = 3)
     public long countMessages(MessageSearchCondition condition) {
         return messageService.countMessages(condition);
+    }
+
+    @Transactional(timeout = 5)
+    public MessageResponse updateMessage(Long messageId, MessageUpdateRequest request) {
+        return messageService.updateMessage(messageId, request);
+    }
+
+    @Transactional(timeout = 5)
+    public void deleteMessage(Long messageId) {
+        messageService.deleteMessage(messageId);
     }
 }

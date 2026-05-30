@@ -6,9 +6,12 @@ import com.nh.nsight.messaging.message.dto.MessageResponse;
 import com.nh.nsight.messaging.message.dto.MessageSearchCondition;
 import com.nh.nsight.messaging.message.facade.MessageFacade;
 import jakarta.validation.Valid;
+import com.nh.nsight.messaging.message.dto.MessageUpdateRequest;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,6 +38,21 @@ public class MessageController {
     public StandardResponse<MessageResponse> getMessage(@PathVariable Long messageId) {
         MessageResponse response = messageFacade.getMessage(messageId);
         return StandardResponse.success("MSG-DETAIL-001", "messageDetail", response);
+    }
+
+    @PutMapping("/{messageId}")
+    public StandardResponse<MessageResponse> updateMessage(
+            @PathVariable Long messageId,
+            @Valid @RequestBody MessageUpdateRequest request
+    ) {
+        MessageResponse response = messageFacade.updateMessage(messageId, request);
+        return StandardResponse.success("MSG-UPDATE-001", "messageUpdate", response);
+    }
+
+    @DeleteMapping("/{messageId}")
+    public StandardResponse<Void> deleteMessage(@PathVariable Long messageId) {
+        messageFacade.deleteMessage(messageId);
+        return StandardResponse.success("MSG-DELETE-001", "messageDelete", null);
     }
 
     @GetMapping

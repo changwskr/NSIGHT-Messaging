@@ -102,4 +102,25 @@
             </if>
         </where>
     </select>
+
+    <update id="updateMessage" parameterType="com.nh.nsight.messaging.message.thing.Message">
+        UPDATE TB_MSG_MESSAGE
+        SET MESSAGE_CODE = #{messageCode},
+            MESSAGE_NAME = #{messageName},
+            MESSAGE_TYPE = #{messageType},
+            CHANNEL_CODE = #{channelCode},
+            LOCALE = #{locale},
+            MESSAGE_CONTENT = #{messageContent},
+            DISPLAY_START_AT = #{displayStartAt},
+            DISPLAY_END_AT = #{displayEndAt},
+            USE_YN = #{useYn},
+            UPDATED_BY = #{updatedBy},
+            UPDATED_AT = CURRENT_TIMESTAMP
+        WHERE MESSAGE_ID = #{messageId}
+    </update>
+
+    <delete id="deleteById" parameterType="long">
+        DELETE FROM TB_MSG_MESSAGE
+        WHERE MESSAGE_ID = #{messageId}
+    </delete>
 </mapper>

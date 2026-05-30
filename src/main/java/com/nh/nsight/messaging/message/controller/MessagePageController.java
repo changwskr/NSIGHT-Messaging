@@ -11,6 +11,11 @@ public class MessagePageController {
         return "redirect:/messages";
     }
 
+    @GetMapping({"/messaging", "/messaging/"})
+    public String messagingAlias() {
+        return "redirect:/messages";
+    }
+
     @GetMapping("/messages")
     public String messages() {
         return "messages/register";

@@ -3,7 +3,7 @@ package com.nh.nsight.messaging.message.mapper;
 import com.nh.nsight.messaging.message.dto.MessageSearchCondition;
 import com.nh.nsight.messaging.message.thing.Message;
 import org.apache.ibatis.annotations.Mapper;
-    import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -14,4 +14,6 @@ public interface MessageMapper {
     Message selectByCode(@Param("messageCode") String messageCode);
     List<Message> selectMessages(MessageSearchCondition condition);
     long countMessages(MessageSearchCondition condition);
+    int updateMessage(Message message);
+    int deleteById(@Param("messageId") Long messageId);
 }

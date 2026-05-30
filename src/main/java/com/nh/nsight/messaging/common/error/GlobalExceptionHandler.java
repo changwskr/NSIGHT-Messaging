@@ -11,6 +11,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.stream.Collectors;
 
@@ -50,6 +51,22 @@ public class GlobalExceptionHandler {
                 .body(StandardResponse.fail("MSG-ERROR-001", "globalException", ErrorCode.DB_POOL_TIMEOUT, "DB resource unavailable"));
     }
 
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<?> handleNoResource(NoResourceFoundException ex) {
+        String path = ex.getResourcePath();
+        if (isFaviconPath(path)) {
+            return ResponseEntity.notFound().build();
+        }
+        if (path != null && path.startsWith("api/")) {
+            log.warn("[NOT-FOUND] path={}", path);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(StandardResponse.fail("MSG-ERROR-001", "globalException", ErrorCode.API_NOT_FOUND,
+                            "요청 경로를 찾을 수 없습니다: /" + path));
+        }
+        log.warn("[NOT-FOUND] path={}", path);
+        return ResponseEntity.notFound().build();
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<StandardResponse<Void>> handleUnknown(Exception ex) {
         log.error("[SYS-UNKNOWN]", ex);
@@ -59,5 +76,9 @@ public class GlobalExceptionHandler {
 
     private String formatFieldError(FieldError error) {
         return error.getField() + "=" + error.getDefaultMessage();
+    }
+
+    private boolean isFaviconPath(String path) {
+        return path != null && path.endsWith("favicon.ico");
     }
 }

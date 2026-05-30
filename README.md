@@ -72,5 +72,5 @@ curl -X POST http://localhost:8080/api/v1/messages \
 |---|---|
 | `/messages` | 메시지 등록 화면 |
 | `/api/v1/messages` | 메시지 목록 조회 / 등록 API |
-| `/api/v1/messages/{messageId}` | 메시지 상세 조회 API |
+| `/api/v1/messages/{messageId}` | 메시지 상세 조회 / 수정 / 삭제 API |
 | `/actuator/health` | Health Check |

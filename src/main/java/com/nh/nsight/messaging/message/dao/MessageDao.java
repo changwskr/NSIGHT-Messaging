@@ -35,4 +35,12 @@ public class MessageDao {
     public long countMessages(MessageSearchCondition condition) {
         return mapper.countMessages(condition);
     }
+
+    public int update(Message message) {
+        return mapper.updateMessage(message);
+    }
+
+    public int deleteById(Long messageId) {
+        return mapper.deleteById(messageId);
+    }
 }
