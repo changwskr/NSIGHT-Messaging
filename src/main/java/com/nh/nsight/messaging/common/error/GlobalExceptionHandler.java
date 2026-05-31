@@ -51,6 +51,13 @@ public class GlobalExceptionHandler {
                 .body(StandardResponse.fail("MSG-ERROR-001", "globalException", ErrorCode.DB_POOL_TIMEOUT, "DB resource unavailable"));
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<StandardResponse<Void>> handleIllegalArgument(IllegalArgumentException ex) {
+        log.warn("[VALIDATION-ERROR] {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(StandardResponse.fail("MSG-ERROR-001", "globalException", ErrorCode.VAL_INVALID_REQUEST, ex.getMessage()));
+    }
+
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<?> handleNoResource(NoResourceFoundException ex) {
         String path = ex.getResourcePath();

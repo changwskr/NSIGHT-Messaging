@@ -10,6 +10,8 @@ public final class MessageLogPathSupport {
             return true;
         }
         if (uri.startsWith("/home/login")
+                || uri.startsWith("/tracedump")
+                || uri.startsWith("/api/v1/trace-dump")
                 || uri.startsWith("/transactionmgr")
                 || uri.startsWith("/api/v1/transaction-logs")
                 || uri.startsWith("/api/v1/message-logs")

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>NSIGHT JVM 덤프 분석</title>
+    <link rel="stylesheet" href="/css/nsight.css"/>
+</head>
+<body>
+<header class="topbar">
+    <div>
+        <h1>NSIGHT Trace Dump Analyzer</h1>
+        <p>JVM Heap / Thread / GC / NMT / hs_err 증거 분석 (가이드 기반)</p>
+    </div>
+    <div class="topbar-right">
+        <nav class="nav-links">
+            <a href="/home">메인</a>
+            <a href="/messages">메시지 관리</a>
+            <a href="/files">파일 관리</a>
+            <a href="/transactionmgr">트랜잭션 관리</a>
+            <a href="/tracedump" class="active">덤프 분석</a>
+            <a href="/home/logout">로그아웃</a>
+        </nav>
+        <div class="badge">DUMP</div>
+    </div>
+</header>
+
+<div id="statusBar" class="status-bar hidden" role="status"></div>
+
+<main class="crud-layout">
+    <section class="card form-card">
+        <div class="card-title">
+            <h2>증거 수집·분석</h2>
+            <p>가이드 3.1 절차에 따라 수집한 Thread Dump, GC Log, hs_err, NMT, histo 등을 폴더 경로 또는 ZIP으로 분석합니다.</p>
+        </div>
+        <form id="analyzeForm" class="grid-form">
+            <label class="wide">
+                증거 폴더 경로 (서버 로컬)
+                <input type="text" id="evidencePath" name="evidencePath"
+                       th:value="${defaultEvidencePath}" placeholder="./data/trace-dump-evidence/sample"/>
+            </label>
+            <label class="wide">
+                또는 ZIP 업로드
+                <input type="file" id="evidenceZip" name="evidenceZip" accept=".zip"/>
+            </label>
+            <div class="actions wide">
+                <button type="submit">분석 실행</button>
+                <button type="button" class="secondary" id="loadSampleBtn">샘플 경로 적용</button>
+            </div>
+            <p class="tx-delete-hint wide">지원: thread*.tdump, *gc*.log, hs_err*, nmt*.txt, histo*.txt, dmesg/journal</p>
+        </form>
+    </section>
+
+    <section class="card">
+        <div class="card-title">
+            <h2>분석 요약</h2>
+            <p id="summaryBox">분석을 실행하면 OOM 분류·Finding·Markdown 리포트가 표시됩니다.</p>
+        </div>
+        <div id="findingList" class="tx-detail-box">
+            <p class="tx-detail-placeholder">Finding 없음</p>
+        </div>
+    </section>
+</main>
+
+<section class="card full">
+    <div class="card-title">
+        <h2>Markdown 리포트</h2>
+    </div>
+    <pre id="reportBox" class="result-box">리포트가 여기에 표시됩니다.</pre>
+</section>
+
+<script src="/js/tracedump.js"></script>
+</body>
+</html>

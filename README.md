@@ -15,7 +15,31 @@ NSIGHT 정보계 기준 **메시징 관리 서비스** 샘플 프로젝트입니
 - HikariCP + **MyBatis** (Mapper XML / DAO), Tomcat, Session, Transaction, Timeout 환경설정
 - H2 Local DB, 운영 전환용 profile 구조
 
-## 2. 실행 방법
+## 2. JVM 덤프 분석 (`tracedump`)
+
+NSIGHT JVM 덤프 분석 가이드 기반 규칙 엔진 + 리포트.
+
+```text
+/tracedump                          # 분석 화면
+POST /api/v1/trace-dump/analyze     # evidencePath 또는 evidenceZip
+./data/trace-dump-evidence/sample/  # 샘플 증거 (thread, gc, hs_err)
+```
+
+패키지: `com.nh.nsight.messaging.tracedump` (collector, parser, analyzer, report)
+
+## 3. JDBC 트랜잭션 샘플 (참고용)
+
+운영 코드는 Spring `@Transactional` + MyBatis를 사용합니다.  
+수동 `ThreadLocal` 트랜잭션 패턴 참고:
+
+```text
+src/main/java/com/nh/nsight/messaging/framework/transaction/txmanager/
+  TransactionManager.java      # 샘플 구현
+  DatabaseConnection.java      # 샘플 전용 H2 연결
+  TransactionManagerSample.java  # 사용 예시 main
+```
+
+## 4. 실행 방법
 
 ```bash
 cd nsight-message-mgmt-service
@@ -39,7 +63,7 @@ User: sa
 Password: 
 ```
 
-## 3. API 예시
+## 5. API 예시
 
 ```bash
 curl -X POST http://localhost:8080/api/v1/messages \
@@ -59,7 +83,7 @@ curl -X POST http://localhost:8080/api/v1/messages \
   }'
 ```
 
-## 4. 운영 전환 시 보완 사항
+## 6. 운영 전환 시 보완 사항
 
 - H2 DB를 Oracle/RDW 업무 DB로 전환
 - `/messages` 화면을 WebTopSuite 화면 표준으로 변환
@@ -68,7 +92,7 @@ curl -X POST http://localhost:8080/api/v1/messages \
 - 로그 수집, APM, 운영 대시보드 연계
 - Message 승인/배포/폐기 Life-cycle 추가
 
-## 5. 주요 URL
+## 7. 주요 URL
 
 | URL | 설명 |
 |---|---|
@@ -77,6 +101,8 @@ curl -X POST http://localhost:8080/api/v1/messages \
 | `/` | 로그인 여부에 따라 `/home` 또는 `/home/login`으로 이동 |
 | `/messages` | 메시지 등록 화면 |
 | `/files` | 파일 업·다운로드 관리 화면 |
+| `/tracedump` | JVM 덤프·로그 증거 분석 |
+| `/api/v1/trace-dump/analyze` | 덤프 분석 API |
 | `/transactionmgr` | 트랜잭션 전문(Header/Control/Security/Error) 이력 조회 |
 | `/api/v1/transaction-logs` | 트랜잭션 로그 API (페이지당 3건) |
 | `DELETE /api/v1/transaction-logs/{txLogId}` | 트랜잭션 1건 + 연관 전문 파일 삭제 |

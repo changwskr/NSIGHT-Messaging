@@ -106,6 +106,8 @@ nsight:
     enabled: true
     storage-path: ./data/nsight-messages
     max-body-bytes: 1048576
+  trace-dump:
+    evidence-path: ./data/trace-dump-evidence
 
 ---
 spring:
