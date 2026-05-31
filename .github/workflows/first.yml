@@ -1,20 +1,60 @@
-name: Our First Workflow
-on: push
+name: NSIGHT Messaging Maven Build
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - develop
+  pull_request:
+    branches:
+      - main
+      - master
+      - develop
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nsight-messaging-build-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  echo:
+  build:
+    name: Build on Ubuntu Latest
     runs-on: ubuntu-latest
+
     steps:
-      - run: echo 'hello, github actions'
-  pwd-ls:
-    name: PWD & LS
-    runs-on: ubuntu-latest
-    steps:
-      - name: Print working directory
-        run: pwd
-      - run: ls -al
-      - run: cd bin
-      - run: pwd
-      - run: ls -l
-      
-  
-  
+      - name: Git checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Check environment
+        run: |
+          echo "===== OS ====="
+          cat /etc/os-release
+          echo "===== Java ====="
+          java -version
+          echo "===== Maven ====="
+          mvn -version
+
+      - name: Build
+        run: mvn -B clean package
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nsight-messaging-build
+          path: |
+            target/*.jar
+            target/*.war
+          if-no-files-found: warn
