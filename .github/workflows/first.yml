@@ -1,6 +1,4 @@
-from pathlib import Path
-
-content = """name: NSIGHT Messaging Maven Build
+name: NSIGHT Messaging Maven Build
 
 on:
   push:
@@ -30,17 +28,17 @@ jobs:
     env:
       TZ: Asia/Seoul
 
-      # GitHub Actions Runner에서 Maven 실행 JVM Heap을 약 3GB로 제한
+      # Maven 자체 JVM 메모리
       MAVEN_OPTS: >-
-        -Xms512m
+        -Xms1g
         -Xmx3g
         -XX:MaxMetaspaceSize=512m
         -Dfile.encoding=UTF-8
         -Duser.timezone=Asia/Seoul
 
-      # Surefire/Failsafe 등 Maven 하위 Java 프로세스에도 동일 기준 적용
+      # Maven 내부에서 실행되는 Java 프로세스에도 적용
       JAVA_TOOL_OPTIONS: >-
-        -Xms512m
+        -Xms1g
         -Xmx3g
         -XX:MaxMetaspaceSize=512m
         -Dfile.encoding=UTF-8
@@ -63,29 +61,27 @@ jobs:
         run: |
           echo "===== OS ====="
           cat /etc/os-release
+
           echo "===== Java ====="
           java -version
+
           echo "===== Maven ====="
           mvn -version
-          echo "===== JVM Options ====="
+
+          echo "===== JVM Memory Options ====="
           echo "MAVEN_OPTS=$MAVEN_OPTS"
           echo "JAVA_TOOL_OPTIONS=$JAVA_TOOL_OPTIONS"
 
-      # 현재 실패 원인은 JVM 메모리 부족이 아니라 traceenvironment 테스트 실패입니다.
-      # 우선 GitHub Actions에서 빌드 산출물을 만들기 위해 테스트를 제외합니다.
-      - name: Build package without tests
-        run: mvn -B clean package -DskipTests
+      - name: Build with Maven
+        run: mvn -B clean package
 
       - name: Upload build artifact
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: nsight-messaging-build
           path: |
             target/*.jar
             target/*.war
-          if-no-files-found: error
-"""
-
-path = Path("/mnt/data/build.yml")
-path.write_text(content, encoding="utf-8")
-print(f"Created: {path}")
+            target/surefire-reports/**
+          if-no-files-found: warn
