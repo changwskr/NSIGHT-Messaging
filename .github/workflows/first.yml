@@ -25,8 +25,27 @@ jobs:
     name: Build on Ubuntu Latest
     runs-on: ubuntu-latest
 
+    env:
+      TZ: Asia/Seoul
+
+      # Maven 자체 JVM 메모리
+      MAVEN_OPTS: >-
+        -Xms1g
+        -Xmx3g
+        -XX:MaxMetaspaceSize=512m
+        -Dfile.encoding=UTF-8
+        -Duser.timezone=Asia/Seoul
+
+      # Maven 내부에서 실행되는 Java 프로세스에도 적용
+      JAVA_TOOL_OPTIONS: >-
+        -Xms1g
+        -Xmx3g
+        -XX:MaxMetaspaceSize=512m
+        -Dfile.encoding=UTF-8
+        -Duser.timezone=Asia/Seoul
+
     steps:
-      - name: Git checkout
+      - name: Checkout source
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -38,23 +57,31 @@ jobs:
           java-version: '17'
           cache: maven
 
-      - name: Check environment
+      - name: Check runner environment
         run: |
           echo "===== OS ====="
           cat /etc/os-release
+
           echo "===== Java ====="
           java -version
+
           echo "===== Maven ====="
           mvn -version
 
-      - name: Build
+          echo "===== JVM Memory Options ====="
+          echo "MAVEN_OPTS=$MAVEN_OPTS"
+          echo "JAVA_TOOL_OPTIONS=$JAVA_TOOL_OPTIONS"
+
+      - name: Build with Maven
         run: mvn -B clean package
 
-      - name: Upload artifact
+      - name: Upload build artifact
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: nsight-messaging-build
           path: |
             target/*.jar
             target/*.war
+            target/surefire-reports/**
           if-no-files-found: warn
