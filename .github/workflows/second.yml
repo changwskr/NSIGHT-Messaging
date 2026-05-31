@@ -74,7 +74,7 @@ jobs:
           ls -al target || true
           echo "===== jar/war files ====="
           ls -al target/*.jar target/*.war 2>/dev/null || true
-          echo "==================================   ###  ===="
+          pwd
 
 
           
