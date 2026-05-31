@@ -14,6 +14,8 @@ import java.util.regex.Pattern;
 public class GcLogParser {
 
     private static final Pattern PAUSE_MS = Pattern.compile("Pause.*?(\\d+\\.?\\d*)\\s*ms", Pattern.CASE_INSENSITIVE);
+    private static final Pattern OLD_REGIONS = Pattern.compile("Old regions:\\s*(\\d+)\\s*->\\s*(\\d+)", Pattern.CASE_INSENSITIVE);
+    private static final Pattern HEAP_SAME = Pattern.compile("(\\d+(?:\\.\\d+)?)([KMG])\\s*->\\s*\\1\\2", Pattern.CASE_INSENSITIVE);
 
     public List<GcLogSnapshot> parse(List<EvidenceFile> files) {
         return files.stream()
@@ -41,11 +43,27 @@ public class GcLogParser {
             } catch (NumberFormatException ignored) {
             }
         }
-        int fullGc = count(lower, "full gc");
+        int fullGc = count(lower, "full gc") + count(lower, "pause full");
         int humongous = count(lower, "humongous");
         int evacFail = count(lower, "to-space exhausted") + count(lower, "evacuation failure");
         int mixed = count(lower, "mixed gc");
-        return new GcLogSnapshot(file.fileName(), pauseCount, maxPause, fullGc, humongous, evacFail, mixed);
+        int oldUnchanged = 0;
+        Matcher oldMatcher = OLD_REGIONS.matcher(content);
+        while (oldMatcher.find()) {
+            if (oldMatcher.group(1).equals(oldMatcher.group(2))) {
+                oldUnchanged++;
+            }
+        }
+        int heapUnchanged = 0;
+        Matcher heapMatcher = HEAP_SAME.matcher(content);
+        while (heapMatcher.find()) {
+            heapUnchanged++;
+        }
+        int softRef = count(lower, "clearing soft references");
+        return new GcLogSnapshot(
+                file.fileName(), pauseCount, maxPause, fullGc, humongous, evacFail, mixed,
+                oldUnchanged, heapUnchanged, softRef
+        );
     }
 
     private int count(String text, String token) {

@@ -13,13 +13,7 @@
         <p>메시징 · 파일 · 트랜잭션 통합 관리 포털</p>
     </div>
     <div class="topbar-right">
-        <nav class="nav-links">
-            <a href="/home" class="active">메인</a>
-            <a href="/messages">메시지 관리</a>
-            <a href="/files">파일 관리</a>
-            <a href="/transactionmgr">트랜잭션 관리</a>
-            <a href="/home/logout">로그아웃</a>
-        </nav>
+        <nav th:replace="~{fragments/main-nav :: mainNav('home')}"></nav>
         <div class="badge" th:text="${loginUserId} ?: 'HOME'">HOME</div>
     </div>
 </header>
@@ -74,19 +68,29 @@
             </ul>
             <span class="service-card__action">화면 열기 →</span>
         </a>
-    </div>
 
-    <section class="home-info card">
-        <h3>운영·연계 정보</h3>
-        <dl class="home-info-dl">
-            <dt>입·출력 전문 파일</dt>
-            <dd><code>./data/nsight-messages/{yyyyMMdd}/{GUID}/*-REQ.json</code> · <code>*-RES.json</code></dd>
-            <dt>첨부 파일 저장</dt>
-            <dd><code>./data/nsight-files/yyyy/MM/dd/{uuid}.{ext}</code></dd>
-            <dt>Health Check</dt>
-            <dd><a href="/actuator/health" target="_blank" rel="noopener">/actuator/health</a></dd>
-        </dl>
-    </section>
+        <a href="/oominspector" class="service-card service-card--oom">
+            <span class="service-card__badge">OOM</span>
+            <h3>OOM 유발 점검</h3>
+            <p>소스·Mapper·설정 정적 분석. 세션·SQL·캐시·파일 패턴 Rule 검사 및 CI Gate.</p>
+            <ul class="service-card__meta">
+                <li><code>/oominspector</code></li>
+                <li><code>/api/oom-inspector</code></li>
+            </ul>
+            <span class="service-card__action">화면 열기 →</span>
+        </a>
+
+        <a href="/operations" class="service-card service-card--ops">
+            <span class="service-card__badge">OPS</span>
+            <h3>운영·연계 정보</h3>
+            <p>저장 경로·외부 연계·Actuator Health Check 버튼 실행 및 결과 확인.</p>
+            <ul class="service-card__meta">
+                <li><code>/operations</code></li>
+                <li><code>/actuator/health</code></li>
+            </ul>
+            <span class="service-card__action">화면 열기 →</span>
+        </a>
+    </div>
 </main>
 </body>
 </html>

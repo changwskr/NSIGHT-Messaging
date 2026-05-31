@@ -34,6 +34,7 @@ public class ThreadDumpParser {
         int hikari = 0;
         int jdbc = 0;
         int http = 0;
+        int cruzApim = 0;
         boolean deadlock = content.contains("Found one Java-level deadlock")
                 || content.contains("Found 1 deadlock");
 
@@ -69,6 +70,9 @@ public class ThreadDumpParser {
                     || lowerBlock.contains("webclient")) {
                 http++;
             }
+            if (lowerBlock.contains("cruzapim") || lowerBlock.contains("cruz api")) {
+                cruzApim++;
+            }
         }
 
         return new ThreadDumpSnapshot(
@@ -82,7 +86,8 @@ public class ThreadDumpParser {
                 deadlock,
                 hikari,
                 jdbc,
-                http
+                http,
+                cruzApim
         );
     }
 }

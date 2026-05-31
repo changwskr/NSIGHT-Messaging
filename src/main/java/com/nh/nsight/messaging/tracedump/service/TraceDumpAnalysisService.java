@@ -1,6 +1,10 @@
 package com.nh.nsight.messaging.tracedump.service;
 
+import com.nh.nsight.messaging.tracedump.analyzer.DumpIndicatorsBuilder;
+import com.nh.nsight.messaging.tracedump.analyzer.OomCorrelationAnalyzer;
 import com.nh.nsight.messaging.tracedump.analyzer.TraceDumpRuleEngine;
+import com.nh.nsight.messaging.tracedump.model.DumpAnalysisIndicators;
+import com.nh.nsight.messaging.tracedump.model.OomCorrelation;
 import com.nh.nsight.messaging.tracedump.collector.EvidenceLoader;
 import com.nh.nsight.messaging.tracedump.model.AnalysisFinding;
 import com.nh.nsight.messaging.tracedump.model.ClassHistogramSnapshot;
@@ -16,12 +20,14 @@ import com.nh.nsight.messaging.tracedump.parser.HsErrParser;
 import com.nh.nsight.messaging.tracedump.parser.NmtParser;
 import com.nh.nsight.messaging.tracedump.parser.ThreadDumpParser;
 import com.nh.nsight.messaging.tracedump.report.TraceDumpReportBuilder;
+import com.nh.nsight.messaging.tracedump.report.TraceDumpReportViewBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
@@ -41,6 +47,9 @@ public class TraceDumpAnalysisService {
     private final ClassHistogramParser classHistogramParser;
     private final TraceDumpRuleEngine ruleEngine;
     private final TraceDumpReportBuilder reportBuilder;
+    private final TraceDumpReportViewBuilder reportViewBuilder;
+    private final OomCorrelationAnalyzer oomCorrelationAnalyzer;
+    private final DumpIndicatorsBuilder dumpIndicatorsBuilder;
 
     public TraceDumpAnalysisService(
             EvidenceLoader evidenceLoader,
@@ -50,7 +59,10 @@ public class TraceDumpAnalysisService {
             NmtParser nmtParser,
             ClassHistogramParser classHistogramParser,
             TraceDumpRuleEngine ruleEngine,
-            TraceDumpReportBuilder reportBuilder
+            TraceDumpReportBuilder reportBuilder,
+            TraceDumpReportViewBuilder reportViewBuilder,
+            OomCorrelationAnalyzer oomCorrelationAnalyzer,
+            DumpIndicatorsBuilder dumpIndicatorsBuilder
     ) {
         this.evidenceLoader = evidenceLoader;
         this.threadDumpParser = threadDumpParser;
@@ -60,6 +72,9 @@ public class TraceDumpAnalysisService {
         this.classHistogramParser = classHistogramParser;
         this.ruleEngine = ruleEngine;
         this.reportBuilder = reportBuilder;
+        this.reportViewBuilder = reportViewBuilder;
+        this.oomCorrelationAnalyzer = oomCorrelationAnalyzer;
+        this.dumpIndicatorsBuilder = dumpIndicatorsBuilder;
     }
 
     public TraceDumpAnalysisReport analyzeDirectory(Path directory) throws IOException {
@@ -82,12 +97,52 @@ public class TraceDumpAnalysisService {
         List<ClassHistogramSnapshot> histograms = classHistogramParser.parse(files);
 
         String oomCategory = hsErrParser.resolveOomCategory(files).orElse("UNKNOWN");
-
-        List<AnalysisFinding> findings = ruleEngine.evaluate(
-                files, threads, gcLogs, hsErrs, nmts, histograms, oomCategory
+        DumpAnalysisIndicators indicators = dumpIndicatorsBuilder.build(
+                oomCategory, files, threads, gcLogs, nmts
         );
 
-        return reportBuilder.build(evidencePath, oomCategory, findings, threads, gcLogs, files.size());
+        List<OomCorrelation> oomCorrelations = oomCorrelationAnalyzer.analyze(
+                oomCategory, files, threads, gcLogs, hsErrs, histograms
+        );
+
+        List<AnalysisFinding> findings = new java.util.ArrayList<>(ruleEngine.evaluate(
+                files, threads, gcLogs, hsErrs, nmts, histograms, oomCategory, indicators
+        ));
+        findings.addAll(correlationFindings(oomCorrelations));
+
+        LocalDateTime analyzedAt = LocalDateTime.now();
+        var reportView = reportViewBuilder.build(
+                analyzedAt,
+                evidencePath,
+                oomCategory,
+                files,
+                findings,
+                threads,
+                gcLogs,
+                hsErrs,
+                nmts,
+                histograms,
+                oomCorrelations,
+                indicators
+        );
+
+        return reportBuilder.build(
+                analyzedAt, evidencePath, oomCategory, findings, threads, gcLogs, files.size(), reportView
+        );
+    }
+
+    private List<AnalysisFinding> correlationFindings(List<OomCorrelation> correlations) {
+        return correlations.stream()
+                .map(c -> new AnalysisFinding(
+                        c.id(),
+                        "OOM-연계",
+                        c.problemArea() + " → " + c.relatedProgram(),
+                        c.probableCause(),
+                        c.severity(),
+                        "1.2",
+                        c.logEvidence() + " @ " + c.evidenceFile()
+                ))
+                .toList();
     }
 
     private void unzip(MultipartFile zipFile, Path targetDir) throws IOException {

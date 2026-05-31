@@ -1,5 +1,5 @@
 package com.nh.nsight.messaging.tracedump.model;
 
 public enum Severity {
-    HIGH, MEDIUM, LOW, INFO
+    CRITICAL, HIGH, MEDIUM, LOW, INFO
 }

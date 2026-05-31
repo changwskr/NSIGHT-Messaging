@@ -13,7 +13,8 @@ public record TraceDumpAnalysisResponse(
         String oomCategory,
         Map<String, Object> summary,
         List<AnalysisFinding> findings,
-        String markdownReport
+        String markdownReport,
+        TraceDumpReportView reportView
 ) {
     public static TraceDumpAnalysisResponse from(TraceDumpAnalysisReport report) {
         return new TraceDumpAnalysisResponse(
@@ -22,7 +23,8 @@ public record TraceDumpAnalysisResponse(
                 report.oomCategory(),
                 report.summary(),
                 report.findings(),
-                report.markdownReport()
+                report.markdownReport(),
+                report.reportView()
         );
     }
 }

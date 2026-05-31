@@ -7,7 +7,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @EnableAsync
 @EnableTransactionManagement
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {
+        "com.nh.nsight.messaging",
+        "com.traceoompgm"
+})
 public class NsightMessageMgmtApplication {
 
     public static void main(String[] args) {

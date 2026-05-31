@@ -108,6 +108,12 @@ nsight:
     max-body-bytes: 1048576
   trace-dump:
     evidence-path: ./data/trace-dump-evidence
+  oom-inspector:
+    default-source-root: ./src/main/java
+    default-mapper-root: ./src/main/resources/mapper
+    default-config-path: ./src/main/resources/application.yml
+    profile-name: nsight-8core-32gb
+    fail-on-critical: true
 
 ---
 spring:

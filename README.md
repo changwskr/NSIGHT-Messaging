@@ -17,15 +17,27 @@ NSIGHT 정보계 기준 **메시징 관리 서비스** 샘플 프로젝트입니
 
 ## 2. JVM 덤프 분석 (`tracedump`)
 
-NSIGHT JVM 덤프 분석 가이드 기반 규칙 엔진 + 리포트.
+**읽기 → 증거 → 판정 → 조치** 4단계 보고서 + 개발 명세(`docs/trace-dump-analysis-spec.md`) 연동.
 
 ```text
-/tracedump                          # 분석 화면
+/tracedump                          # 분석 화면 (4단계 보고서)
 POST /api/v1/trace-dump/analyze     # evidencePath 또는 evidenceZip
-./data/trace-dump-evidence/sample/  # 샘플 증거 (thread, gc, hs_err)
+./data/trace-dump-evidence/sample/  # 샘플 증거
 ```
 
-패키지: `com.nh.nsight.messaging.tracedump` (collector, parser, analyzer, report)
+패키지: `tracedump` — collector → parser → analyzer(Rule THR/GC/HEAP) → report
+
+## 2-1. OOM 유발 점검 (`traceoompgm`)
+
+설계서 기반 **OOM Risk Inspector** — 소스·Mapper·설정 정적 Rule 스캔.
+
+```text
+/oominspector
+POST /api/oom-inspector/scans
+POST /api/oom-inspector/gate?failOn=CRITICAL
+```
+
+패키지: `com.traceoompgm` · 명세: `docs/oom-inspector-spec.md`
 
 ## 3. JDBC 트랜잭션 샘플 (참고용)
 

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>NSIGHT OOM Risk Inspector</title>
+    <link rel="stylesheet" href="/css/nsight.css"/>
+</head>
+<body>
+<header class="topbar">
+    <div>
+        <h1>NSIGHT OOM Risk Inspector</h1>
+        <p>읽기(소스·설정·Mapper) → 증거(패턴) → 판정(Rule) → 조치(권고)</p>
+    </div>
+    <div class="topbar-right">
+        <nav th:replace="~{fragments/main-nav :: mainNav('oominspector')}"></nav>
+        <div class="badge">OOM</div>
+    </div>
+</header>
+
+<div id="statusBar" class="status-bar hidden" role="status"></div>
+
+<main class="crud-layout">
+    <section class="card form-card">
+        <div class="card-title">
+            <h2>정적 분석 스캔</h2>
+            <p>Java · application.yml · MyBatis Mapper에서 OOM 유발 패턴을 검사합니다. (설계서 MVP)</p>
+        </div>
+        <form id="scanForm" class="grid-form">
+            <label>
+                프로젝트명
+                <input type="text" id="projectName" value="nsight-message-mgmt-service"/>
+            </label>
+            <label>
+                프로파일
+                <input type="text" id="profileName" th:value="${profileName}" readonly/>
+            </label>
+            <label class="wide">
+                Java 소스 루트
+                <input type="text" id="sourceRoot" th:value="${defaultSourceRoot}"/>
+            </label>
+            <label class="wide">
+                Mapper XML 루트
+                <input type="text" id="mapperRoot" th:value="${defaultMapperRoot}"/>
+            </label>
+            <label class="wide">
+                설정 파일 (application.yml)
+                <input type="text" id="configPath" th:value="${defaultConfigPath}"/>
+            </label>
+            <div class="actions wide">
+                <button type="submit">스캔 실행</button>
+                <button type="button" class="secondary" id="quickScanBtn">현재 프로젝트 빠른 스캔</button>
+                <button type="button" class="secondary" id="gateBtn">CI Gate (CRITICAL)</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="card">
+        <div class="card-title">
+            <h2>스캔 요약</h2>
+            <p id="summaryBox">스캔 후 Gate·심각도별 건수가 표시됩니다.</p>
+        </div>
+    </section>
+</main>
+
+<section id="reportPanel" class="dump-report-wrap hidden">
+    <article class="dump-report card full">
+        <header class="dump-report__header">
+            <div>
+                <p class="dump-report__label">OOM RISK</p>
+                <h2>점검 결과 보고서</h2>
+                <p id="reportMeta" class="dump-report__meta"></p>
+            </div>
+            <span id="gateBadge" class="dump-report__oom-badge ok">GATE</span>
+        </header>
+
+        <section class="dump-report__section dump-report__flow">
+            <h3>분석 4단계 요약</h3>
+            <div id="fourStepBox" class="dump-four-step"></div>
+        </section>
+
+        <section class="dump-report__section">
+            <h3>Finding 목록 (Rule ID · 조치)</h3>
+            <div class="table-wrap">
+                <table class="dump-report__table dump-report__table--findings" id="findingTable">
+                    <colgroup>
+                        <col class="col-rule"/>
+                        <col class="col-sev"/>
+                        <col class="col-cat"/>
+                        <col class="col-title"/>
+                        <col class="col-file"/>
+                        <col class="col-action"/>
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>Rule</th>
+                        <th>심각도</th>
+                        <th>분류</th>
+                        <th>제목 / 설명</th>
+                        <th>파일</th>
+                        <th>조치 권고</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="card full dump-report-markdown">
+            <details open>
+                <summary>Markdown 리포트</summary>
+                <pre id="reportMarkdown" class="result-box"></pre>
+            </details>
+        </section>
+    </article>
+</section>
+
+<div id="filePreviewModal" class="modal hidden" aria-hidden="true">
+    <div class="modal-backdrop" data-close="true"></div>
+    <div class="modal-panel modal-panel--file" role="dialog" aria-labelledby="filePreviewTitle">
+        <div class="file-preview-header">
+            <h3 id="filePreviewTitle">파일 미리보기</h3>
+            <p id="filePreviewMeta" class="file-preview-meta"></p>
+        </div>
+        <div id="filePreviewLoading" class="file-preview-loading hidden">불러오는 중…</div>
+        <div id="filePreviewError" class="file-preview-error hidden"></div>
+        <div id="filePreviewBody" class="file-preview-body hidden"></div>
+        <div class="modal-actions">
+            <button type="button" class="secondary" data-close="true">닫기</button>
+        </div>
+    </div>
+</div>
+
+<script src="/js/oominspector.js"></script>
+</body>
+</html>

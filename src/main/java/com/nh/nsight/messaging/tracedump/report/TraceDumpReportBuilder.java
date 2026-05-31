@@ -5,7 +5,9 @@ import com.nh.nsight.messaging.tracedump.model.ClassHistogramSnapshot;
 import com.nh.nsight.messaging.tracedump.model.GcLogSnapshot;
 import com.nh.nsight.messaging.tracedump.model.Severity;
 import com.nh.nsight.messaging.tracedump.model.ThreadDumpSnapshot;
+import com.nh.nsight.messaging.tracedump.dto.TraceDumpReportView;
 import com.nh.nsight.messaging.tracedump.model.TraceDumpAnalysisReport;
+import com.nh.nsight.messaging.tracedump.dto.TraceDumpReportView.OomCorrelationRow;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -18,12 +20,14 @@ import java.util.Map;
 public class TraceDumpReportBuilder {
 
     public TraceDumpAnalysisReport build(
+            LocalDateTime analyzedAt,
             String evidencePath,
             String oomCategory,
             List<AnalysisFinding> findings,
             List<ThreadDumpSnapshot> threads,
             List<GcLogSnapshot> gcLogs,
-            int evidenceFileCount
+            int evidenceFileCount,
+            TraceDumpReportView reportView
     ) {
         Map<String, Object> summary = new HashMap<>();
         summary.put("evidenceFileCount", evidenceFileCount);
@@ -31,18 +35,20 @@ public class TraceDumpReportBuilder {
         summary.put("gcLogCount", gcLogs.size());
         summary.put("findingCount", findings.size());
         summary.put("highSeverityCount", findings.stream().filter(f -> f.severity() == Severity.HIGH).count());
+        summary.put("criticalSeverityCount", findings.stream().filter(f -> f.severity() == Severity.CRITICAL).count());
 
-        String markdown = buildMarkdown(evidencePath, oomCategory, findings, threads, gcLogs, summary);
+        String markdown = buildMarkdown(evidencePath, oomCategory, findings, threads, gcLogs, summary, reportView);
 
         return new TraceDumpAnalysisReport(
-                LocalDateTime.now(),
+                analyzedAt,
                 evidencePath,
                 oomCategory == null ? "UNKNOWN" : oomCategory,
                 summary,
                 findings.stream()
                         .sorted(Comparator.comparingInt(f -> severityOrder(f.severity())))
                         .toList(),
-                markdown
+                markdown,
+                reportView
         );
     }
 
@@ -52,7 +58,8 @@ public class TraceDumpReportBuilder {
             List<AnalysisFinding> findings,
             List<ThreadDumpSnapshot> threads,
             List<GcLogSnapshot> gcLogs,
-            Map<String, Object> summary
+            Map<String, Object> summary,
+            TraceDumpReportView reportView
     ) {
         StringBuilder sb = new StringBuilder();
         sb.append("# NSIGHT JVM 덤프 분석 리포트\n\n");
@@ -87,6 +94,17 @@ public class TraceDumpReportBuilder {
             sb.append("\n");
         }
 
+        if (reportView != null && reportView.oomCorrelations() != null && !reportView.oomCorrelations().isEmpty()) {
+            sb.append("## OOM 로그 연계 (문제 영역 → 프로그램 → 원인)\n\n");
+            for (OomCorrelationRow row : reportView.oomCorrelations()) {
+                sb.append("### ").append(row.problemArea()).append("\n");
+                sb.append("- 로그: ").append(row.logEvidence()).append("\n");
+                sb.append("- 연관 프로그램: ").append(row.relatedProgram()).append("\n");
+                sb.append("- 추정 원인: ").append(row.probableCause()).append("\n");
+                sb.append("- 증거: `").append(row.evidenceFile()).append("`\n\n");
+            }
+        }
+
         sb.append("## 원인 추적 후보 (Finding)\n\n");
         for (AnalysisFinding f : findings) {
             sb.append("### [").append(f.severity()).append("] ").append(f.title()).append("\n");
@@ -108,10 +126,11 @@ public class TraceDumpReportBuilder {
 
     private static int severityOrder(Severity severity) {
         return switch (severity) {
-            case HIGH -> 0;
-            case MEDIUM -> 1;
-            case LOW -> 2;
-            case INFO -> 3;
+            case CRITICAL -> 0;
+            case HIGH -> 1;
+            case MEDIUM -> 2;
+            case LOW -> 3;
+            case INFO -> 4;
         };
     }
 }

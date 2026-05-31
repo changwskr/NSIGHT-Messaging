@@ -7,5 +7,7 @@ public enum EvidenceType {
     NMT,
     CLASS_HISTOGRAM,
     OS_LOG,
+    HEAP_DUMP,
+    HEAP_CONSOLE,
     UNKNOWN
 }

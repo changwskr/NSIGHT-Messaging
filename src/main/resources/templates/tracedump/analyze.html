@@ -10,17 +10,10 @@
 <header class="topbar">
     <div>
         <h1>NSIGHT Trace Dump Analyzer</h1>
-        <p>JVM Heap / Thread / GC / NMT / hs_err 증거 분석 (가이드 기반)</p>
+        <p>읽기 → 증거 → 판정 → 조치 (프로그램 개발 명세 · 가이드 연동)</p>
     </div>
     <div class="topbar-right">
-        <nav class="nav-links">
-            <a href="/home">메인</a>
-            <a href="/messages">메시지 관리</a>
-            <a href="/files">파일 관리</a>
-            <a href="/transactionmgr">트랜잭션 관리</a>
-            <a href="/tracedump" class="active">덤프 분석</a>
-            <a href="/home/logout">로그아웃</a>
-        </nav>
+        <nav th:replace="~{fragments/main-nav :: mainNav('tracedump')}"></nav>
         <div class="badge">DUMP</div>
     </div>
 </header>
@@ -31,7 +24,7 @@
     <section class="card form-card">
         <div class="card-title">
             <h2>증거 수집·분석</h2>
-            <p>가이드 3.1 절차에 따라 수집한 Thread Dump, GC Log, hs_err, NMT, histo 등을 폴더 경로 또는 ZIP으로 분석합니다.</p>
+            <p>Heap Dump(hprof), Thread Dump, GC Log, NMT, Histogram, Heap Console을 ZIP 또는 폴더로 제출합니다.</p>
         </div>
         <form id="analyzeForm" class="grid-form">
             <label class="wide">
@@ -47,14 +40,14 @@
                 <button type="submit">분석 실행</button>
                 <button type="button" class="secondary" id="loadSampleBtn">샘플 경로 적용</button>
             </div>
-            <p class="tx-delete-hint wide">지원: thread*.tdump, *gc*.log, hs_err*, nmt*.txt, histo*.txt, dmesg/journal</p>
+            <p class="tx-delete-hint wide">개발 명세: docs/trace-dump-analysis-spec.md</p>
         </form>
     </section>
 
     <section class="card">
         <div class="card-title">
             <h2>분석 요약</h2>
-            <p id="summaryBox">분석을 실행하면 OOM 분류·Finding·Markdown 리포트가 표시됩니다.</p>
+            <p id="summaryBox">분석을 실행하면 4단계 보고서가 표시됩니다.</p>
         </div>
         <div id="findingList" class="tx-detail-box">
             <p class="tx-detail-placeholder">Finding 없음</p>
@@ -62,11 +55,173 @@
     </section>
 </main>
 
-<section class="card full">
-    <div class="card-title">
-        <h2>Markdown 리포트</h2>
-    </div>
-    <pre id="reportBox" class="result-box">리포트가 여기에 표시됩니다.</pre>
+<section id="reportPanel" class="dump-report-wrap hidden">
+    <article class="dump-report card full">
+        <header class="dump-report__header">
+            <div>
+                <p class="dump-report__label">NSIGHT</p>
+                <h2>JVM Dump 분석 보고서</h2>
+                <p id="reportMeta" class="dump-report__meta"></p>
+            </div>
+            <div class="dump-report__actions">
+                <span id="reportOomBadge" class="dump-report__oom-badge">OOM</span>
+                <button type="button" class="secondary" id="printReportBtn">인쇄</button>
+            </div>
+        </header>
+
+        <section class="dump-report__section dump-report__flow">
+            <h3>분석 따라가기 (4단계)</h3>
+            <div id="fourStepGuide" class="dump-four-step"></div>
+            <details class="dump-pipeline-details">
+                <summary>프로그램 파이프라인 (7단계)</summary>
+                <ol id="pipelineList" class="dump-pipeline-list"></ol>
+            </details>
+        </section>
+
+        <section class="dump-report__section">
+            <h3>핵심 지표</h3>
+            <table class="dump-report__table dump-report__table--kv" id="indicatorsTable"></table>
+        </section>
+
+        <section class="dump-report__section">
+            <h3>1. 장애 개요</h3>
+            <table class="dump-report__table dump-report__table--kv" id="overviewTable"></table>
+        </section>
+
+        <section class="dump-report__section">
+            <h3>2. 수집 증거 (무엇을 읽었는가)</h3>
+            <div class="table-wrap">
+                <table class="dump-report__table dump-report__table--data dump-report__table--evidence" id="evidenceTable">
+                    <colgroup>
+                        <col class="col-ev-type"/>
+                        <col class="col-ev-file"/>
+                        <col class="col-ev-time"/>
+                        <col class="col-ev-note"/>
+                    </colgroup>
+                    <thead>
+                    <tr><th>증거</th><th>파일명</th><th>수집시각</th><th>비고</th></tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="dump-report__section">
+            <h3>증거 상세 — GC Log</h3>
+            <table class="dump-report__table dump-report__table--kv" id="gcTable"></table>
+            <p id="gcPatterns" class="dump-report__section-desc"></p>
+        </section>
+
+        <section class="dump-report__section">
+            <h3>증거 상세 — Heap</h3>
+            <table class="dump-report__table dump-report__table--kv" id="heapTable"></table>
+            <ul id="heapFileList" class="dump-report__file-list"></ul>
+        </section>
+
+        <section class="dump-report__section">
+            <h3>증거 상세 — Thread</h3>
+            <table class="dump-report__table dump-report__table--kv" id="threadSummaryTable"></table>
+            <div class="table-wrap">
+                <table class="dump-report__table dump-report__table--data dump-report__table--thread" id="threadDetailTable">
+                    <colgroup>
+                        <col class="col-th-file"/>
+                        <col class="col-th-num"/>
+                        <col class="col-th-num"/>
+                        <col class="col-th-num"/>
+                        <col class="col-th-num"/>
+                        <col class="col-th-num"/>
+                        <col class="col-th-num"/>
+                        <col class="col-th-num"/>
+                        <col class="col-th-num"/>
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>파일</th><th>전체</th><th>RUN</th><th>WAIT</th><th>BLK</th>
+                        <th>DL</th><th>Hikari</th><th>JDBC</th><th>CruzAPIM</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="dump-report__section dump-report__section--oom">
+            <h3>③ 판정 — OOM 로그·프로그램 연계</h3>
+            <p class="dump-report__section-desc">문제 영역 → 로그 근거 → 연관 모듈 → 추정 원인</p>
+            <div class="table-wrap">
+                <table class="dump-report__table dump-report__table--data dump-report__table--oom" id="oomCorrelationTable">
+                    <colgroup>
+                        <col class="col-area"/>
+                        <col class="col-log"/>
+                        <col class="col-program"/>
+                        <col class="col-cause"/>
+                        <col class="col-evidence"/>
+                        <col class="col-sev"/>
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>문제 영역</th><th>로그 근거</th><th>연관 프로그램</th>
+                        <th>추정 원인</th><th>증거 파일</th><th>심각도</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="dump-report__section">
+            <h3>③ 판정 — 원인 가설 (우선순위)</h3>
+            <div class="table-wrap">
+                <table class="dump-report__table dump-report__table--data" id="hypothesisTable">
+                    <colgroup>
+                        <col class="col-hyp-pri"/>
+                        <col class="col-hyp-name"/>
+                        <col class="col-hyp-sev"/>
+                        <col class="col-hyp-conf"/>
+                        <col class="col-hyp-ev"/>
+                        <col class="col-hyp-rule"/>
+                        <col class="col-hyp-act"/>
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>순위</th><th>가설</th><th>심각도</th><th>신뢰도</th>
+                        <th>근거</th><th>Rule ID</th><th>권고 조치</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="dump-report__section">
+            <h3>3. 1차 판단</h3>
+            <table class="dump-report__table dump-report__table--kv" id="judgmentTable"></table>
+        </section>
+
+        <section class="dump-report__section">
+            <h3>6. 원인 결론 (유형별)</h3>
+            <table class="dump-report__table dump-report__table--conclusion" id="conclusionTable">
+                <tbody></tbody>
+            </table>
+        </section>
+
+        <section class="dump-report__section">
+            <h3>④ 조치 및 재발 방지</h3>
+            <table class="dump-report__table dump-report__table--kv" id="actionTable"></table>
+        </section>
+
+        <section class="dump-report__section">
+            <h3>부록 — 자동 분석 Finding (Rule ID · 가이드 §)</h3>
+            <div id="reportFindingList" class="tx-detail-box"></div>
+        </section>
+    </article>
+</section>
+
+<section class="card full dump-report-markdown">
+    <details>
+        <summary>Markdown 원문 보기</summary>
+        <pre id="reportBox" class="result-box">리포트가 여기에 표시됩니다.</pre>
+    </details>
 </section>
 
 <script src="/js/tracedump.js"></script>

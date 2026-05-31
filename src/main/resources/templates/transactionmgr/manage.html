@@ -13,14 +13,7 @@
         <p>표준 전문 Header / Control / Security / Error 이력 조회</p>
     </div>
     <div class="topbar-right">
-        <nav class="nav-links">
-            <a href="/home">메인</a>
-            <a href="/messages">메시지 관리</a>
-            <a href="/files">파일 관리</a>
-            <a href="/transactionmgr" class="active">트랜잭션 관리</a>
-            <a href="/tracedump">덤프 분석</a>
-            <a href="/home/logout">로그아웃</a>
-        </nav>
+        <nav th:replace="~{fragments/main-nav :: mainNav('transactionmgr')}"></nav>
         <div class="badge">TX-MGR</div>
     </div>
 </header>

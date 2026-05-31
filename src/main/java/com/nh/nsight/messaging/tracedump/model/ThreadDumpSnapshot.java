@@ -13,6 +13,7 @@ public record ThreadDumpSnapshot(
         boolean deadlockDetected,
         int hikariWaitCount,
         int jdbcWaitCount,
-        int httpClientWaitCount
+        int httpClientWaitCount,
+        int cruzApimWaitCount
 ) {
 }

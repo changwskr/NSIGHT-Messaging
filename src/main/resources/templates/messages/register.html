@@ -13,14 +13,7 @@
         <p>메시지 등록 · 조회 · 수정 · 삭제</p>
     </div>
     <div class="topbar-right">
-        <nav class="nav-links">
-            <a href="/home">메인</a>
-            <a href="/messages" class="active">메시지 관리</a>
-            <a href="/files">파일 관리</a>
-            <a href="/transactionmgr">트랜잭션 관리</a>
-            <a href="/tracedump">덤프 분석</a>
-            <a href="/home/logout">로그아웃</a>
-        </nav>
+        <nav th:replace="~{fragments/main-nav :: mainNav('messages')}"></nav>
         <div class="badge">MSG-CRUD</div>
     </div>
 </header>

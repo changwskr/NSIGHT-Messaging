@@ -7,6 +7,9 @@ public record GcLogSnapshot(
         int fullGcCount,
         int humongousMentionCount,
         int evacuationFailureCount,
-        int mixedGcCount
+        int mixedGcCount,
+        int oldRegionUnchangedCount,
+        int heapUnchangedAfterFullGcCount,
+        int softReferenceCompactionCount
 ) {
 }

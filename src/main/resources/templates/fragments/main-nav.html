@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<body>
+<nav class="nav-links" th:fragment="mainNav(active)">
+    <a href="/home" th:classappend="${active == 'home'} ? ' active' : ''">메인</a>
+    <a href="/messages" th:classappend="${active == 'messages'} ? ' active' : ''">메시지</a>
+    <a href="/files" th:classappend="${active == 'files'} ? ' active' : ''">파일</a>
+    <a href="/transactionmgr" th:classappend="${active == 'transactionmgr'} ? ' active' : ''">트랜잭션</a>
+    <a href="/tracedump" th:classappend="${active == 'tracedump'} ? ' active' : ''">덤프 분석</a>
+    <a href="/oominspector" th:classappend="${active == 'oominspector'} ? ' active' : ''">OOM 점검</a>
+    <a href="/operations" th:classappend="${active == 'operations'} ? ' active' : ''">운영</a>
+    <a href="/home/logout" class="nav-logout">로그아웃</a>
+</nav>
+</body>
+</html>

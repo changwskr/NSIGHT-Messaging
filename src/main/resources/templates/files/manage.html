@@ -13,14 +13,7 @@
         <p>파일 업로드 · 다운로드 · 목록 · 삭제 관리</p>
     </div>
     <div class="topbar-right">
-        <nav class="nav-links">
-            <a href="/home">메인</a>
-            <a href="/messages">메시지 관리</a>
-            <a href="/files" class="active">파일 관리</a>
-            <a href="/transactionmgr">트랜잭션 관리</a>
-            <a href="/tracedump">덤프 분석</a>
-            <a href="/home/logout">로그아웃</a>
-        </nav>
+        <nav th:replace="~{fragments/main-nav :: mainNav('files')}"></nav>
         <div class="badge">FILE-MGMT</div>
     </div>
 </header>
