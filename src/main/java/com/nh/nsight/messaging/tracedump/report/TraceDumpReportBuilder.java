@@ -1,7 +1,6 @@
 package com.nh.nsight.messaging.tracedump.report;
 
 import com.nh.nsight.messaging.tracedump.model.AnalysisFinding;
-import com.nh.nsight.messaging.tracedump.model.ClassHistogramSnapshot;
 import com.nh.nsight.messaging.tracedump.model.GcLogSnapshot;
 import com.nh.nsight.messaging.tracedump.model.Severity;
 import com.nh.nsight.messaging.tracedump.model.ThreadDumpSnapshot;

@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -30,7 +29,6 @@ public class MapperXmlRiskScanner {
         }
         List<OomRiskFinding> findings = new ArrayList<>();
         String content = file.content();
-        String lower = content.toLowerCase(Locale.ROOT);
 
         Matcher m = SELECT_LIST.matcher(content);
         while (m.find()) {

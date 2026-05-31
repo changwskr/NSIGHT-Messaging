@@ -38,4 +38,29 @@ class ConfigParserServiceTest {
         assertThat(byKey).containsEntry("spring.application.name", "demo-app");
         assertThat(byKey).containsEntry("server.port", "9090");
     }
+
+    @Test
+    void parseMyBatisConfig_extractsStatementTimeoutAndFetchSize() throws Exception {
+        String xml = """
+                <?xml version="1.0" encoding="UTF-8" ?>
+                <!DOCTYPE configuration
+                        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+                        "https://mybatis.org/dtd/mybatis-3-config.dtd">
+                <configuration>
+                    <settings>
+                        <setting name="defaultStatementTimeout" value="3"/>
+                        <setting name="defaultFetchSize" value="300"/>
+                    </settings>
+                </configuration>
+                """;
+
+        List<ParsedConfigEntry> entries = parser.parse(
+                "mybatis-config.xml", xml.getBytes(StandardCharsets.UTF_8));
+        Map<String, String> byConfigKey = entries.stream()
+                .collect(Collectors.toMap(ParsedConfigEntry::configKey, ParsedConfigEntry::configValue, (a, b) -> b));
+
+        assertThat(byConfigKey)
+                .containsEntry("mybatis.default-statement-timeout", "3")
+                .containsEntry("mybatis.default-fetch-size", "300");
+    }
 }

@@ -12,9 +12,12 @@
     </div>
 
     <section class="card env-screen" id="env003Section">
-        <div class="card-title">
-            <h2>ENV-003 TPS·VM 산정 결과</h2>
-            <p id="env003ScenarioLabel">시나리오: —</p>
+        <div class="card-title row-title">
+            <div>
+                <h2>ENV-003 TPS·VM 산정 결과</h2>
+                <p id="env003ScenarioLabel">시나리오: —</p>
+            </div>
+            <th:block th:replace="~{traceenvironment/fragments/env-export-btn :: excelBtn('ENV003', 'Excel 다운로드')}"></th:block>
         </div>
         <div id="env003FormulaGuide" class="env-env003-guide env-env003-guide--empty" role="region" aria-label="ENV-003 표 항목 설명">
             <p class="env-env003-guide__placeholder">「산정 실행」 후 아래 표의 <strong>목표 TPS</strong>, <strong>TPMC</strong> 등 항목 설명이 표시됩니다.</p>
@@ -48,5 +51,6 @@
 </main>
 
 <script src="/js/traceenvironment-planner.js"></script>
+<script src="/js/traceenvironment-export.js"></script>
 </body>
 </html>

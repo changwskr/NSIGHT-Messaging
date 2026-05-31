@@ -4,7 +4,6 @@ import com.nh.nsight.messaging.common.log.MessageEnvelopeFileService;
 import com.nh.nsight.messaging.config.FileStorageProperties;
 import com.nh.nsight.messaging.config.MessageEnvelopeProperties;
 import com.nh.nsight.messaging.config.TraceDumpProperties;
-import com.nh.nsight.messaging.file.service.FileService;
 import com.nh.nsight.messaging.traceoompgm.config.OomInspectorProperties;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;

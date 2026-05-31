@@ -67,7 +67,7 @@ public final class IntegratedEnvironmentGuideCatalog {
                         + (Nsight32Core256GbGuide.CRUZAPIM_READ_TIMEOUT_MS / 1000) + "s) < Proxy("
                         + (Nsight32Core256GbGuide.PROXY_READ_TIMEOUT_MS / 1000) + "s) < WebTop Request("
                         + (Nsight32Core256GbGuide.WEBTOP_REQUEST_TIMEOUT_MS / 1000) + "s) < L4 Idle("
-                        + (Nsight32Core256GbGuide.L4_IDLE_TIMEOUT_MS / 1000) + "s)",
+                        + Nsight32Core256GbGuide.L4_CLIENT_IDLE_TIMEOUT_SEC + "s)",
                 "[실요청 · CAPACITY-REL-002] 전체 " + Nsight32Core256GbGuide.TOTAL_USERS + "명 × "
                         + Nsight32Core256GbGuide.ACTUAL_REQUEST_PERCENT_PEAK + "% = "
                         + Nsight32Core256GbGuide.ACTUAL_REQUEST_USERS_PEAK
@@ -96,7 +96,7 @@ public final class IntegratedEnvironmentGuideCatalog {
                 "[DB·SQL] MyBatis defaultStatementTimeout "
                         + Nsight32Core256GbGuide.MYBATIS_STATEMENT_TIMEOUT_SEC
                         + "s, defaultFetchSize 300 · 장시간 SQL·풀스캔은 Timeout만 올리지 말고 쿼리·인덱스 점검",
-                "[L4·GSLB · INFRA] Idle " + (Nsight32Core256GbGuide.L4_IDLE_TIMEOUT_MS / 1000)
+                "[L4·GSLB · INFRA] Idle " + Nsight32Core256GbGuide.L4_CLIENT_IDLE_TIMEOUT_SEC
                         + "s, Health " + Nsight32Core256GbGuide.L4_HEALTH_INTERVAL_SEC + "s/"
                         + Nsight32Core256GbGuide.L4_HEALTH_TIMEOUT_SEC + "s/"
                         + Nsight32Core256GbGuide.L4_HEALTH_FAIL_COUNT + "회, Sticky "

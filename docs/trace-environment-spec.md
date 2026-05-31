@@ -61,6 +61,12 @@
 - §5: **전체 스택** UI → GSLB → L4 → Apache → Tomcat → JVM(사이징+Grid) → Spring Boot → MyBatis — 계층별 권장·현재·위치·예시·조치 + 통합 Grid
 - §6: Rule Engine 요약 (점검은 Rule 점검 탭에서 실행)
 
+### Excel 다운로드
+- API: `POST /api/v1/trace-environment/export/excel` (body: `exportType`, `capacityView`, `capacityRequest`, `assessmentRun`, `baseline`)
+- UI: ENV-003 / ENV-004 / 종합 보고서 / Rule 점검 화면 **Excel 다운로드** 버튼
+- 데이터: 브라우저 `sessionStorage` 산정 캐시 + Rule 점검 시 `assessments/{runId}` 재조회
+- **종합 보고서(CHECK)**: 화면 §0~6 전체 — 종합결론, ENV-002 조건, ENV-003(요약+전체표), ENV-004 요약, Core TPS, 환경구성 Grid·계층별, 산출식, JVM, Rule·Timeout·Flow·SC-007(점검 시)
+
 ### Rule 점검 (`/traceenvironment/rule-check`)
 - SC-002 프로젝트 기준정보 (ENV-002 산정 연동)
 - SC-004 설정 업로드·파싱 · Assessment(Rule Engine)

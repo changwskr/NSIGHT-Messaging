@@ -343,6 +343,7 @@ function persistAssessmentRun(run) {
             failCount: run.failCount,
             savedAt: new Date().toISOString()
         }));
+        sessionStorage.setItem('nsight.env.lastAssessmentFull', JSON.stringify(run));
     } catch (e) {
         /* ignore */
     }

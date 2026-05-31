@@ -8,12 +8,15 @@
 
 <main class="env-layout">
     <section class="card env-check-report-card" id="envCheckReportSection">
-        <div class="card-title">
-            <h2>통합 환경설정 점검 · 종합 보고서</h2>
-            <p>
-                ENV-002 조건 → ENV-003 TPS·VM 산정 → ENV-004 전체 스택 구성 결론을 한 화면에 정리합니다.
-                Rule Engine·설정 대조·SC-007/008/009는 <a href="/traceenvironment/rule-check">Rule 점검</a> 탭에서 수행하세요.
-            </p>
+        <div class="card-title row-title">
+            <div>
+                <h2>통합 환경설정 점검 · 종합 보고서</h2>
+                <p>
+                    ENV-002 조건 → ENV-003 TPS·VM 산정 → ENV-004 전체 스택 구성 결론을 한 화면에 정리합니다.
+                    Rule Engine·설정 대조·SC-007/008/009는 <a href="/traceenvironment/rule-check">Rule 점검</a> 탭에서 수행하세요.
+                </p>
+            </div>
+            <th:block th:replace="~{traceenvironment/fragments/env-export-btn :: excelBtn('CHECK', '종합 보고서 Excel')}"></th:block>
         </div>
         <div id="envCheckReportPanel" class="env-check-report env-check-report--empty" role="region" aria-label="종합 보고서">
             <p class="env-check-report__placeholder">
@@ -29,5 +32,6 @@
 
 <script src="/js/traceenvironment-planner.js"></script>
 <script src="/js/traceenvironment.js"></script>
+<script src="/js/traceenvironment-export.js"></script>
 </body>
 </html>

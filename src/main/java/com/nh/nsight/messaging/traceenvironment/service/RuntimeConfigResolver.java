@@ -3,10 +3,10 @@ package com.nh.nsight.messaging.traceenvironment.service;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
+import com.nh.nsight.messaging.traceenvironment.util.SecureXmlDocuments;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
-import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -108,7 +108,7 @@ public class RuntimeConfigResolver {
     private Map<String, String> readMyBatisSettings() {
         Map<String, String> map = new LinkedHashMap<>();
         try (InputStream in = new ClassPathResource("mybatis/mybatis-config.xml").getInputStream()) {
-            Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(in);
+            Document doc = SecureXmlDocuments.parse(in);
             NodeList settings = doc.getElementsByTagName("setting");
             for (int i = 0; i < settings.getLength(); i++) {
                 var node = settings.item(i);

@@ -28,7 +28,7 @@ public class EnvCheckProperties {
     private int apCount = Nsight32Core256GbGuide.DEFAULT_AP_COUNT;
     private String apVmSpec = Nsight32Core256GbGuide.VM_SPEC;
     private int targetP95Ms = Nsight32Core256GbGuide.TARGET_P95_MS;
-    private int l4IdleTimeoutMs = Nsight32Core256GbGuide.L4_IDLE_TIMEOUT_MS;
+    private int l4IdleTimeoutMs = Nsight32Core256GbGuide.L4_CLIENT_IDLE_TIMEOUT_SEC * 1000;
     private int l4HealthIntervalSec = Nsight32Core256GbGuide.L4_HEALTH_INTERVAL_SEC;
     private int l4HealthTimeoutSec = Nsight32Core256GbGuide.L4_HEALTH_TIMEOUT_SEC;
     private int l4HealthFailCount = Nsight32Core256GbGuide.L4_HEALTH_FAIL_COUNT;

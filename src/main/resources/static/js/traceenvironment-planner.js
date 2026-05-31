@@ -2062,6 +2062,12 @@
     window.nsightBuildBaselineFromCapacity = buildProjectBaselineFromCapacity;
     window.nsightRefreshCheckReport = refreshCheckPageBaselines;
     window.nsightInitCapacityView = initCapacityViewPages;
+    window.nsightGetCapacityViewForExport = function () {
+        return normalizeCapacityView(loadPersistedCapacityView());
+    };
+    window.nsightGetCapacityRequestForExport = function () {
+        return loadPersistedRequest();
+    };
 
     initCapacityPlanner();
 })();

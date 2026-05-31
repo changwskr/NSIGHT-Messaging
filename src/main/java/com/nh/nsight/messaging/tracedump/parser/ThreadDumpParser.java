@@ -13,7 +13,6 @@ import java.util.regex.Pattern;
 @Component
 public class ThreadDumpParser {
 
-    private static final Pattern THREAD_LINE = Pattern.compile("^\"(.+)\".*$");
     private static final Pattern STATE_LINE = Pattern.compile("\\s+java\\.lang\\.Thread\\.State:\\s+(\\w+)");
 
     public List<ThreadDumpSnapshot> parse(List<EvidenceFile> files) {

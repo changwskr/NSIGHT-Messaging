@@ -2,7 +2,6 @@ package com.nh.nsight.messaging.traceenvironment.service;
 
 import com.nh.nsight.messaging.traceenvironment.config.EnvCheckProperties;
 import com.nh.nsight.messaging.traceenvironment.guide.JvmSizingGuide;
-import com.nh.nsight.messaging.traceenvironment.guide.VmProfile;
 import com.nh.nsight.messaging.traceenvironment.model.CapacityDesignView;
 import com.nh.nsight.messaging.traceenvironment.model.CapacityPlannerRequest;
 import com.nh.nsight.messaging.traceenvironment.model.JvmSizingRecommendation;

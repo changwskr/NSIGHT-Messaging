@@ -1,14 +1,16 @@
 package com.nh.nsight.messaging.traceenvironment.service;
 
 import com.nh.nsight.messaging.traceenvironment.model.ParsedConfigEntry;
+import com.nh.nsight.messaging.traceenvironment.util.SecureXmlDocuments;
 import org.springframework.stereotype.Service;
-import org.yaml.snakeyaml.Yaml;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.yaml.snakeyaml.LoaderOptions;
+import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.SafeConstructor;
 
-import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -37,8 +39,16 @@ public class ConfigParserService {
         if (lower.endsWith(".properties")) {
             return parseProperties(fileName, text);
         }
-        if (lower.endsWith(".xml") && isTomcatServerXml(fileName, text)) {
-            return parseTomcatServerXml(fileName, text);
+        if (lower.endsWith(".xml")) {
+            if (isTomcatServerXml(fileName, text)) {
+                return parseTomcatServerXml(fileName, text);
+            }
+            if (isMyBatisConfig(fileName, text)) {
+                return parseMyBatisSettingsXml(fileName, text);
+            }
+            if (text.contains("<setting")) {
+                return parseSettingsXml(fileName, text);
+            }
         }
         return parseFlatLines(fileName, text);
     }
@@ -48,6 +58,13 @@ public class ConfigParserService {
         return lowerName.contains("server") || text.contains("<Connector");
     }
 
+    private boolean isMyBatisConfig(String fileName, String text) {
+        String lowerName = fileName.toLowerCase(Locale.ROOT);
+        return lowerName.contains("mybatis")
+                || text.contains("mybatis.org")
+                || text.contains("defaultStatementTimeout");
+    }
+
     private boolean isAllowed(String lower) {
         return ALLOWED_EXT.stream().anyMatch(lower::endsWith);
     }
@@ -55,9 +72,10 @@ public class ConfigParserService {
     /**
      * Spring Boot application.yml 은 {@code ---} 로 프로파일 문서가 구분되는 multi-document YAML 입니다.
      */
-    @SuppressWarnings("unchecked")
     private List<ParsedConfigEntry> parseYaml(String fileName, String text) {
-        Yaml yaml = new Yaml();
+        LoaderOptions options = new LoaderOptions();
+        options.setMaxAliasesForCollections(50);
+        Yaml yaml = new Yaml(new SafeConstructor(options));
         Map<String, Object> merged = new LinkedHashMap<>();
         for (Object loaded : yaml.loadAll(text)) {
             if (loaded instanceof Map<?, ?> root) {
@@ -127,8 +145,7 @@ public class ConfigParserService {
     private List<ParsedConfigEntry> parseTomcatServerXml(String fileName, String text) {
         List<ParsedConfigEntry> entries = new ArrayList<>();
         try {
-            Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder()
-                    .parse(new java.io.ByteArrayInputStream(text.getBytes(StandardCharsets.UTF_8)));
+            Document doc = SecureXmlDocuments.parseUtf8(text);
             NodeList connectors = doc.getElementsByTagName("Connector");
             for (int i = 0; i < connectors.getLength(); i++) {
                 if (!(connectors.item(i) instanceof Element connector)) {
@@ -147,6 +164,55 @@ public class ConfigParserService {
             return parseFlatLines(fileName, text);
         }
         return entries;
+    }
+
+    private List<ParsedConfigEntry> parseMyBatisSettingsXml(String fileName, String text) {
+        List<ParsedConfigEntry> entries = parseSettingsXml(fileName, text);
+        if (entries.isEmpty()) {
+            return parseFlatLines(fileName, text);
+        }
+        return entries;
+    }
+
+    private List<ParsedConfigEntry> parseSettingsXml(String fileName, String text) {
+        List<ParsedConfigEntry> entries = new ArrayList<>();
+        try {
+            Document doc = SecureXmlDocuments.parseUtf8(text);
+            NodeList settings = doc.getElementsByTagName("setting");
+            for (int i = 0; i < settings.getLength(); i++) {
+                Node node = settings.item(i);
+                if (!(node instanceof Element setting) || setting.getAttributes() == null) {
+                    continue;
+                }
+                Node nameAttr = setting.getAttributes().getNamedItem("name");
+                Node valueAttr = setting.getAttributes().getNamedItem("value");
+                if (nameAttr == null || valueAttr == null) {
+                    continue;
+                }
+                String name = nameAttr.getTextContent();
+                String value = valueAttr.getTextContent();
+                String configKey = myBatisSettingKey(name);
+                entries.add(new ParsedConfigEntry(
+                        fileName, configKey, value, normalizeKey(configKey), i + 1
+                ));
+            }
+        } catch (Exception e) {
+            throw new IllegalArgumentException("XML setting 파싱 실패: " + e.getMessage());
+        }
+        return entries;
+    }
+
+    private String myBatisSettingKey(String settingName) {
+        return switch (settingName) {
+            case "defaultStatementTimeout" -> "mybatis.default-statement-timeout";
+            case "defaultFetchSize" -> "mybatis.default-fetch-size";
+            case "mapUnderscoreToCamelCase" -> "mybatis.map-underscore-to-camel-case";
+            default -> "mybatis." + camelToKebab(settingName);
+        };
+    }
+
+    private String camelToKebab(String camel) {
+        return camel.replaceAll("([a-z])([A-Z])", "$1-$2").toLowerCase(Locale.ROOT);
     }
 
     private void addTomcatAttr(

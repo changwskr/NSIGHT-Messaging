@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<button type="button"
+        class="secondary env-export-excel-btn"
+        th:fragment="excelBtn(exportType, label)"
+        th:attr="data-env-export=${exportType}"
+        th:text="${label != null ? label : 'Excel 다운로드'}">Excel 다운로드</button>
+</body>
+</html>

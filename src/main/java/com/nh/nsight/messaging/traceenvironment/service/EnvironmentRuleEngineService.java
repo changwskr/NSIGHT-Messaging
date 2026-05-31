@@ -13,7 +13,6 @@ import com.nh.nsight.messaging.traceenvironment.model.TimeoutMapView;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -167,7 +166,7 @@ public class EnvironmentRuleEngineService {
                     "Request Timeout",
                     "nsight.webtop.request-timeout-ms", "application.yml",
                     Nsight32Core256GbGuide.WEBTOP_REQUEST_TIMEOUT_MS + " ms", null),
-            new TimeoutChainSpec(6, null, Nsight32Core256GbGuide.L4_IDLE_TIMEOUT_MS, "L4", "Idle Timeout (참고)",
+            new TimeoutChainSpec(6, null, Nsight32Core256GbGuide.L4_CLIENT_IDLE_TIMEOUT_SEC * 1000L, "L4", "Idle Timeout (참고)",
                     "nsight.env-check.l4-idle-timeout-ms", "application.yml · L4 Console",
                     "80 s", "Client-L4 70~90s · Sticky 70~80m · Session 60m")
     );

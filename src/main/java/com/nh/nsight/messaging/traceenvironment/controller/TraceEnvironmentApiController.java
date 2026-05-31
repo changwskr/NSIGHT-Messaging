@@ -10,11 +10,16 @@ import com.nh.nsight.messaging.traceenvironment.model.IntegratedEnvironmentView;
 import com.nh.nsight.messaging.traceenvironment.model.ProjectBaselineView;
 import com.nh.nsight.messaging.traceenvironment.model.ConcurrentFlowMapView;
 import com.nh.nsight.messaging.traceenvironment.model.TimeoutMapView;
+import com.nh.nsight.messaging.traceenvironment.model.TraceEnvironmentExportRequest;
 import com.nh.nsight.messaging.traceenvironment.service.CapacityDesignService;
 import com.nh.nsight.messaging.traceenvironment.service.ConfigImportService;
 import com.nh.nsight.messaging.traceenvironment.service.EnvironmentAssessmentService;
 import com.nh.nsight.messaging.traceenvironment.service.ProjectBaselineService;
+import com.nh.nsight.messaging.traceenvironment.service.TraceEnvironmentExcelExportService;
 import com.nh.nsight.messaging.traceenvironment.service.TraceEnvironmentService;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,19 +42,22 @@ public class TraceEnvironmentApiController {
     private final ConfigImportService configImportService;
     private final EnvironmentAssessmentService assessmentService;
     private final CapacityDesignService capacityDesignService;
+    private final TraceEnvironmentExcelExportService excelExportService;
 
     public TraceEnvironmentApiController(
             TraceEnvironmentService traceEnvironmentService,
             ProjectBaselineService projectBaselineService,
             ConfigImportService configImportService,
             EnvironmentAssessmentService assessmentService,
-            CapacityDesignService capacityDesignService
+            CapacityDesignService capacityDesignService,
+            TraceEnvironmentExcelExportService excelExportService
     ) {
         this.traceEnvironmentService = traceEnvironmentService;
         this.projectBaselineService = projectBaselineService;
         this.configImportService = configImportService;
         this.assessmentService = assessmentService;
         this.capacityDesignService = capacityDesignService;
+        this.excelExportService = excelExportService;
     }
 
     @GetMapping("/capacity-design/defaults")
@@ -121,6 +129,19 @@ public class TraceEnvironmentApiController {
     public StandardResponse<ConcurrentFlowMapView> getConcurrentFlowMap(@PathVariable String runId) {
         return StandardResponse.success("ENV-ASM-CAP-001", "concurrentFlowMap",
                 assessmentService.getRun(runId).concurrentFlowMap());
+    }
+
+    @PostMapping(value = "/export/excel", produces = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    public ResponseEntity<byte[]> exportExcel(@RequestBody TraceEnvironmentExportRequest request) throws Exception {
+        byte[] body = excelExportService.export(request);
+        String filename = excelExportService.filename(request);
+        String encoded = java.net.URLEncoder.encode(filename, java.nio.charset.StandardCharsets.UTF_8)
+                .replace("+", "%20");
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename*=UTF-8''" + encoded)
+                .contentType(MediaType.parseMediaType(
+                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .body(body);
     }
 
     @GetMapping("/dashboard/summary")
