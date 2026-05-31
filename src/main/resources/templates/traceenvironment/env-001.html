@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{traceenvironment/fragments/env-page-head :: head('ENV-001 대시')}"></head>
+<body data-env-page="env001">
+<th:block th:replace="~{traceenvironment/fragments/env-page-head :: topbar('ENV-001 — 산정 시나리오 요약 · 위험 집계')}"></th:block>
+
+<div id="statusBar" class="status-bar hidden" role="status"></div>
+
+<main class="env-layout">
+    <div id="envNoDataBanner" class="env-no-data-banner">
+        <p>아직 산정 결과가 없습니다. <a href="/traceenvironment/env-002">ENV-002</a>에서 조건을 입력하고 「산정 실행」을 누른 뒤 이 화면을 새로고침하세요.</p>
+    </div>
+
+    <section class="card env-screen env-screen--dash" id="envDashSection">
+        <div class="card-title">
+            <h2>ENV-001 대시보드</h2>
+            <p>최근 산정 실행 결과 요약</p>
+        </div>
+        <div class="env-dash">
+            <div class="env-dash__item"><span class="env-dash__label">시나리오</span><strong id="dashScenarioId">—</strong></div>
+            <div class="env-dash__item"><span class="env-dash__label">설계 세션</span><strong id="dashDesignSessions">—</strong></div>
+            <div class="env-dash__item env-dash__item--ok"><span class="env-dash__label">정상</span><strong id="dashRiskNormal">0</strong></div>
+            <div class="env-dash__item env-dash__item--warn"><span class="env-dash__label">경고</span><strong id="dashRiskWarn">0</strong></div>
+            <div class="env-dash__item env-dash__item--crit"><span class="env-dash__label">위험</span><strong id="dashRiskCrit">0</strong></div>
+            <span id="stackValidBadge" class="env-score">—</span>
+        </div>
+    </section>
+
+    <section class="card env-screen-nav-cards">
+        <h3 class="env-screen-nav-cards__title">다음 화면</h3>
+        <div class="env-screen-nav-cards__grid">
+            <a class="env-screen-nav-card" href="/traceenvironment/env-002"><strong>ENV-002</strong><span>산정 조건 입력</span></a>
+            <a class="env-screen-nav-card" href="/traceenvironment/env-003"><strong>ENV-003</strong><span>TPS·VM 산정 결과</span></a>
+            <a class="env-screen-nav-card" href="/traceenvironment/env-004"><strong>ENV-004</strong><span>계층별 설정 점검</span></a>
+            <a class="env-screen-nav-card" href="/traceenvironment/check"><strong>종합 보고서</strong><span>ENV-002~004 결론</span></a>
+            <a class="env-screen-nav-card" href="/traceenvironment/rule-check"><strong>Rule 점검</strong><span>SC-002/004/007/008/009</span></a>
+        </div>
+    </section>
+</main>
+
+<script src="/js/traceenvironment-planner.js"></script>
+</body>
+</html>

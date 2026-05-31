@@ -7,7 +7,7 @@
         <!-- DB 컬럼 MESSAGE_CODE → messageCode -->
         <setting name="mapUnderscoreToCamelCase" value="true"/>
         <!-- NSIGHT DB Query Timeout 3초 -->
-        <setting name="defaultStatementTimeout" value="3"/>
+        <setting name="defaultStatementTimeout" value="2"/>
         <setting name="defaultFetchSize" value="300"/>
         <setting name="jdbcTypeForNull" value="NULL"/>
         <setting name="callSettersOnNulls" value="true"/>

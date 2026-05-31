@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(pageTitle)">
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title th:text="${pageTitle} + ' · NSIGHT 환경설정'">NSIGHT 환경설정</title>
+    <link rel="stylesheet" href="/css/nsight.css"/>
+</head>
+<body>
+<th:block th:fragment="topbar(subtitle)">
+<header class="topbar">
+    <div>
+        <h1>NSIGHT 환경설정 산정·점검</h1>
+        <p th:text="${subtitle}">—</p>
+    </div>
+    <div class="topbar-right">
+        <nav th:replace="~{fragments/main-nav :: mainNav('traceenvironment')}"></nav>
+        <div class="badge">ENV</div>
+    </div>
+</header>
+<nav th:replace="~{traceenvironment/fragments/env-sub-nav :: subNav(${activeNav})}"></nav>
+</th:block>
+</body>
+</html>

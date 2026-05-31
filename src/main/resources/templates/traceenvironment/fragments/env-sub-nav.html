@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<body>
+<nav class="env-sub-nav" th:fragment="subNav(active)" aria-label="ENV 화면 이동">
+    <a href="/traceenvironment/env-001" th:classappend="${active == 'env001'} ? ' active' : ''">ENV-001 대시</a>
+    <a href="/traceenvironment/env-002" th:classappend="${active == 'env002'} ? ' active' : ''">ENV-002 조건</a>
+    <a href="/traceenvironment/env-003" th:classappend="${active == 'env003'} ? ' active' : ''">ENV-003 TPS·VM</a>
+    <a href="/traceenvironment/env-004" th:classappend="${active == 'env004'} ? ' active' : ''">ENV-004 계층</a>
+    <a href="/traceenvironment/check" th:classappend="${active == 'check'} ? ' active' : ''">종합 보고서</a>
+    <a href="/traceenvironment/rule-check" th:classappend="${active == 'rulecheck'} ? ' active' : ''">Rule 점검</a>
+</nav>
+</body>
+</html>

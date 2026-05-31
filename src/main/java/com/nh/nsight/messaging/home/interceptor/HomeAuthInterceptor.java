@@ -44,6 +44,7 @@ public class HomeAuthInterceptor implements HandlerInterceptor {
                 || uri.startsWith("/transactionmgr")
                 || uri.startsWith("/tracedump")
                 || uri.startsWith("/oominspector")
-                || uri.startsWith("/operations");
+                || uri.startsWith("/operations")
+                || uri.startsWith("/traceenvironment");
     }
 }

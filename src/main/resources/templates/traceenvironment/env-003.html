@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{traceenvironment/fragments/env-page-head :: head('ENV-003 TPS·VM')}"></head>
+<body data-env-page="env003">
+<th:block th:replace="~{traceenvironment/fragments/env-page-head :: topbar('ENV-003 — TPS·VM 산정 결과')}"></th:block>
+
+<div id="statusBar" class="status-bar hidden" role="status"></div>
+
+<main class="env-layout">
+    <div id="envNoDataBanner" class="env-no-data-banner">
+        <p>산정 결과가 없습니다. <a href="/traceenvironment/env-002">ENV-002</a>에서 「산정 실행」 후 다시 열어 주세요.</p>
+    </div>
+
+    <section class="card env-screen" id="env003Section">
+        <div class="card-title">
+            <h2>ENV-003 TPS·VM 산정 결과</h2>
+            <p id="env003ScenarioLabel">시나리오: —</p>
+        </div>
+        <div id="env003FormulaGuide" class="env-env003-guide env-env003-guide--empty" role="region" aria-label="ENV-003 표 항목 설명">
+            <p class="env-env003-guide__placeholder">「산정 실행」 후 아래 표의 <strong>목표 TPS</strong>, <strong>TPMC</strong> 등 항목 설명이 표시됩니다.</p>
+        </div>
+        <div class="table-wrap">
+            <table class="dump-report__table dump-report__table--data dump-report__table--env-vm-result">
+                <thead>
+                <tr>
+                    <th>요청률/초</th>
+                    <th>실요청자</th>
+                    <th>목표 TPS</th>
+                    <th>TPMC</th>
+                    <th>VM 사양</th>
+                    <th>VM TPS(35)</th>
+                    <th>필요 VM</th>
+                    <th>A-A 권장</th>
+                    <th>VM당 JVM Heap</th>
+                    <th>VM당 WAS Threads</th>
+                    <th>VM당 DB Pool</th>
+                    <th>DB Pool 합계</th>
+                    <th>판정</th>
+                </tr>
+                </thead>
+                <tbody id="capVmResultBody">
+                <tr><td colspan="13" class="env-empty-cell">ENV-002 조건 입력 후 산정 실행</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <p class="env-screen-footer-hint"><a href="/traceenvironment/env-002">← ENV-002 조건</a> · <a href="/traceenvironment/env-004">ENV-004 계층 점검 →</a></p>
+    </section>
+</main>
+
+<script src="/js/traceenvironment-planner.js"></script>
+</body>
+</html>

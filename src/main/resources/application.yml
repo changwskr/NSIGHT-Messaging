@@ -19,7 +19,7 @@ spring:
     password:
     hikari:
       pool-name: MSG-HIKARI-POOL
-      maximum-pool-size: 50
+      maximum-pool-size: 150
       minimum-idle: 10
       connection-timeout: 3000
       validation-timeout: 3000
@@ -53,11 +53,12 @@ server:
         same-site: Lax
   tomcat:
     threads:
-      max: 500
-      min-spare: 100
-    accept-count: 500
-    max-connections: 10000
+      max: 1500
+      min-spare: 300
+    accept-count: 800
+    max-connections: 30000
     connection-timeout: 8s
+    keep-alive-timeout: 60s
 
 mybatis:
   config-location: classpath:mybatis/mybatis-config.xml
@@ -84,6 +85,11 @@ logging:
 
 nsight:
   ap-id: MSG-LOCAL-AP01
+  async:
+    audit-log:
+      core-pool-size: 50
+      max-pool-size: 100
+      queue-capacity: 1000
   transaction:
     default-timeout-seconds: 5
     readonly-timeout-seconds: 3
@@ -108,11 +114,50 @@ nsight:
     max-body-bytes: 1048576
   trace-dump:
     evidence-path: ./data/trace-dump-evidence
+  env-check:
+    default-project-id: nsight-message-mgmt
+    default-project-name: NSIGHT Message Management
+    default-env-code: local
+    hardware-profile: nsight-32core-256gb
+    center-type: DR
+    branch-count: 6000
+    users-per-branch: 6
+    total-users: 36000
+    actual-request-users: 1800
+    actual-request-peak-percent: 5
+    session-design-count: 36000
+    session-buffered-min: 43000
+    session-buffered-max: 47000
+    base-tps: 360
+    peak-tps: 600
+    high-peak-tps: 1200
+    stress-tps: 1800
+    vm-max-tps: 1000
+    peak-concurrent-users: 1800
+    ap-count: 2
+    ap-vm-spec: 32 vCPU / 256GB
+    target-p95-ms: 3000
+    l4-idle-timeout-ms: 80000
+    l4-was-idle-timeout-sec: 80
+    l4-health-interval-sec: 5
+    l4-health-timeout-sec: 2
+    l4-health-fail-count: 3
+    l4-sticky-timeout-sec: 70
+    gslb-health-interval-sec: 5
+    gslb-health-timeout-sec: 2
+    gslb-health-fail-count: 3
+    gslb-sticky-timeout-sec: 70
+    proxy-read-timeout-ms: 10000
+    db-session-limit: 500
+    tomcat-max-threads: 1500
+    tomcat-accept-count: 800
+    tomcat-max-connections: 30000
+    hikari-pool-general: 150
   oom-inspector:
     default-source-root: ./src/main/java
     default-mapper-root: ./src/main/resources/mapper
     default-config-path: ./src/main/resources/application.yml
-    profile-name: nsight-8core-32gb
+    profile-name: nsight-32core-256gb
     fail-on-critical: true
 
 ---
@@ -127,7 +172,7 @@ spring:
     password: ${MSG_DB_PASSWORD}
     hikari:
       pool-name: MSG-HIKARI-POOL-PRD
-      maximum-pool-size: 50
+      maximum-pool-size: 150
       minimum-idle: 10
       connection-timeout: 3000
       validation-timeout: 3000
