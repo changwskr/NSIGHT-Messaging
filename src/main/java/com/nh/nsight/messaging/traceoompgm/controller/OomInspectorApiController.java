@@ -1,11 +1,11 @@
-package com.traceoompgm.controller;
+package com.nh.nsight.messaging.traceoompgm.controller;
 
 import com.nh.nsight.messaging.common.response.StandardResponse;
-import com.traceoompgm.config.OomInspectorProperties;
-import com.traceoompgm.model.OomFileContentView;
-import com.traceoompgm.model.OomScanReport;
-import com.traceoompgm.service.OomInspectorFileService;
-import com.traceoompgm.service.OomInspectorScanService;
+import com.nh.nsight.messaging.traceoompgm.config.OomInspectorProperties;
+import com.nh.nsight.messaging.traceoompgm.model.OomFileContentView;
+import com.nh.nsight.messaging.traceoompgm.model.OomScanReport;
+import com.nh.nsight.messaging.traceoompgm.service.OomInspectorFileService;
+import com.nh.nsight.messaging.traceoompgm.service.OomInspectorScanService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

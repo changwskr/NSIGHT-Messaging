@@ -1,13 +1,13 @@
-package com.traceoompgm.service;
+package com.nh.nsight.messaging.traceoompgm.service;
 
-import com.traceoompgm.collector.SourceFileCollector;
-import com.traceoompgm.config.OomInspectorProperties;
-import com.traceoompgm.model.OomRiskFinding;
-import com.traceoompgm.model.OomScanReport;
-import com.traceoompgm.report.OomScanReportBuilder;
-import com.traceoompgm.scanner.JavaSourceRiskScanner;
-import com.traceoompgm.scanner.MapperXmlRiskScanner;
-import com.traceoompgm.scanner.YamlConfigRiskScanner;
+import com.nh.nsight.messaging.traceoompgm.collector.SourceFileCollector;
+import com.nh.nsight.messaging.traceoompgm.config.OomInspectorProperties;
+import com.nh.nsight.messaging.traceoompgm.model.OomRiskFinding;
+import com.nh.nsight.messaging.traceoompgm.model.OomScanReport;
+import com.nh.nsight.messaging.traceoompgm.report.OomScanReportBuilder;
+import com.nh.nsight.messaging.traceoompgm.scanner.JavaSourceRiskScanner;
+import com.nh.nsight.messaging.traceoompgm.scanner.MapperXmlRiskScanner;
+import com.nh.nsight.messaging.traceoompgm.scanner.YamlConfigRiskScanner;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;

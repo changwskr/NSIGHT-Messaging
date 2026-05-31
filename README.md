@@ -37,7 +37,7 @@ POST /api/oom-inspector/scans
 POST /api/oom-inspector/gate?failOn=CRITICAL
 ```
 
-패키지: `com.traceoompgm` · 명세: `docs/oom-inspector-spec.md`
+패키지: `com.nh.nsight.messaging.traceoompgm` · 명세: `docs/oom-inspector-spec.md`
 
 ## 3. JDBC 트랜잭션 샘플 (참고용)
 

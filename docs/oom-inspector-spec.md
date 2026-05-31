@@ -4,7 +4,7 @@
 
 ## 패키지
 
-`com.traceoompgm`
+`com.nh.nsight.messaging.traceoompgm`
 
 ## 4단계
 

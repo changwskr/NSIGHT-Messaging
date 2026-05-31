@@ -1,8 +1,8 @@
-package com.traceoompgm.report;
+package com.nh.nsight.messaging.traceoompgm.report;
 
-import com.traceoompgm.model.OomRiskFinding;
-import com.traceoompgm.model.OomRiskSeverity;
-import com.traceoompgm.model.OomScanReport;
+import com.nh.nsight.messaging.traceoompgm.model.OomRiskFinding;
+import com.nh.nsight.messaging.traceoompgm.model.OomRiskSeverity;
+import com.nh.nsight.messaging.traceoompgm.model.OomScanReport;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;

@@ -1,6 +1,6 @@
-package com.traceoompgm.controller;
+package com.nh.nsight.messaging.traceoompgm.controller;
 
-import com.traceoompgm.config.OomInspectorProperties;
+import com.nh.nsight.messaging.traceoompgm.config.OomInspectorProperties;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,4 +1,4 @@
-package com.traceoompgm.model;
+package com.nh.nsight.messaging.traceoompgm.model;
 
 public record OomRiskFinding(
         String ruleId,

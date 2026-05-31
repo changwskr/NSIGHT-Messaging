@@ -1,4 +1,4 @@
-package com.traceoompgm.collector;
+package com.nh.nsight.messaging.traceoompgm.collector;
 
 import org.springframework.stereotype.Component;
 

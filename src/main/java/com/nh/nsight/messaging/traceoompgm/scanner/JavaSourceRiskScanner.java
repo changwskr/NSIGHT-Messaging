@@ -1,9 +1,9 @@
-package com.traceoompgm.scanner;
+package com.nh.nsight.messaging.traceoompgm.scanner;
 
-import com.traceoompgm.collector.SourceFileCollector;
-import com.traceoompgm.model.OomRiskCategory;
-import com.traceoompgm.model.OomRiskFinding;
-import com.traceoompgm.model.OomRiskSeverity;
+import com.nh.nsight.messaging.traceoompgm.collector.SourceFileCollector;
+import com.nh.nsight.messaging.traceoompgm.model.OomRiskCategory;
+import com.nh.nsight.messaging.traceoompgm.model.OomRiskFinding;
+import com.nh.nsight.messaging.traceoompgm.model.OomRiskSeverity;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

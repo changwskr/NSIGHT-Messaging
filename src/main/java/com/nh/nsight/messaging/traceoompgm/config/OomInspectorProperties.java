@@ -1,4 +1,4 @@
-package com.traceoompgm.config;
+package com.nh.nsight.messaging.traceoompgm.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

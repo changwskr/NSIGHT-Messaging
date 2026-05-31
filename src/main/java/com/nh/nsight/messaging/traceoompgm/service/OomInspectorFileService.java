@@ -1,7 +1,7 @@
-package com.traceoompgm.service;
+package com.nh.nsight.messaging.traceoompgm.service;
 
-import com.traceoompgm.config.OomInspectorProperties;
-import com.traceoompgm.model.OomFileContentView;
+import com.nh.nsight.messaging.traceoompgm.config.OomInspectorProperties;
+import com.nh.nsight.messaging.traceoompgm.model.OomFileContentView;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
