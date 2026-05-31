@@ -12,6 +12,9 @@ jobs:
       - name: Print working directory
         run: pwd
       - run: ls -al
+      - run: cd bin
+      - run: pwd
+      - run: ls -l
       
   
   
