@@ -1,0 +1,85 @@
+name: NSIGHT Messaging Maven Build
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - develop
+  pull_request:
+    branches:
+      - main
+      - master
+      - develop
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nsight-messaging-build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build on Ubuntu Latest
+    runs-on: ubuntu-latest
+
+    env:
+      TZ: Asia/Seoul
+      MAVEN_OPTS: >-
+        -Xms512m
+        -Xmx3g
+        -XX:MaxMetaspaceSize=512m
+        -Dfile.encoding=UTF-8
+        -Duser.timezone=Asia/Seoul
+      JAVA_TOOL_OPTIONS: >-
+        -Xms512m
+        -Xmx3g
+        -XX:MaxMetaspaceSize=512m
+        -Dfile.encoding=UTF-8
+        -Duser.timezone=Asia/Seoul
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Check runner environment
+        run: |
+          echo "===== OS ====="
+          cat /etc/os-release
+          echo "===== Java ====="
+          java -version
+          echo "===== Maven ====="
+          mvn -version
+          echo "===== JVM Options ====="
+          echo "MAVEN_OPTS=$MAVEN_OPTS"
+          echo "JAVA_TOOL_OPTIONS=$JAVA_TOOL_OPTIONS"
+
+      - name: Build package without running tests
+        run: mvn -B clean package -DskipTests
+
+      - name: Verify build output
+        run: |
+          echo "===== target files ====="
+          ls -al target || true
+          echo "===== jar/war files ====="
+          ls -al target/*.jar target/*.war 2>/dev/null || true
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nsight-messaging-build
+          path: |
+            target/*.jar
+            target/*.war
+          if-no-files-found: error
