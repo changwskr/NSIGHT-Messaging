@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{xpilot/fragments/xpilot-page-head :: head('PILOT-002 세션')}"></head>
+<body data-xpilot-page="pilot002">
+<th:block th:replace="~{xpilot/fragments/xpilot-page-head :: topbar('PILOT-002 — Pilot 세션 등록')}"></th:block>
+
+<div id="statusBar" class="status-bar hidden" role="status"></div>
+
+<main class="env-layout">
+    <section class="card env-screen">
+        <div class="card-title">
+            <h2>Pilot 세션 등록</h2>
+            <p>traceenvironment를 ac/as/dc 구조로 옮기기 위한 Pilot 메타데이터를 저장합니다.</p>
+        </div>
+        <form id="pilotCreateForm" class="env-form-grid">
+            <label>Pilot 이름 <input type="text" id="pilotName" name="pilotName" required placeholder="예: ENV 구조 전환 1차"/></label>
+            <label>환경 Run ID <input type="text" id="envRunId" name="envRunId" placeholder="선택 — ENV assessment runId"/></label>
+            <label>메모 <textarea id="pilotNote" name="note" rows="3" placeholder="전환 범위·검증 메모"></textarea></label>
+        </form>
+        <div class="env-form-actions">
+            <button type="button" class="btn btn-primary" id="btnPilotCreate">Pilot 세션 생성</button>
+            <button type="button" class="btn btn-secondary" id="btnPilotSample">샘플 생성</button>
+            <button type="button" class="btn btn-secondary" id="btnPilotReload">목록 새로고침</button>
+        </div>
+    </section>
+
+    <section class="card env-screen">
+        <div class="card-title">
+            <h2>등록된 Pilot 세션</h2>
+        </div>
+        <div class="table-wrap">
+            <table class="data-table" id="pilotTable">
+                <thead>
+                <tr>
+                    <th>Pilot ID</th>
+                    <th>이름</th>
+                    <th>대상</th>
+                    <th>구조(현재→목표)</th>
+                    <th>상태</th>
+                </tr>
+                </thead>
+                <tbody id="pilotTableBody">
+                <tr><td colspan="5" class="muted">로딩 중…</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+
+<script src="/js/xpilot.js"></script>
+</body>
+</html>

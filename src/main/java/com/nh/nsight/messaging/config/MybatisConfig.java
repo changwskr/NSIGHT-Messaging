@@ -7,7 +7,12 @@ import org.springframework.context.annotation.Configuration;
 @MapperScan(basePackages = {
         "com.nh.nsight.messaging.message.mapper",
         "com.nh.nsight.messaging.file.mapper",
-        "com.nh.nsight.messaging.transactionmgr.mapper"
+        "com.nh.nsight.messaging.transactionmgr.mapper",
+        "com.nh.nsight.messaging.capacitymgr.dc.accountdc.mapper",
+        "com.nh.nsight.messaging.xpilot.dc.pilotdc.mapper",
+        "com.nh.nsight.messaging.xpilotmessaging.dc.messagedc.mapper",
+        "com.nh.nsight.messaging.xpilotfile.dc.filedc.mapper",
+        "com.nh.nsight.messaging.xpilottransactionmgr.dc.transactiondc.mapper"
 })
 public class MybatisConfig {
 }

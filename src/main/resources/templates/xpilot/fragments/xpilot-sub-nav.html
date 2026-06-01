@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<body>
+<nav class="env-sub-nav" th:fragment="subNav(activeNav)">
+    <a href="/xpilot/pilot-001" th:classappend="${activeNav == 'pilot001'} ? ' active' : ''">PILOT-001 대시</a>
+    <a href="/xpilot/pilot-002" th:classappend="${activeNav == 'pilot002'} ? ' active' : ''">PILOT-002 세션</a>
+    <a href="/traceenvironment/env-001" class="env-sub-nav__external">↗ 통합 환경설정(기존)</a>
+</nav>
+</body>
+</html>

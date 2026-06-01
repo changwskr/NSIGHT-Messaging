@@ -151,7 +151,14 @@ body {
     background: #eef3fb;
     color: #1f5eff;
 }
+.service-card--xpilotmsg .service-card__badge { background: #eff6ff; color: #1d4ed8; }
+.service-card--xpilotmsg .service-card__action { color: #1d4ed8; }
 .service-card--file .service-card__badge { background: #ecfdf5; color: #0d9488; }
+.service-card--xpilotfile .service-card__badge { background: #f0fdf4; color: #15803d; }
+.service-card--xpilotfile .service-card__action { color: #15803d; }
+
+.service-card--xpilottx .service-card__badge { background: #fef3c7; color: #b45309; }
+.service-card--xpilottx .service-card__action { color: #b45309; }
 .service-card--tx .service-card__badge { background: #f5f3ff; color: #7c3aed; }
 .service-card--dump .service-card__badge { background: #fff7ed; color: #c2410c; }
 .service-card--dump .service-card__action { color: #c2410c; }
@@ -161,6 +168,9 @@ body {
 .service-card--ops .service-card__action { color: #0369a1; }
 .service-card--env .service-card__badge { background: #f4f3ff; color: #5b21b6; }
 .service-card--env .service-card__action { color: #5b21b6; }
+.service-card--xpilot .service-card__badge { background: #ecfeff; color: #0e7490; }
+.service-card--xpilot .service-card__action { color: #0e7490; }
+.env-sub-nav__external { margin-left: auto; font-size: 13px; opacity: 0.85; }
 
 /* 통합환경설정 점검 — 전체 폭·글자 크기 확대 */
 .env-layout {

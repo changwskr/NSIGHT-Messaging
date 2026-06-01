@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nh.nsight.messaging.xpilotmessaging.dc.messagedc.mapper.XpmMessageMapper">
+
+    <resultMap id="MessageResultMap" type="com.nh.nsight.messaging.xpilotmessaging.dc.messagedc.XpmMessage">
+        <id property="messageId" column="MESSAGE_ID"/>
+        <result property="messageCode" column="MESSAGE_CODE"/>
+        <result property="messageName" column="MESSAGE_NAME"/>
+        <result property="messageType" column="MESSAGE_TYPE"/>
+        <result property="channelCode" column="CHANNEL_CODE"/>
+        <result property="locale" column="LOCALE"/>
+        <result property="messageContent" column="MESSAGE_CONTENT"/>
+        <result property="displayStartAt" column="DISPLAY_START_AT"/>
+        <result property="displayEndAt" column="DISPLAY_END_AT"/>
+        <result property="useYn" column="USE_YN"/>
+        <result property="createdBy" column="CREATED_BY"/>
+        <result property="createdAt" column="CREATED_AT"/>
+        <result property="updatedBy" column="UPDATED_BY"/>
+        <result property="updatedAt" column="UPDATED_AT"/>
+    </resultMap>
+
+    <insert id="insertMessage" parameterType="com.nh.nsight.messaging.xpilotmessaging.dc.messagedc.XpmMessage"
+            useGeneratedKeys="true" keyProperty="messageId">
+        INSERT INTO TB_MSG_MESSAGE (
+            MESSAGE_CODE, MESSAGE_NAME, MESSAGE_TYPE, CHANNEL_CODE, LOCALE,
+            MESSAGE_CONTENT, DISPLAY_START_AT, DISPLAY_END_AT, USE_YN,
+            CREATED_BY, CREATED_AT, UPDATED_BY, UPDATED_AT
+        ) VALUES (
+            #{messageCode}, #{messageName}, #{messageType}, #{channelCode}, #{locale},
+            #{messageContent}, #{displayStartAt}, #{displayEndAt}, #{useYn},
+            #{createdBy}, CURRENT_TIMESTAMP, #{updatedBy}, CURRENT_TIMESTAMP
+        )
+    </insert>
+
+    <select id="selectById" resultMap="MessageResultMap">
+        SELECT * FROM TB_MSG_MESSAGE WHERE MESSAGE_ID = #{messageId}
+    </select>
+
+    <select id="selectByCode" resultMap="MessageResultMap">
+        SELECT * FROM TB_MSG_MESSAGE WHERE MESSAGE_CODE = #{messageCode}
+    </select>
+
+    <select id="selectMessages" resultMap="MessageResultMap">
+        SELECT * FROM TB_MSG_MESSAGE
+        <where>
+            <if test="messageType != null and messageType != ''">
+                AND MESSAGE_TYPE = #{messageType}
+            </if>
+            <if test="channelCode != null and channelCode != ''">
+                AND CHANNEL_CODE = #{channelCode}
+            </if>
+            <if test="useYn != null and useYn != ''">
+                AND USE_YN = #{useYn}
+            </if>
+        </where>
+        ORDER BY MESSAGE_ID DESC
+        OFFSET #{offset} ROWS FETCH NEXT #{safePageSize} ROWS ONLY
+    </select>
+
+    <select id="countMessages" resultType="long">
+        SELECT COUNT(*) FROM TB_MSG_MESSAGE
+        <where>
+            <if test="messageType != null and messageType != ''">
+                AND MESSAGE_TYPE = #{messageType}
+            </if>
+            <if test="channelCode != null and channelCode != ''">
+                AND CHANNEL_CODE = #{channelCode}
+            </if>
+            <if test="useYn != null and useYn != ''">
+                AND USE_YN = #{useYn}
+            </if>
+        </where>
+    </select>
+
+    <update id="updateMessage">
+        UPDATE TB_MSG_MESSAGE
+        SET MESSAGE_CODE = #{messageCode},
+            MESSAGE_NAME = #{messageName},
+            MESSAGE_TYPE = #{messageType},
+            CHANNEL_CODE = #{channelCode},
+            LOCALE = #{locale},
+            MESSAGE_CONTENT = #{messageContent},
+            DISPLAY_START_AT = #{displayStartAt},
+            DISPLAY_END_AT = #{displayEndAt},
+            USE_YN = #{useYn},
+            UPDATED_BY = #{updatedBy},
+            UPDATED_AT = CURRENT_TIMESTAMP
+        WHERE MESSAGE_ID = #{messageId}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM TB_MSG_MESSAGE WHERE MESSAGE_ID = #{messageId}
+    </delete>
+</mapper>

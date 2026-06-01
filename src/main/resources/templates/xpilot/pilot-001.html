@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{xpilot/fragments/xpilot-page-head :: head('PILOT-001 대시')}"></head>
+<body data-xpilot-page="pilot001">
+<th:block th:replace="~{xpilot/fragments/xpilot-page-head :: topbar('PILOT-001 — traceenvironment 요약 · Pilot 세션')}"></th:block>
+
+<div id="statusBar" class="status-bar hidden" role="status"></div>
+
+<main class="env-layout">
+    <section class="card env-screen env-screen--dash" id="pilotDashSection">
+        <div class="card-title">
+            <h2>PILOT-001 대시보드</h2>
+            <p>AC/AS/DC 계층 API로 traceenvironment 데이터를 조회합니다 (기존 모듈은 수정하지 않음).</p>
+        </div>
+        <div class="env-dash">
+            <div class="env-dash__item"><span class="env-dash__label">비교 일치</span><strong id="envMatchCount">—</strong></div>
+            <div class="env-dash__item env-dash__item--warn"><span class="env-dash__label">경고</span><strong id="envWarnCount">—</strong></div>
+            <div class="env-dash__item"><span class="env-dash__label">총 비교</span><strong id="envTotalCompared">—</strong></div>
+            <div class="env-dash__item"><span class="env-dash__label">Pilot 세션</span><strong id="pilotSessionCount">—</strong></div>
+        </div>
+    </section>
+
+    <section class="card env-screen-nav-cards">
+        <h3 class="env-screen-nav-cards__title">다음 화면</h3>
+        <div class="env-screen-nav-cards__grid">
+            <a class="env-screen-nav-card" href="/xpilot/pilot-002"><strong>PILOT-002</strong><span>Pilot 세션 등록·목록</span></a>
+            <a class="env-screen-nav-card" href="/traceenvironment/env-001"><strong>ENV-001</strong><span>기존 통합 환경설정</span></a>
+            <a class="env-screen-nav-card" href="/traceenvironment/env-002"><strong>ENV-002</strong><span>산정 조건 입력</span></a>
+        </div>
+    </section>
+</main>
+
+<script src="/js/xpilot.js"></script>
+</body>
+</html>
