@@ -15,6 +15,8 @@ public final class MessageLogPathSupport {
                 || uri.startsWith("/transactionmgr")
                 || uri.startsWith("/api/v1/transaction-logs")
                 || uri.startsWith("/api/v1/message-logs")
+                || uri.startsWith("/xpilottransactionmgr")
+                || uri.startsWith("/api/xpilottransactionmgr")
                 || uri.contains("/h2-console")
                 || uri.startsWith("/actuator")
                 || uri.startsWith("/css/")

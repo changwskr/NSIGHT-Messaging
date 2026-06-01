@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nh.nsight.messaging.capacitymgr.dc.accountdc.mapper.AccountMapper">
+
+    <resultMap id="AccountResultMap" type="com.nh.nsight.messaging.capacitymgr.dc.accountdc.Account">
+        <id property="accountNumber" column="ACCOUNT_NUMBER"/>
+        <result property="name" column="NAME"/>
+        <result property="identificationNumber" column="IDENTIFICATION_NUMBER"/>
+        <result property="interestRate" column="INTEREST_RATE"/>
+        <result property="lastTransaction" column="LAST_TRANSACTION"/>
+        <result property="password" column="PASSWORD"/>
+        <result property="netAmount" column="NET_AMOUNT"/>
+        <result property="accountType" column="ACCOUNT_TYPE"/>
+        <result property="status" column="STATUS"/>
+        <result property="currency" column="CURRENCY"/>
+        <result property="createdDate" column="CREATED_DATE"/>
+        <result property="updatedDate" column="UPDATED_DATE"/>
+    </resultMap>
+
+    <sql id="accountColumns">
+        ACCOUNT_NUMBER,
+        NAME,
+        IDENTIFICATION_NUMBER,
+        INTEREST_RATE,
+        LAST_TRANSACTION,
+        PASSWORD,
+        NET_AMOUNT,
+        ACCOUNT_TYPE,
+        STATUS,
+        CURRENCY,
+        CREATED_DATE,
+        UPDATED_DATE
+    </sql>
+
+    <select id="selectByAccountNumber" resultMap="AccountResultMap">
+        SELECT <include refid="accountColumns"/>
+        FROM TB_CAPACITY_ACCOUNT
+        WHERE ACCOUNT_NUMBER = #{accountNumber}
+    </select>
+
+    <select id="selectAll" resultMap="AccountResultMap">
+        SELECT <include refid="accountColumns"/>
+        FROM TB_CAPACITY_ACCOUNT
+        <where>
+            <if test="criteria != null and criteria.accountNumber != null and criteria.accountNumber != ''">
+                AND ACCOUNT_NUMBER LIKE CONCAT('%', #{criteria.accountNumber}, '%')
+            </if>
+            <if test="criteria != null and criteria.name != null and criteria.name != ''">
+                AND NAME LIKE CONCAT('%', #{criteria.name}, '%')
+            </if>
+            <if test="criteria != null and criteria.accountType != null and criteria.accountType != ''">
+                AND ACCOUNT_TYPE = #{criteria.accountType}
+            </if>
+            <if test="criteria != null and criteria.status != null and criteria.status != ''">
+                AND STATUS = #{criteria.status}
+            </if>
+            <if test="criteria != null and criteria.currency != null and criteria.currency != ''">
+                AND CURRENCY = #{criteria.currency}
+            </if>
+        </where>
+        ORDER BY ACCOUNT_NUMBER
+    </select>
+
+    <select id="countByAccountNumber" resultType="int">
+        SELECT COUNT(*)
+        FROM TB_CAPACITY_ACCOUNT
+        WHERE ACCOUNT_NUMBER = #{accountNumber}
+    </select>
+
+    <insert id="insert" parameterType="com.nh.nsight.messaging.capacitymgr.dc.accountdc.Account">
+        INSERT INTO TB_CAPACITY_ACCOUNT (
+            ACCOUNT_NUMBER, NAME, IDENTIFICATION_NUMBER, INTEREST_RATE, LAST_TRANSACTION,
+            PASSWORD, NET_AMOUNT, ACCOUNT_TYPE, STATUS, CURRENCY, CREATED_DATE, UPDATED_DATE
+        ) VALUES (
+            #{accountNumber}, #{name}, #{identificationNumber}, #{interestRate}, #{lastTransaction},
+            #{password}, #{netAmount}, #{accountType}, #{status}, #{currency},
+            #{createdDate}, #{updatedDate}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.nh.nsight.messaging.capacitymgr.dc.accountdc.Account">
+        UPDATE TB_CAPACITY_ACCOUNT
+        SET NAME = #{name},
+            IDENTIFICATION_NUMBER = #{identificationNumber},
+            INTEREST_RATE = #{interestRate},
+            LAST_TRANSACTION = #{lastTransaction},
+            PASSWORD = #{password},
+            NET_AMOUNT = #{netAmount},
+            ACCOUNT_TYPE = #{accountType},
+            STATUS = #{status},
+            CURRENCY = #{currency},
+            UPDATED_DATE = #{updatedDate}
+        WHERE ACCOUNT_NUMBER = #{accountNumber}
+    </update>
+
+    <delete id="deleteByAccountNumber">
+        DELETE FROM TB_CAPACITY_ACCOUNT
+        WHERE ACCOUNT_NUMBER = #{accountNumber}
+    </delete>
+
+    <update id="updateBalance">
+        UPDATE TB_CAPACITY_ACCOUNT
+        SET NET_AMOUNT = #{netAmount},
+            UPDATED_DATE = CURRENT_TIMESTAMP
+        WHERE ACCOUNT_NUMBER = #{accountNumber}
+    </update>
+
+    <update id="updateLastTransaction">
+        UPDATE TB_CAPACITY_ACCOUNT
+        SET LAST_TRANSACTION = #{lastTransaction},
+            UPDATED_DATE = CURRENT_TIMESTAMP
+        WHERE ACCOUNT_NUMBER = #{accountNumber}
+    </update>
+
+</mapper>

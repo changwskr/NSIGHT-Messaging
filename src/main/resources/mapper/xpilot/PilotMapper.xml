@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nh.nsight.messaging.xpilot.dc.pilotdc.mapper.PilotMapper">
+
+    <resultMap id="PilotResultMap" type="com.nh.nsight.messaging.xpilot.dc.pilotdc.Pilot">
+        <id property="pilotId" column="PILOT_ID"/>
+        <result property="pilotName" column="PILOT_NAME"/>
+        <result property="targetModule" column="TARGET_MODULE"/>
+        <result property="sourceStructure" column="SOURCE_STRUCTURE"/>
+        <result property="targetStructure" column="TARGET_STRUCTURE"/>
+        <result property="status" column="STATUS"/>
+        <result property="envRunId" column="ENV_RUN_ID"/>
+        <result property="note" column="NOTE"/>
+        <result property="createdDate" column="CREATED_DATE"/>
+        <result property="updatedDate" column="UPDATED_DATE"/>
+    </resultMap>
+
+    <sql id="pilotColumns">
+        PILOT_ID,
+        PILOT_NAME,
+        TARGET_MODULE,
+        SOURCE_STRUCTURE,
+        TARGET_STRUCTURE,
+        STATUS,
+        ENV_RUN_ID,
+        NOTE,
+        CREATED_DATE,
+        UPDATED_DATE
+    </sql>
+
+    <select id="selectByPilotId" resultMap="PilotResultMap">
+        SELECT <include refid="pilotColumns"/>
+        FROM TB_XPILOT_SESSION
+        WHERE PILOT_ID = #{pilotId}
+    </select>
+
+    <select id="selectList" resultMap="PilotResultMap">
+        SELECT <include refid="pilotColumns"/>
+        FROM TB_XPILOT_SESSION
+        <where>
+            <if test="status != null and status != ''">
+                AND STATUS = #{status}
+            </if>
+            <if test="targetModule != null and targetModule != ''">
+                AND TARGET_MODULE = #{targetModule}
+            </if>
+        </where>
+        ORDER BY CREATED_DATE DESC
+    </select>
+
+    <select id="existsByPilotId" resultType="boolean">
+        SELECT COUNT(1) > 0
+        FROM TB_XPILOT_SESSION
+        WHERE PILOT_ID = #{pilotId}
+    </select>
+
+    <insert id="insert">
+        INSERT INTO TB_XPILOT_SESSION (
+            PILOT_ID,
+            PILOT_NAME,
+            TARGET_MODULE,
+            SOURCE_STRUCTURE,
+            TARGET_STRUCTURE,
+            STATUS,
+            ENV_RUN_ID,
+            NOTE,
+            CREATED_DATE,
+            UPDATED_DATE
+        ) VALUES (
+            #{pilotId},
+            #{pilotName},
+            #{targetModule},
+            #{sourceStructure},
+            #{targetStructure},
+            #{status},
+            #{envRunId},
+            #{note},
+            #{createdDate},
+            #{updatedDate}
+        )
+    </insert>
+</mapper>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nh.nsight.messaging.xpilottransactionmgr.dc.transactiondc.mapper.XptTransactionLogMapper">
+
+    <resultMap id="TransactionLogResultMap" type="com.nh.nsight.messaging.xpilottransactionmgr.dc.transactiondc.XptTransactionLog">
+        <id property="txLogId" column="TX_LOG_ID"/>
+        <result property="requestUri" column="REQUEST_URI"/>
+        <result property="httpMethod" column="HTTP_METHOD"/>
+        <result property="guid" column="GUID"/>
+        <result property="traceId" column="TRACE_ID"/>
+        <result property="spanId" column="SPAN_ID"/>
+        <result property="transactionId" column="TRANSACTION_ID"/>
+        <result property="interfaceId" column="INTERFACE_ID"/>
+        <result property="serviceId" column="SERVICE_ID"/>
+        <result property="requestDateTime" column="REQUEST_DATE_TIME"/>
+        <result property="responseDateTime" column="RESPONSE_DATE_TIME"/>
+        <result property="sourceSystemId" column="SOURCE_SYSTEM_ID"/>
+        <result property="targetSystemId" column="TARGET_SYSTEM_ID"/>
+        <result property="channelId" column="CHANNEL_ID"/>
+        <result property="terminalId" column="TERMINAL_ID"/>
+        <result property="userId" column="USER_ID"/>
+        <result property="branchId" column="BRANCH_ID"/>
+        <result property="centerId" column="CENTER_ID"/>
+        <result property="apId" column="AP_ID"/>
+        <result property="requestType" column="REQUEST_TYPE"/>
+        <result property="messageType" column="MESSAGE_TYPE"/>
+        <result property="version" column="VERSION"/>
+        <result property="clientIp" column="CLIENT_IP"/>
+        <result property="ctrlTimeout" column="CTRL_TIMEOUT"/>
+        <result property="ctrlRetryYn" column="CTRL_RETRY_YN"/>
+        <result property="ctrlRetryCount" column="CTRL_RETRY_COUNT"/>
+        <result property="ctrlPageNo" column="CTRL_PAGE_NO"/>
+        <result property="ctrlPageSize" column="CTRL_PAGE_SIZE"/>
+        <result property="ctrlTotalCount" column="CTRL_TOTAL_COUNT"/>
+        <result property="secMaskingLevel" column="SEC_MASKING_LEVEL"/>
+        <result property="secDataGrade" column="SEC_DATA_GRADE"/>
+        <result property="secAccessPurpose" column="SEC_ACCESS_PURPOSE"/>
+        <result property="secAuditRequiredYn" column="SEC_AUDIT_REQUIRED_YN"/>
+        <result property="errResultCode" column="ERR_RESULT_CODE"/>
+        <result property="errResultMessage" column="ERR_RESULT_MESSAGE"/>
+        <result property="errErrorCode" column="ERR_ERROR_CODE"/>
+        <result property="errErrorMessage" column="ERR_ERROR_MESSAGE"/>
+        <result property="errErrorDetail" column="ERR_ERROR_DETAIL"/>
+        <result property="errErrorSystemId" column="ERR_ERROR_SYSTEM_ID"/>
+        <result property="errErrorDateTime" column="ERR_ERROR_DATE_TIME"/>
+        <result property="createdAt" column="CREATED_AT"/>
+    </resultMap>
+
+    <sql id="transactionLogWhere">
+        <where>
+            <if test="guid != null and guid != ''">
+                AND UPPER(GUID) LIKE '%' || UPPER(#{guid}) || '%'
+            </if>
+            <if test="traceId != null and traceId != ''">
+                AND UPPER(TRACE_ID) LIKE '%' || UPPER(#{traceId}) || '%'
+            </if>
+            <if test="transactionId != null and transactionId != ''">
+                AND UPPER(TRANSACTION_ID) LIKE '%' || UPPER(#{transactionId}) || '%'
+            </if>
+            <if test="serviceId != null and serviceId != ''">
+                AND UPPER(SERVICE_ID) LIKE '%' || UPPER(#{serviceId}) || '%'
+            </if>
+            <if test="resultCode != null and resultCode != ''">
+                AND ERR_RESULT_CODE = #{resultCode}
+            </if>
+            <if test="userId != null and userId != ''">
+                AND UPPER(USER_ID) LIKE '%' || UPPER(#{userId}) || '%'
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectById" parameterType="long" resultMap="TransactionLogResultMap">
+        SELECT * FROM TB_TX_TRANSACTION_LOG WHERE TX_LOG_ID = #{txLogId}
+    </select>
+
+    <select id="selectTransactionLogs"
+            parameterType="com.nh.nsight.messaging.xpilottransactionmgr.dc.transactiondc.dto.TransactionLogSearchDDTO"
+            resultMap="TransactionLogResultMap">
+        SELECT * FROM TB_TX_TRANSACTION_LOG
+        <include refid="transactionLogWhere"/>
+        ORDER BY TX_LOG_ID DESC
+        OFFSET #{offset} ROWS FETCH NEXT #{safePageSize} ROWS ONLY
+    </select>
+
+    <select id="countTransactionLogs"
+            parameterType="com.nh.nsight.messaging.xpilottransactionmgr.dc.transactiondc.dto.TransactionLogSearchDDTO"
+            resultType="long">
+        SELECT COUNT(*) FROM TB_TX_TRANSACTION_LOG
+        <include refid="transactionLogWhere"/>
+    </select>
+
+    <select id="selectTransactionLogsForDelete"
+            parameterType="com.nh.nsight.messaging.xpilottransactionmgr.dc.transactiondc.dto.TransactionLogSearchDDTO"
+            resultMap="TransactionLogResultMap">
+        SELECT * FROM TB_TX_TRANSACTION_LOG
+        <include refid="transactionLogWhere"/>
+        ORDER BY TX_LOG_ID DESC
+    </select>
+
+    <delete id="deleteById" parameterType="long">
+        DELETE FROM TB_TX_TRANSACTION_LOG WHERE TX_LOG_ID = #{txLogId}
+    </delete>
+
+    <delete id="deleteByCondition"
+            parameterType="com.nh.nsight.messaging.xpilottransactionmgr.dc.transactiondc.dto.TransactionLogSearchDDTO">
+        DELETE FROM TB_TX_TRANSACTION_LOG
+        <include refid="transactionLogWhere"/>
+    </delete>
+</mapper>

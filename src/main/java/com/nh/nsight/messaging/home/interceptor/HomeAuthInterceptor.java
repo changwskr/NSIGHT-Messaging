@@ -40,11 +40,15 @@ public class HomeAuthInterceptor implements HandlerInterceptor {
             return true;
         }
         return uri.startsWith("/messages")
+                || uri.startsWith("/xpilotmessaging")
+                || uri.startsWith("/xpilotfile")
                 || uri.startsWith("/files")
                 || uri.startsWith("/transactionmgr")
+                || uri.startsWith("/xpilottransactionmgr")
                 || uri.startsWith("/tracedump")
                 || uri.startsWith("/oominspector")
                 || uri.startsWith("/operations")
-                || uri.startsWith("/traceenvironment");
+                || uri.startsWith("/traceenvironment")
+                || uri.startsWith("/xpilot");
     }
 }

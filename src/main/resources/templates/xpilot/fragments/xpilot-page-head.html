@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(pageTitle)">
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title th:text="${pageTitle} + ' · NSIGHT Xpilot'">NSIGHT Xpilot</title>
+    <link rel="stylesheet" href="/css/nsight.css"/>
+</head>
+<body>
+<th:block th:fragment="topbar(subtitle)">
+<header class="topbar">
+    <div>
+        <h1>NSIGHT Xpilot — traceenvironment 구조 전환</h1>
+        <p th:text="${subtitle}">—</p>
+    </div>
+    <div class="topbar-right">
+        <nav th:replace="~{fragments/main-nav :: mainNav('xpilot')}"></nav>
+        <div class="badge">XPL</div>
+    </div>
+</header>
+<nav th:replace="~{xpilot/fragments/xpilot-sub-nav :: subNav(${activeNav})}"></nav>
+</th:block>
+</body>
+</html>
