@@ -60,7 +60,8 @@ public class ASMXPF71001 {
             ddto.setOriginalName(originalName);
             ddto.setStoredName(storedName);
             ddto.setContentType(StringUtils.hasText(file.getContentType())
-                    ? file.getContentType() : "application/octet-stream");
+                    ? file.getContentType()
+                    : "application/octet-stream");
             ddto.setFileSize(file.getSize());
             ddto.setStoragePath(relativePath);
             ddto.setBizCategory(bizCategory);

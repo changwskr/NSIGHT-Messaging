@@ -1,0 +1,52 @@
+{
+  "meta": {
+    "messageCode": "INB_ACCT_INQ_001",
+    "messageName": "계좌조회 요청 (PH1 샘플)",
+    "standardVersion": "PH1-20080421",
+    "direction": "REQ",
+    "documentRef": "차아키_AA_PH1_내부표준전문"
+  },
+  "header": {
+    "system": {
+      "TGM_LEN": "00000504",
+      "STD_TGM_DVCD": "IN",
+      "SND_RCV_DVCD": "S",
+      "TGM_STCD": "0",
+      "SYS_ID": "MSG"
+    },
+    "common": {
+      "GLBL_ID": "20260603-INB-00000001",
+      "TRN_DT": "20260603",
+      "TRN_TM": "143000",
+      "CHNL_DVCD": "WEB",
+      "TRN_ID": "INB_ACCT_INQ_001",
+      "SRVC_ID": "accountInquiry"
+    },
+    "business": {
+      "BRN_NO": "0001",
+      "USER_ID": "USER000001",
+      "SCRN_ID": "ACCT0100M",
+      "TERM_ID": "T000000001"
+    }
+  },
+  "body": {
+    "ACNO": "1234567890123",
+    "INQ_DVCD": "01",
+    "CUST_NM": ""
+  },
+  "control": {
+    "timeout": 30,
+    "retryYn": "N",
+    "pageNo": 1,
+    "pageSize": 20
+  },
+  "security": {
+    "maskingLevel": "GENERAL",
+    "dataGrade": "INTERNAL",
+    "auditRequiredYn": "Y"
+  },
+  "error": {
+    "resultCode": "SUCCESS",
+    "resultMessage": "정상"
+  }
+}

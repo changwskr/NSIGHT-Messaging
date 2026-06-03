@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nh.nsight.messaging.junmun.dc.junmundc.mapper.JunmunDefinitionMapper">
+
+    <resultMap id="JunmunDefinitionResultMap" type="com.nh.nsight.messaging.junmun.dc.junmundc.JunmunDefinition">
+        <id property="definitionId" column="DEFINITION_ID"/>
+        <result property="messageCode" column="MESSAGE_CODE"/>
+        <result property="messageName" column="MESSAGE_NAME"/>
+        <result property="transactionId" column="TRANSACTION_ID"/>
+        <result property="serviceId" column="SERVICE_ID"/>
+        <result property="direction" column="DIRECTION"/>
+        <result property="standardVersion" column="STANDARD_VERSION"/>
+        <result property="documentRef" column="DOCUMENT_REF"/>
+        <result property="layoutJson" column="LAYOUT_JSON"/>
+        <result property="sampleJson" column="SAMPLE_JSON"/>
+        <result property="description" column="DESCRIPTION"/>
+        <result property="useYn" column="USE_YN"/>
+        <result property="createdBy" column="CREATED_BY"/>
+        <result property="createdAt" column="CREATED_AT"/>
+        <result property="updatedBy" column="UPDATED_BY"/>
+        <result property="updatedAt" column="UPDATED_AT"/>
+    </resultMap>
+
+    <sql id="junmunColumns">
+        DEFINITION_ID, MESSAGE_CODE, MESSAGE_NAME, TRANSACTION_ID, SERVICE_ID,
+        DIRECTION, STANDARD_VERSION, DOCUMENT_REF, LAYOUT_JSON, SAMPLE_JSON,
+        DESCRIPTION, USE_YN, CREATED_BY, CREATED_AT, UPDATED_BY, UPDATED_AT
+    </sql>
+
+    <select id="selectByMessageCode" resultMap="JunmunDefinitionResultMap">
+        SELECT <include refid="junmunColumns"/>
+        FROM TB_JUNMUN_DEFINITION
+        WHERE MESSAGE_CODE = #{messageCode}
+    </select>
+
+    <select id="selectAll" resultMap="JunmunDefinitionResultMap">
+        SELECT <include refid="junmunColumns"/>
+        FROM TB_JUNMUN_DEFINITION
+        <where>
+            <if test="criteria != null and criteria.messageCode() != null and criteria.messageCode() != ''">
+                AND MESSAGE_CODE LIKE CONCAT('%', #{criteria.messageCode}, '%')
+            </if>
+            <if test="criteria != null and criteria.messageName() != null and criteria.messageName() != ''">
+                AND MESSAGE_NAME LIKE CONCAT('%', #{criteria.messageName}, '%')
+            </if>
+            <if test="criteria != null and criteria.direction() != null and criteria.direction() != ''">
+                AND DIRECTION = #{criteria.direction}
+            </if>
+            <if test="criteria != null and criteria.useYn() != null and criteria.useYn() != ''">
+                AND USE_YN = #{criteria.useYn}
+            </if>
+        </where>
+        ORDER BY MESSAGE_CODE
+    </select>
+
+    <select id="countByMessageCode" resultType="int">
+        SELECT COUNT(*) FROM TB_JUNMUN_DEFINITION WHERE MESSAGE_CODE = #{messageCode}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="definitionId" keyColumn="DEFINITION_ID">
+        INSERT INTO TB_JUNMUN_DEFINITION (
+            MESSAGE_CODE, MESSAGE_NAME, TRANSACTION_ID, SERVICE_ID, DIRECTION,
+            STANDARD_VERSION, DOCUMENT_REF, LAYOUT_JSON, SAMPLE_JSON, DESCRIPTION,
+            USE_YN, CREATED_BY, UPDATED_BY
+        ) VALUES (
+            #{messageCode}, #{messageName}, #{transactionId}, #{serviceId}, #{direction},
+            #{standardVersion}, #{documentRef}, #{layoutJson}, #{sampleJson}, #{description},
+            #{useYn}, #{createdBy}, #{updatedBy}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE TB_JUNMUN_DEFINITION SET
+            MESSAGE_NAME = #{messageName},
+            TRANSACTION_ID = #{transactionId},
+            SERVICE_ID = #{serviceId},
+            DIRECTION = #{direction},
+            STANDARD_VERSION = #{standardVersion},
+            DOCUMENT_REF = #{documentRef},
+            LAYOUT_JSON = #{layoutJson},
+            SAMPLE_JSON = #{sampleJson},
+            DESCRIPTION = #{description},
+            USE_YN = #{useYn},
+            UPDATED_BY = #{updatedBy},
+            UPDATED_AT = CURRENT_TIMESTAMP
+        WHERE MESSAGE_CODE = #{messageCode}
+    </update>
+
+    <delete id="deleteByMessageCode">
+        DELETE FROM TB_JUNMUN_DEFINITION WHERE MESSAGE_CODE = #{messageCode}
+    </delete>
+</mapper>

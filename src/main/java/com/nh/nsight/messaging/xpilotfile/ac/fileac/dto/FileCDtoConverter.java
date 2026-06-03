@@ -112,8 +112,7 @@ public final class FileCDtoConverter {
                 enriched.getCreatedBy(),
                 enriched.getCreatedAt(),
                 enriched.getUpdatedBy(),
-                enriched.getUpdatedAt()
-        );
+                enriched.getUpdatedAt());
     }
 
     public static List<FileResponse> toResponseList(List<FileCDTO> dtos, XpilotFileStorageSupport storageSupport) {

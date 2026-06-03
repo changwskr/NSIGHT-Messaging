@@ -166,3 +166,22 @@ VALUES
 ('sec01', '보안 담당', 'sec@nsight.local', '010-3000-0002', 'SECURITY', 'ACTIVE'),
 ('mkt01', '마케팅 담당', 'mkt@nsight.local', '010-4000-0001', 'MARKETING', 'ACTIVE'),
 ('batch01', '배치 계정', 'batch@nsight.internal', NULL, 'BATCH', 'ACTIVE');
+
+-- TB_JUNMUN_DEFINITION (PH1 내부표준전문 샘플)
+INSERT INTO TB_JUNMUN_DEFINITION (
+    MESSAGE_CODE, MESSAGE_NAME, TRANSACTION_ID, SERVICE_ID, DIRECTION,
+    STANDARD_VERSION, DOCUMENT_REF, LAYOUT_JSON, SAMPLE_JSON, DESCRIPTION,
+    USE_YN, CREATED_BY, UPDATED_BY
+) VALUES (
+    'INB_ACCT_INQ_001',
+    '계좌조회 요청 (PH1 내부표준전문)',
+    'INB_ACCT_INQ_001',
+    'accountInquiry',
+    'REQ',
+    'PH1-20080421',
+    '차아키_AA_PH1_내부표준전문_20080421_v1.0',
+    '{"standardVersion":"PH1-20080421","sections":[{"sectionId":"SYS_HDR","sectionName":"시스템표준헤더","fields":[{"fieldId":"TGM_LEN","name":"전문길이","type":"N","length":8,"required":true}]},{"sectionId":"MSG_BODY","sectionName":"업무본문","jsonMode":true,"fields":[{"fieldId":"ACNO","name":"계좌번호","type":"A","required":true}]}]}',
+    '{"meta":{"messageCode":"INB_ACCT_INQ_001","direction":"REQ"},"header":{"system":{"TGM_LEN":"00000504"}},"body":{"ACNO":"1234567890123"},"control":{},"security":{},"error":{"resultCode":"SUCCESS"}}',
+    'AA PH1 내부표준전문 관리 샘플',
+    'Y', 'SYSTEM', 'SYSTEM'
+);

@@ -79,8 +79,7 @@ public class ASMXPF72001 {
                 properties.getStoragePath(),
                 properties.getMaxFileSizeBytes(),
                 storageSupport.formatSizeLabel(properties.getMaxFileSizeBytes()),
-                properties.getAllowedExtensions()
-        );
+                properties.getAllowedExtensions());
         System.out.println("★★★★★★★ [" + AS + "] getStorageLocation END");
         return result;
     }

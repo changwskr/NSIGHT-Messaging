@@ -60,6 +60,19 @@ cd nsight-message-mgmt-service
 | `bin/build-jar-gradle.bat` | Gradle JAR 패키징      |
 | `bin/pull-and-build.bat`   | develop 동기화 후 빌드 |
 
+**Git 스크립트 (`bin/gitcmd/`)**
+
+| 스크립트 | 설명 |
+| -------- | ---- |
+| `compare-remote.bat` / `.sh` | 현재 브랜치 vs `origin/master`(기본) — 뒤처진 커밋·파일 수·diff |
+| `status-branches.bat` / `.sh` | `develop`/`master` vs origin ahead·behind 요약 |
+| `pull-remote.bat` / `.sh` | 지정 브랜치 checkout + `git pull --ff-only` (기본 `develop`) |
+| `merge-remote-into-current.bat` / `.sh` | 현재 브랜치에 `origin/master` 등 merge (확인 후 실행) |
+
+Windows에서 한글 출력: `.bat`은 동일 이름 `.ps1`을 호출합니다(PowerShell UTF-8). 터미널 폰트가 한글을 지원해야 합니다.
+
+환경 변수: `GIT_REMOTE`(기본 `origin`), `GIT_BRANCH`(compare/merge 기본 `master`, pull 기본 `develop`).
+
 **접속 URL**
 
 ```text

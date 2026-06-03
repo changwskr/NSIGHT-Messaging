@@ -30,7 +30,7 @@ public class XpilotMessageRule {
     }
 
     private void validateFields(String messageCode, String messageType, String channelCode, String useYn,
-                                LocalDateTime displayStartAt, LocalDateTime displayEndAt) {
+            LocalDateTime displayStartAt, LocalDateTime displayEndAt) {
         if (!StringUtils.hasText(messageCode) || !MESSAGE_CODE_PATTERN.matcher(messageCode).matches()) {
             throw new BusinessException(ErrorCode.VAL_INVALID_REQUEST,
                     "messageCode는 영문 대문자, 숫자, _, - 조합으로 3~50자여야 합니다.");

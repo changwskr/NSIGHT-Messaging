@@ -5,6 +5,7 @@ import com.nh.nsight.messaging.xpilotstyleguide.ac.userac.dto.UserProfileCDTO;
 import com.nh.nsight.messaging.xpilotstyleguide.as.useras.ASMSU73001;
 import com.nh.nsight.messaging.xpilotstyleguide.as.useras.ASMSU74001;
 import com.nh.nsight.messaging.xpilotstyleguide.util.StyleGuideBizException;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -34,8 +35,8 @@ public class ACMSU73001 {
             @RequestBody UserProfileCDTO userProfileCDTO) {
         System.out.println("★★★★★ [" + AC + "] update START userId=" + userId);
         userProfileCDTO.setUserId(userId);
-        ResponseEntity<UserApiResponse<UserProfileCDTO>> result =
-                ResponseEntity.ok(UserApiResponse.ok(asmsu73001.update(userProfileCDTO), "사용자정보가 수정되었습니다."));
+        ResponseEntity<UserApiResponse<UserProfileCDTO>> result = ResponseEntity
+                .ok(UserApiResponse.ok(asmsu73001.update(userProfileCDTO), "사용자정보가 수정되었습니다."));
         System.out.println("★★★★★ [" + AC + "] update END userId=" + userId);
         return result;
     }
@@ -46,8 +47,7 @@ public class ACMSU73001 {
         UserProfileCDTO criteria = new UserProfileCDTO();
         criteria.setUserId(userId);
         asmsu74001.delete(criteria);
-        ResponseEntity<UserApiResponse<Void>> result =
-                ResponseEntity.ok(UserApiResponse.ok(null, "사용자정보가 삭제되었습니다."));
+        ResponseEntity<UserApiResponse<Void>> result = ResponseEntity.ok(UserApiResponse.ok(null, "사용자정보가 삭제되었습니다."));
         System.out.println("★★★★★ [" + AC + "] delete END userId=" + userId);
         return result;
     }

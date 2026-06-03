@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>NSIGHT 전문 관리</title>
+    <link rel="stylesheet" href="/css/nsight.css"/>
+</head>
+<body class="junmun-page" data-junmun-page="manage">
+<header class="topbar">
+    <div>
+        <h1>NSIGHT 전문 관리</h1>
+        <p>PH1 내부표준전문 — 시스템/공통/업무 헤더 + JSON 업무본문 (차아키 AA 아키텍처 확립단계)</p>
+    </div>
+    <div class="topbar-right">
+        <nav th:replace="~{fragments/main-nav :: mainNav('junmun')}"></nav>
+        <div class="badge">JUNMUN</div>
+    </div>
+</header>
+
+<div id="statusBar" class="status-bar hidden" role="status"></div>
+
+<main class="crud-layout junmun-layout">
+    <section class="card form-card">
+        <div class="card-title row-title">
+            <div>
+                <h2 id="formTitle">전문 정의 등록</h2>
+                <p id="formDesc">전문코드·레이아웃(JSON)·샘플 envelope를 관리합니다.</p>
+            </div>
+            <span id="formModeBadge" class="mode-badge create">CREATE</span>
+        </div>
+
+        <form id="junmunForm" class="grid-form">
+            <label>전문코드 <input type="text" id="messageCode" maxlength="50" required placeholder="INB_ACCT_INQ_001"/></label>
+            <label>전문명 <input type="text" id="messageName" maxlength="200" required/></label>
+            <label>거래ID <input type="text" id="transactionId" maxlength="50" required/></label>
+            <label>서비스ID <input type="text" id="serviceId" maxlength="50" required/></label>
+            <label>송수신
+                <select id="direction">
+                    <option value="REQ">REQ (요청)</option>
+                    <option value="RES">RES (응답)</option>
+                </select>
+            </label>
+            <label>표준버전 <input type="text" id="standardVersion" value="PH1-20080421" maxlength="30"/></label>
+            <label class="wide">참조문서 <input type="text" id="documentRef" maxlength="300"
+                placeholder="차아키_AA_PH1_내부표준전문_20080421_v1.0"/></label>
+            <label class="wide">설명 <input type="text" id="description" maxlength="500"/></label>
+            <label>사용여부
+                <select id="useYn">
+                    <option value="Y">Y</option>
+                    <option value="N">N</option>
+                </select>
+            </label>
+            <label class="wide">레이아웃 JSON (sections/fields)
+                <textarea id="layoutJson" rows="12" required spellcheck="false"></textarea>
+            </label>
+            <label class="wide">샘플 envelope JSON
+                <textarea id="sampleJson" rows="10" spellcheck="false"></textarea>
+            </label>
+            <div class="form-actions wide">
+                <button type="button" id="btnLoadPh1" class="secondary">PH1 기본값</button>
+                <button type="button" id="btnSave" class="primary">저장</button>
+                <button type="button" id="btnReset" class="secondary">신규</button>
+                <button type="button" id="btnDelete" class="danger hidden">삭제</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="card list-card">
+        <div class="card-title row-title">
+            <h2>전문 정의 목록</h2>
+            <button type="button" id="btnRefreshList" class="secondary small">새로고침</button>
+        </div>
+        <div class="filter-row">
+            <input type="text" id="searchCode" placeholder="전문코드 검색"/>
+            <select id="searchDirection">
+                <option value="">전체</option>
+                <option value="REQ">REQ</option>
+                <option value="RES">RES</option>
+            </select>
+        </div>
+        <div class="table-wrap">
+            <table id="junmunTable">
+                <thead>
+                <tr>
+                    <th>전문코드</th>
+                    <th>전문명</th>
+                    <th>거래ID</th>
+                    <th>구분</th>
+                    <th>버전</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="card junmun-build-card">
+        <div class="card-title row-title">
+            <h2>JSON 전문 생성 · 검증</h2>
+            <p>선택한 전문 정의와 필드값으로 표준 envelope JSON을 생성합니다.</p>
+        </div>
+        <div class="grid-form">
+            <label class="wide">필드값 (JSON map)
+                <textarea id="fieldValuesJson" rows="6" spellcheck="false">{
+  "GLBL_ID": "20260603-INB-00000001",
+  "TRN_DT": "20260603",
+  "TRN_TM": "143000",
+  "TRN_ID": "INB_ACCT_INQ_001",
+  "SRVC_ID": "accountInquiry",
+  "BRN_NO": "0001",
+  "USER_ID": "USER000001",
+  "ACNO": "1234567890123",
+  "INQ_DVCD": "01"
+}</textarea>
+            </label>
+            <div class="form-actions wide">
+                <button type="button" id="btnBuild" class="primary">JSON 생성</button>
+                <button type="button" id="btnValidate" class="secondary">검증</button>
+            </div>
+            <label class="wide">생성/검증 결과
+                <textarea id="envelopeResult" rows="16" readonly spellcheck="false"></textarea>
+            </label>
+            <p id="validateSummary" class="env-inline-hint"></p>
+        </div>
+    </section>
+</main>
+
+<script src="/js/junmun.js"></script>
+</body>
+</html>

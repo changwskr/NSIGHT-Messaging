@@ -4,6 +4,7 @@ import com.nh.nsight.messaging.xpilotstyleguide.ac.userac.dto.UserApiResponse;
 import com.nh.nsight.messaging.xpilotstyleguide.ac.userac.dto.UserProfileCDTO;
 import com.nh.nsight.messaging.xpilotstyleguide.as.useras.ASMSU71001;
 import com.nh.nsight.messaging.xpilotstyleguide.util.StyleGuideBizException;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,8 +29,8 @@ public class ACMSU71001 {
         System.out.println("★★★★★ [" + AC + "] create START userId="
                 + (userProfileCDTO != null ? userProfileCDTO.getUserId() : null));
         UserProfileCDTO created = asmsu71001.create(userProfileCDTO);
-        ResponseEntity<UserApiResponse<UserProfileCDTO>> result =
-                ResponseEntity.ok(UserApiResponse.ok(created, "사용자정보가 생성되었습니다."));
+        ResponseEntity<UserApiResponse<UserProfileCDTO>> result = ResponseEntity
+                .ok(UserApiResponse.ok(created, "사용자정보가 생성되었습니다."));
         System.out.println("★★★★★ [" + AC + "] create END userId="
                 + (created != null ? created.getUserId() : null));
         return result;

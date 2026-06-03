@@ -5,6 +5,7 @@ import com.nh.nsight.messaging.xpilotstyleguide.ac.userac.dto.UserProfileCDtoCon
 import com.nh.nsight.messaging.xpilotstyleguide.dc.userdc.DCUserProfile;
 import com.nh.nsight.messaging.xpilotstyleguide.dc.userdc.dto.UserProfileDDTO;
 import com.nh.nsight.messaging.xpilotstyleguide.util.StyleGuideBizException;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,8 +42,7 @@ public class ASMSU72001 {
         }
         condition.setPageNo(pageNo);
         condition.setPageSize(pageSize);
-        List<UserProfileCDTO> result =
-                UserProfileCDtoConverter.toCDtoList(dcUserProfile.getListUserProfile(condition));
+        List<UserProfileCDTO> result = UserProfileCDtoConverter.toCDtoList(dcUserProfile.getListUserProfile(condition));
         System.out.println("★★★★★ [" + AS + "] list END size=" + result.size());
         return result;
     }
