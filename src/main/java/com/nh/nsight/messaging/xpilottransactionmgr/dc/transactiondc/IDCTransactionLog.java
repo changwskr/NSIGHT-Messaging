@@ -1,7 +1,6 @@
 package com.nh.nsight.messaging.xpilottransactionmgr.dc.transactiondc;
 
 import com.nh.nsight.messaging.xpilottransactionmgr.dc.transactiondc.dto.TransactionLogSearchDDTO;
-import com.nh.nsight.messaging.xpilottransactionmgr.dc.transactiondc.XptTransactionLog;
 
 import java.util.List;
 

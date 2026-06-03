@@ -53,10 +53,22 @@ src/main/java/com/nh/nsight/messaging/framework/transaction/txmanager/
 
 ## 4. 실행 방법
 
+**Maven**
+
 ```bash
 cd nsight-message-mgmt-service
 mvn spring-boot:run
 ```
+
+**Gradle** (Maven과 동일 의존성 · `pom.xml` / `build.gradle` 병행)
+
+```bash
+cd nsight-message-mgmt-service
+./gradlew bootRun          # Windows: gradlew.bat bootRun
+./gradlew build            # JAR: build/libs/nsight-message-mgmt-service-1.0.0.jar
+```
+
+빌드 스크립트: `bin/build-jar.bat` (Maven) · `bin/build-jar-gradle.bat` (Gradle)
 
 접속 URL:
 

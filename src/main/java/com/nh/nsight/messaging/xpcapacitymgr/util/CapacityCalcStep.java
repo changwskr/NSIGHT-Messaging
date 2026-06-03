@@ -1,7 +1,5 @@
 package com.nh.nsight.messaging.xpcapacitymgr.zcommonutil;
 
-import com.nh.nsight.messaging.xpcapacitymgr.zcommonutil.XpCapacityBizException;
-
 /**
  * 용량산정 단계 — CAP-020(TPS) ~ CAP-050(DB Pool).
  */

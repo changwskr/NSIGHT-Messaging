@@ -9,7 +9,7 @@ import com.nh.nsight.messaging.capacitymgr.zcommonutil.CapacityBizException;
 import org.springframework.stereotype.Service;
 
 /**
- * ?? ?? Application Service ? AC·AS ??? {@link AccountCDTO}.
+ * ?? ?? Application Service — AC·AS ??? {@link AccountCDTO}.
  */
 @Service
 public class ASMBC71001 {
@@ -32,7 +32,7 @@ public class ASMBC71001 {
     private void validateAccountNumber(AccountCDTO accountCDTO) {
         if (accountCDTO == null || accountCDTO.getAccountNumber() == null
                 || accountCDTO.getAccountNumber().isBlank()) {
-            throw new CapacityBizException("????? ?? ?? ?????.");
+            throw new CapacityBizException("????? ?????.");
         }
     }
 }

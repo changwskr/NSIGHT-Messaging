@@ -78,6 +78,16 @@
                     <jvmArguments>-Dfile.encoding=UTF-8 -Dstdout.encoding=UTF-8 -Dstderr.encoding=UTF-8</jvmArguments>
                 </configuration>
             </plugin>
+            <!-- TpcUtil.main() — PowerShell: mvn -q exec:java @ exec.args (아래 bin/run-tpc-util.bat 참고) -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.5.0</version>
+                <configuration>
+                    <mainClass>com.nh.nsight.messaging.xpilottpcclient.TpcUtil</mainClass>
+                    <classpathScope>compile</classpathScope>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>
