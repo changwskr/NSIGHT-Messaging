@@ -26,7 +26,19 @@ import java.util.Optional;
 
 public enum VmProfile {
 
+    /** 소형 AP · PoC — 2 vCPU / 16GB. */
+    CORE2_16(
+            "2CORE-16GB", 2, 16, 60, 72, 80, 150, 200, 60,
+            th(150, 200, 25, 40, 50, 100, 4_000, 6_000, 20, 30, 20, 28, 60,
+                    "소형 VM · Thread·DB Session 상한 엄격 검증")
+    ),
 
+    /** 소형 Scale-Out — 4 vCPU / 32GB. */
+    CORE4_32(
+            "4CORE-32GB", 4, 32, 120, 144, 160, 280, 350, 120,
+            th(280, 350, 50, 75, 100, 175, 6_000, 8_000, 35, 45, 30, 40, 120,
+                    "소형·개발계 · 운영 전 성능시험 필수")
+    ),
 
     /** 온라인 AP Scale-Out — 8 vCPU / 32GB, VM당 250 TPS. */
 
