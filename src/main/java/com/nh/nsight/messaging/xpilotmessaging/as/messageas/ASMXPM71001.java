@@ -8,7 +8,7 @@ import com.nh.nsight.messaging.xpilotmessaging.ac.messageac.dto.MessageCDtoConve
 import com.nh.nsight.messaging.xpilotmessaging.ac.messageac.dto.MessageCreateCDTO;
 import com.nh.nsight.messaging.xpilotmessaging.dc.messagedc.DCMessage;
 import com.nh.nsight.messaging.xpilotmessaging.dc.messagedc.dto.MessageDDTO;
-import com.nh.nsight.messaging.xpilotmessaging.zcommonutil.XpilotMessageRule;
+import com.nh.nsight.messaging.xpilotmessaging.util.XpilotMessageRule;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

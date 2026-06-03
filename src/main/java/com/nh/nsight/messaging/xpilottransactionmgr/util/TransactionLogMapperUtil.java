@@ -1,4 +1,4 @@
-package com.nh.nsight.messaging.xpilottransactionmgr.zcommonutil;
+package com.nh.nsight.messaging.xpilottransactionmgr.util;
 
 import com.nh.nsight.messaging.transactionmgr.thing.TransactionLog;
 import com.nh.nsight.messaging.xpilottransactionmgr.dc.transactiondc.XptTransactionLog;

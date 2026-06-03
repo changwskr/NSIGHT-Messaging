@@ -1,7 +1,7 @@
 package com.nh.nsight.messaging.capacitymgr.as.accountas;
 
 import com.nh.nsight.messaging.capacitymgr.ac.accountac.dto.AccountCDTO;
-import com.nh.nsight.messaging.capacitymgr.zcommonutil.CapacityBizException;
+import com.nh.nsight.messaging.capacitymgr.util.CapacityBizException;
 
 import org.springframework.stereotype.Service;
 

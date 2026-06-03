@@ -2,8 +2,8 @@ package com.nh.nsight.messaging.capacitymgr.dc.accountdc;
 
 import com.nh.nsight.messaging.capacitymgr.dc.accountdc.dto.AccountDDTO;
 import com.nh.nsight.messaging.capacitymgr.dc.accountdc.repository.AccountRepository;
-import com.nh.nsight.messaging.capacitymgr.zcommonutil.AccountMapperUtil;
-import com.nh.nsight.messaging.capacitymgr.zcommonutil.CapacityBizException;
+import com.nh.nsight.messaging.capacitymgr.util.AccountMapperUtil;
+import com.nh.nsight.messaging.capacitymgr.util.CapacityBizException;
 
 import org.springframework.stereotype.Repository;
 

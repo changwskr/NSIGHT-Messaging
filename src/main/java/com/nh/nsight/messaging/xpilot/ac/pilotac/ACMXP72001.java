@@ -2,7 +2,7 @@ package com.nh.nsight.messaging.xpilot.ac.pilotac;
 
 import com.nh.nsight.messaging.xpilot.ac.pilotac.dto.PilotApiResponse;
 import com.nh.nsight.messaging.xpilot.as.pilotas.ASMXP72001;
-import com.nh.nsight.messaging.xpilot.zcommonutil.XpilotBizException;
+import com.nh.nsight.messaging.xpilot.util.XpilotBizException;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

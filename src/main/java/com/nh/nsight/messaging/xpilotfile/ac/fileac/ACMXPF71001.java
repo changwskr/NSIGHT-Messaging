@@ -4,7 +4,7 @@ import com.nh.nsight.messaging.common.response.StandardResponse;
 import com.nh.nsight.messaging.file.dto.FileResponse;
 import com.nh.nsight.messaging.xpilotfile.ac.fileac.dto.FileCDtoConverter;
 import com.nh.nsight.messaging.xpilotfile.as.fileas.ASMXPF71001;
-import com.nh.nsight.messaging.xpilotfile.zcommonutil.XpilotFileStorageSupport;
+import com.nh.nsight.messaging.xpilotfile.util.XpilotFileStorageSupport;
 
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;

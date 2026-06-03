@@ -1,4 +1,4 @@
-package com.nh.nsight.messaging.xpilotmessaging.zcommonutil;
+package com.nh.nsight.messaging.xpilotmessaging.util;
 
 /**
  * xpilotmessaging 업무 예외 (AC에서 BusinessException과 함께 GlobalExceptionHandler 사용).

@@ -1,4 +1,4 @@
-package com.nh.nsight.messaging.xpcapacitymgr.zcommonutil;
+package com.nh.nsight.messaging.xpcapacitymgr.util;
 
 /**
  * NSIGHT 용량산정 DB Pool — 2026-06-03 DB Pool 설계서.

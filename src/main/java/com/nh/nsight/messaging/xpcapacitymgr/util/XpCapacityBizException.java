@@ -1,4 +1,4 @@
-package com.nh.nsight.messaging.xpcapacitymgr.zcommonutil;
+package com.nh.nsight.messaging.xpcapacitymgr.util;
 
 public class XpCapacityBizException extends RuntimeException {
 

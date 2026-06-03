@@ -7,7 +7,7 @@ import com.nh.nsight.messaging.file.dto.FileStorageLocationResponse;
 import com.nh.nsight.messaging.xpilotfile.ac.fileac.dto.FileCDtoConverter;
 import com.nh.nsight.messaging.xpilotfile.ac.fileac.dto.FileSearchCDTO;
 import com.nh.nsight.messaging.xpilotfile.as.fileas.ASMXPF72001;
-import com.nh.nsight.messaging.xpilotfile.zcommonutil.XpilotFileStorageSupport;
+import com.nh.nsight.messaging.xpilotfile.util.XpilotFileStorageSupport;
 
 import org.springframework.core.io.Resource;
 import org.springframework.http.ContentDisposition;

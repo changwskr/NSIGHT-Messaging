@@ -1,4 +1,4 @@
-package com.nh.nsight.messaging.xpilotstyleguide.zcommonutil;
+package com.nh.nsight.messaging.xpilotstyleguide.util;
 
 /**
  * xpilotstyleguide 도메인 비즈니스 예외.

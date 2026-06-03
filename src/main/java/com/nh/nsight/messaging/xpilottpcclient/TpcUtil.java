@@ -11,8 +11,8 @@ import com.nh.nsight.messaging.xpilotmessaging.ac.messageac.dto.MessageCreateCDT
 import com.nh.nsight.messaging.xpilotmessaging.ac.messageac.dto.MessageSearchCDTO;
 import com.nh.nsight.messaging.xpilotmessaging.ac.messageac.dto.MessageUpdateCDTO;
 import com.nh.nsight.messaging.xpilottpcclient.dto.MessageSearchResult;
-import com.nh.nsight.messaging.xpilottpcclient.zcommonutil.TpcClientException;
-import com.nh.nsight.messaging.xpilottpcclient.zcommonutil.TpcMessageMapper;
+import com.nh.nsight.messaging.xpilottpcclient.util.TpcClientException;
+import com.nh.nsight.messaging.xpilottpcclient.util.TpcMessageMapper;
 
 import java.net.URI;
 import java.net.URLEncoder;

@@ -4,7 +4,7 @@ import com.nh.nsight.messaging.common.error.BusinessException;
 import com.nh.nsight.messaging.common.error.ErrorCode;
 import com.nh.nsight.messaging.xpilotfile.dc.filedc.DCFile;
 import com.nh.nsight.messaging.xpilotfile.dc.filedc.dto.FileDDTO;
-import com.nh.nsight.messaging.xpilotfile.zcommonutil.XpilotFileStorageSupport;
+import com.nh.nsight.messaging.xpilotfile.util.XpilotFileStorageSupport;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

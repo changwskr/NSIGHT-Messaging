@@ -3,7 +3,7 @@ package com.nh.nsight.messaging.xpilotfile.ac.fileac.dto;
 import com.nh.nsight.messaging.file.dto.FileResponse;
 import com.nh.nsight.messaging.xpilotfile.dc.filedc.dto.FileDDTO;
 import com.nh.nsight.messaging.xpilotfile.dc.filedc.dto.FileSearchDDTO;
-import com.nh.nsight.messaging.xpilotfile.zcommonutil.XpilotFileStorageSupport;
+import com.nh.nsight.messaging.xpilotfile.util.XpilotFileStorageSupport;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.nh.nsight.messaging.capacitymgr.zcommonutil;
+package com.nh.nsight.messaging.capacitymgr.util;
 
 /**
  * capacitymgr 업무 예외 (KSA NewBusinessException 대체).

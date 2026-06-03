@@ -1,4 +1,4 @@
-package com.nh.nsight.messaging.xpilotfile.zcommonutil;
+package com.nh.nsight.messaging.xpilotfile.util;
 
 import com.nh.nsight.messaging.xpilotfile.dc.filedc.XpfFile;
 import com.nh.nsight.messaging.xpilotfile.dc.filedc.dto.FileDDTO;

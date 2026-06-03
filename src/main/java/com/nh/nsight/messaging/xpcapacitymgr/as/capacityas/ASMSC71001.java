@@ -7,7 +7,7 @@ import com.nh.nsight.messaging.xpcapacitymgr.ac.capacityac.dto.CapacityCalculati
 import com.nh.nsight.messaging.xpcapacitymgr.ac.capacityac.dto.CapacityCalculationResultCDTO;
 import com.nh.nsight.messaging.xpcapacitymgr.dc.capacitydc.DCCapacity;
 import com.nh.nsight.messaging.xpcapacitymgr.dc.capacitydc.dto.CapacityCalculationDDTO;
-import com.nh.nsight.messaging.xpcapacitymgr.zcommonutil.CapacityCalcStep;
+import com.nh.nsight.messaging.xpcapacitymgr.util.CapacityCalcStep;
 
 @Service
 public class ASMSC71001 {

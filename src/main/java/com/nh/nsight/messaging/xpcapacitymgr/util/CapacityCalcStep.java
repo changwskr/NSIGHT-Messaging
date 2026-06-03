@@ -1,4 +1,4 @@
-package com.nh.nsight.messaging.xpcapacitymgr.zcommonutil;
+package com.nh.nsight.messaging.xpcapacitymgr.util;
 
 /**
  * 용량산정 단계 — CAP-020(TPS) ~ CAP-050(DB Pool).

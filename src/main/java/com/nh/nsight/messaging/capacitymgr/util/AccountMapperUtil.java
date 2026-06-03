@@ -1,4 +1,4 @@
-package com.nh.nsight.messaging.capacitymgr.zcommonutil;
+package com.nh.nsight.messaging.capacitymgr.util;
 
 import com.nh.nsight.messaging.capacitymgr.dc.accountdc.Account;
 import com.nh.nsight.messaging.capacitymgr.dc.accountdc.dto.AccountDDTO;

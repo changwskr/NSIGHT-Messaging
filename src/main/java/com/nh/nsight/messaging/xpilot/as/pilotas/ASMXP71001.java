@@ -4,7 +4,7 @@ import com.nh.nsight.messaging.xpilot.ac.pilotac.dto.PilotCDTO;
 import com.nh.nsight.messaging.xpilot.ac.pilotac.dto.PilotCDtoConverter;
 import com.nh.nsight.messaging.xpilot.dc.pilotdc.DCPilot;
 import com.nh.nsight.messaging.xpilot.dc.pilotdc.dto.PilotDDTO;
-import com.nh.nsight.messaging.xpilot.zcommonutil.XpilotBizException;
+import com.nh.nsight.messaging.xpilot.util.XpilotBizException;
 
 import org.springframework.stereotype.Service;
 

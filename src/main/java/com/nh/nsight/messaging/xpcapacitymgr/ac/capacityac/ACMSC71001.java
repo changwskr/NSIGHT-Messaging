@@ -12,7 +12,7 @@ import com.nh.nsight.messaging.xpcapacitymgr.ac.capacityac.dto.CapacityApiRespon
 import com.nh.nsight.messaging.xpcapacitymgr.ac.capacityac.dto.CapacityCalculationCDTO;
 import com.nh.nsight.messaging.xpcapacitymgr.ac.capacityac.dto.CapacityCalculationResultCDTO;
 import com.nh.nsight.messaging.xpcapacitymgr.as.capacityas.ASMSC71001;
-import com.nh.nsight.messaging.xpcapacitymgr.zcommonutil.XpCapacityBizException;
+import com.nh.nsight.messaging.xpcapacitymgr.util.XpCapacityBizException;
 
 @RestController
 @RequestMapping("/api/xpcapacitymgr")

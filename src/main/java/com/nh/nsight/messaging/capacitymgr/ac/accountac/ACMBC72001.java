@@ -3,7 +3,7 @@ package com.nh.nsight.messaging.capacitymgr.ac.accountac;
 import com.nh.nsight.messaging.capacitymgr.ac.accountac.dto.AccountApiResponse;
 import com.nh.nsight.messaging.capacitymgr.ac.accountac.dto.AccountCDTO;
 import com.nh.nsight.messaging.capacitymgr.as.accountas.ASMBC72001;
-import com.nh.nsight.messaging.capacitymgr.zcommonutil.CapacityBizException;
+import com.nh.nsight.messaging.capacitymgr.util.CapacityBizException;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

@@ -4,7 +4,7 @@ import com.nh.nsight.messaging.xpilotstyleguide.ac.userac.dto.UserProfileCDTO;
 import com.nh.nsight.messaging.xpilotstyleguide.ac.userac.dto.UserProfileCDtoConverter;
 import com.nh.nsight.messaging.xpilotstyleguide.dc.userdc.DCUserProfile;
 import com.nh.nsight.messaging.xpilotstyleguide.dc.userdc.dto.UserProfileDDTO;
-import com.nh.nsight.messaging.xpilotstyleguide.zcommonutil.StyleGuideBizException;
+import com.nh.nsight.messaging.xpilotstyleguide.util.StyleGuideBizException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
