@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nh.nsight.messaging.xpilotstyleguide.dc.userdc.mapper.UserProfileMapper">
+
+    <resultMap id="UserProfileResultMap" type="com.nh.nsight.messaging.xpilotstyleguide.dc.userdc.UserProfile">
+        <id property="userId" column="USER_ID"/>
+        <result property="userName" column="USER_NAME"/>
+        <result property="email" column="EMAIL"/>
+        <result property="phoneNumber" column="PHONE_NUMBER"/>
+        <result property="roleCode" column="ROLE_CODE"/>
+        <result property="status" column="STATUS"/>
+        <result property="createdDate" column="CREATED_DATE"/>
+        <result property="updatedDate" column="UPDATED_DATE"/>
+    </resultMap>
+
+    <sql id="userColumns">
+        USER_ID,
+        USER_NAME,
+        EMAIL,
+        PHONE_NUMBER,
+        ROLE_CODE,
+        STATUS,
+        CREATED_DATE,
+        UPDATED_DATE
+    </sql>
+
+    <select id="selectByUserId" resultMap="UserProfileResultMap">
+        SELECT <include refid="userColumns"/>
+        FROM TB_ST_USER_PROFILE
+        WHERE USER_ID = #{userId}
+    </select>
+
+    <select id="selectAll" resultMap="UserProfileResultMap">
+        SELECT <include refid="userColumns"/>
+        FROM TB_ST_USER_PROFILE
+        <where>
+            <if test="criteria != null and criteria.userId != null and criteria.userId != ''">
+                AND USER_ID LIKE CONCAT('%', #{criteria.userId}, '%')
+            </if>
+            <if test="criteria != null and criteria.userName != null and criteria.userName != ''">
+                AND USER_NAME LIKE CONCAT('%', #{criteria.userName}, '%')
+            </if>
+            <if test="criteria != null and criteria.roleCode != null and criteria.roleCode != ''">
+                AND ROLE_CODE = #{criteria.roleCode}
+            </if>
+            <if test="criteria != null and criteria.status != null and criteria.status != ''">
+                AND STATUS = #{criteria.status}
+            </if>
+        </where>
+        ORDER BY USER_ID
+        OFFSET #{criteria.offset} ROWS FETCH NEXT #{criteria.safePageSize} ROWS ONLY
+    </select>
+
+    <select id="countAll" resultType="long">
+        SELECT COUNT(*)
+        FROM TB_ST_USER_PROFILE
+        <where>
+            <if test="criteria != null and criteria.userId != null and criteria.userId != ''">
+                AND USER_ID LIKE CONCAT('%', #{criteria.userId}, '%')
+            </if>
+            <if test="criteria != null and criteria.userName != null and criteria.userName != ''">
+                AND USER_NAME LIKE CONCAT('%', #{criteria.userName}, '%')
+            </if>
+            <if test="criteria != null and criteria.roleCode != null and criteria.roleCode != ''">
+                AND ROLE_CODE = #{criteria.roleCode}
+            </if>
+            <if test="criteria != null and criteria.status != null and criteria.status != ''">
+                AND STATUS = #{criteria.status}
+            </if>
+        </where>
+    </select>
+
+    <select id="countByUserId" resultType="int">
+        SELECT COUNT(*)
+        FROM TB_ST_USER_PROFILE
+        WHERE USER_ID = #{userId}
+    </select>
+
+    <insert id="insert" parameterType="com.nh.nsight.messaging.xpilotstyleguide.dc.userdc.UserProfile">
+        INSERT INTO TB_ST_USER_PROFILE (
+            USER_ID, USER_NAME, EMAIL, PHONE_NUMBER,
+            ROLE_CODE, STATUS, CREATED_DATE, UPDATED_DATE
+        ) VALUES (
+            #{userId}, #{userName}, #{email}, #{phoneNumber},
+            #{roleCode}, #{status}, #{createdDate}, #{updatedDate}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.nh.nsight.messaging.xpilotstyleguide.dc.userdc.UserProfile">
+        UPDATE TB_ST_USER_PROFILE
+        SET USER_NAME = #{userName},
+            EMAIL = #{email},
+            PHONE_NUMBER = #{phoneNumber},
+            ROLE_CODE = #{roleCode},
+            STATUS = #{status},
+            UPDATED_DATE = #{updatedDate}
+        WHERE USER_ID = #{userId}
+    </update>
+
+    <delete id="deleteByUserId">
+        DELETE FROM TB_ST_USER_PROFILE
+        WHERE USER_ID = #{userId}
+    </delete>
+
+</mapper>

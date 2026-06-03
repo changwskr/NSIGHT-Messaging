@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>NSIGHT Xpilot 사용자정보 관리</title>
+    <link rel="stylesheet" href="/css/nsight.css"/>
+</head>
+<body>
+<header class="topbar">
+    <div>
+        <h1>NSIGHT Xpilot 사용자정보 관리 (AC/AS/DC)</h1>
+        <p>사용자 생성 · 조회 · 수정 · 삭제</p>
+    </div>
+    <div class="topbar-right">
+        <nav th:replace="~{fragments/main-nav :: mainNav('xpilotstyleguide')}"></nav>
+        <div class="badge">XSG-USER</div>
+    </div>
+</header>
+
+<div id="statusBar" class="status-bar hidden" role="status"></div>
+
+<main class="crud-layout">
+    <section class="card form-card">
+        <div class="card-title row-title">
+            <div>
+                <h2>사용자 입력</h2>
+                <p>필수값: 사용자ID. 나머지는 선택 입력입니다.</p>
+            </div>
+            <span class="mode-badge create" id="formModeBadge">CREATE</span>
+        </div>
+
+        <form id="userForm" class="grid-form">
+            <label>사용자ID <input name="userId" id="userId" maxlength="30" required/></label>
+            <label>사용자명 <input name="userName" id="userName" maxlength="100"/></label>
+            <label>이메일 <input name="email" id="email" maxlength="200"/></label>
+            <label>전화번호 <input name="phoneNumber" id="phoneNumber" maxlength="30"/></label>
+            <label>역할코드 <input name="roleCode" id="roleCode" maxlength="20" placeholder="ADMIN/USER"/></label>
+            <label>상태
+                <select name="status" id="status">
+                    <option value="">선택</option>
+                    <option value="ACTIVE">ACTIVE</option>
+                    <option value="INACTIVE">INACTIVE</option>
+                </select>
+            </label>
+            <div class="actions wide">
+                <button type="submit" id="saveBtn">저장</button>
+                <button type="button" class="secondary" id="resetBtn">초기화</button>
+                <button type="button" class="secondary hidden" id="cancelEditBtn">수정 취소</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="card">
+        <div class="card-title">
+            <h2>선택 사용자 상세</h2>
+            <p>목록에서 [상세]를 누르면 주요 정보가 표시됩니다.</p>
+        </div>
+        <pre id="resultBox" class="result-box">조회 결과에서 항목을 선택하세요.</pre>
+    </section>
+</main>
+
+<section class="card full">
+    <div class="card-title row-title">
+        <div>
+            <h2>사용자 목록</h2>
+            <p id="listSummary">전체 0건</p>
+        </div>
+        <div class="filters">
+            <input type="search" id="filterUserId" placeholder="사용자ID"/>
+            <input type="search" id="filterUserName" placeholder="사용자명"/>
+            <input type="search" id="filterRoleCode" placeholder="역할코드"/>
+            <select id="filterStatus">
+                <option value="">상태(전체)</option>
+                <option value="ACTIVE">ACTIVE</option>
+                <option value="INACTIVE">INACTIVE</option>
+            </select>
+            <button type="button" class="secondary" id="reloadBtn">조회</button>
+        </div>
+    </div>
+    <div class="table-wrap">
+        <table>
+            <thead>
+            <tr>
+                <th>사용자ID</th>
+                <th>사용자명</th>
+                <th>이메일</th>
+                <th>전화번호</th>
+                <th>역할</th>
+                <th>상태</th>
+                <th>수정일시</th>
+                <th class="col-actions">작업</th>
+            </tr>
+            </thead>
+            <tbody id="userTableBody">
+            <tr><td colspan="8" class="empty-row">조회 중...</td></tr>
+            </tbody>
+        </table>
+    </div>
+    <nav id="userPagination" class="pagination" aria-label="사용자 목록 페이지"></nav>
+</section>
+
+<div id="deleteModal" class="modal hidden" aria-hidden="true">
+    <div class="modal-backdrop" data-close="true"></div>
+    <div class="modal-panel" role="dialog">
+        <h3>사용자 삭제</h3>
+        <p id="deleteModalText">선택한 사용자를 삭제하시겠습니까?</p>
+        <div class="modal-actions">
+            <button type="button" class="danger" id="confirmDeleteBtn">삭제</button>
+            <button type="button" class="secondary" data-close="true">취소</button>
+        </div>
+    </div>
+</div>
+
+<script src="/js/xpilotstyleguide-users.js"></script>
+</body>
+</html>
