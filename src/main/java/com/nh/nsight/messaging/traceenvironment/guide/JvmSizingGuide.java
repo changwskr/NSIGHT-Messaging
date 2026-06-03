@@ -94,8 +94,10 @@ public final class JvmSizingGuide {
             int minGb = Math.max(12, (int) Math.round(safeCores * 1.5));
             int maxGb = Math.max(minGb + 2, (int) Math.round(safeCores * 1.75));
             if (safeCores >= 32) {
-                minGb = Math.max(Nsight32Core256GbGuide.JVM_HEAP_GENERAL_GB_MIN, minGb);
-                maxGb = Math.min(Nsight32Core256GbGuide.JVM_HEAP_GENERAL_GB_MAX, Math.max(minGb, maxGb));
+                minGb = Nsight32Core256GbGuide.JVM_HEAP_GENERAL_GB_MIN;
+                maxGb = Math.min(
+                        Nsight32Core256GbGuide.JVM_HEAP_GENERAL_GB_MAX,
+                        Math.max(minGb, maxGb));
             }
             return new HeapRange(minGb, maxGb);
         }
