@@ -9,7 +9,7 @@ import com.nh.nsight.messaging.capacitymgr.util.CapacityBizException;
 import org.springframework.stereotype.Service;
 
 /**
- * ?? ?? Application Service ó AC∑AS ??? {@link AccountCDTO}.
+ * ?? ?? Application Service ù ACùAS ??? {@link AccountCDTO}.
  */
 @Service
 public class ASMBC71001 {

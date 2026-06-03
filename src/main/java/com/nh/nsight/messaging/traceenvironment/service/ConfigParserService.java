@@ -9,7 +9,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.SafeConstructor;
+import org.yaml.snakeyaml.constructor.Constructor;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -75,7 +75,7 @@ public class ConfigParserService {
     private List<ParsedConfigEntry> parseYaml(String fileName, String text) {
         LoaderOptions options = new LoaderOptions();
         options.setMaxAliasesForCollections(50);
-        Yaml yaml = new Yaml(new SafeConstructor(options));
+        Yaml yaml = new Yaml(new Constructor(options));
         Map<String, Object> merged = new LinkedHashMap<>();
         for (Object loaded : yaml.loadAll(text)) {
             if (loaded instanceof Map<?, ?> root) {
@@ -95,11 +95,11 @@ public class ConfigParserService {
             Object val = e.getValue();
             if (val instanceof Map<?, ?> nested) {
                 Object existing = target.get(key);
-                if (existing instanceof Map<?, ?> existingMap) {
-                    deepMerge(castMap(existingMap), castMap(nested));
-                } else {
-                    target.put(key, new LinkedHashMap<>(castMap(nested)));
-                }
+                Map<String, Object> targetChild = existing instanceof Map<?, ?> existingMap
+                        ? castMap(existingMap)
+                        : new LinkedHashMap<>();
+                deepMerge(targetChild, castMap(nested));
+                target.put(key, targetChild);
             } else {
                 target.put(key, val);
             }

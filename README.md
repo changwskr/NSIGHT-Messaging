@@ -20,16 +20,16 @@ NSIGHT 정보계 기준 **메시징 관리 서비스** 샘플 프로젝트입니
 
 ## 2. 패키지 구조 (Xpilot / capacitymgr)
 
-| 모듈 | 패키지 | 역할 |
-|------|--------|------|
-| `capacitymgr` | `ac` / `as` / `dc` / `util` | 계정 관리 샘플 (기준 모듈) |
-| `xpilotmessaging` | 동일 | 메시지 CRUD (AC/AS/DC) |
-| `xpilotfile` | 동일 | 파일 업·다운로드 |
-| `xpilottransactionmgr` | 동일 | 트랜잭션 전문 이력 |
-| `xpilotstyleguide` | 동일 | 사용자 프로필 CRUD (스타일 가이드 샘플) |
-| `xpcapacitymgr` | 동일 | 용량산정 CAP-010~050 (TPS·AP·WAS·DB Pool) |
-| `xpilot` | 동일 | traceenvironment 구조 전환 Pilot |
-| `xpilottpcclient` | `util` | HTTP JSON → xpilotmessaging API 호출 (`TpcUtil`) |
+| 모듈                   | 패키지                      | 역할                                             |
+| ---------------------- | --------------------------- | ------------------------------------------------ |
+| `capacitymgr`          | `ac` / `as` / `dc` / `util` | 계정 관리 샘플 (기준 모듈)                       |
+| `xpilotmessaging`      | 동일                        | 메시지 CRUD (AC/AS/DC)                           |
+| `xpilotfile`           | 동일                        | 파일 업·다운로드                                 |
+| `xpilottransactionmgr` | 동일                        | 트랜잭션 전문 이력                               |
+| `xpilotstyleguide`     | 동일                        | 사용자 프로필 CRUD (스타일 가이드 샘플)          |
+| `xpcapacitymgr`        | 동일                        | 용량산정 CAP-010~050 (TPS·AP·WAS·DB Pool)        |
+| `xpilot`               | 동일                        | traceenvironment 구조 전환 Pilot                 |
+| `xpilottpcclient`      | `util`                      | HTTP JSON → xpilotmessaging API 호출 (`TpcUtil`) |
 
 공통 유틸은 **`zcommonutil` → `util`** 로 통일되어 있습니다. (폴더 경로와 `package` 선언이 일치해야 합니다.)
 
@@ -54,11 +54,11 @@ cd nsight-message-mgmt-service
 
 **빌드 스크립트**
 
-| 스크립트 | 설명 |
-|----------|------|
-| `bin/build-jar.bat` | Maven JAR 패키징 |
-| `bin/build-jar-gradle.bat` | Gradle JAR 패키징 |
-| `bin/pull-and-build.bat` | develop 동기화 후 빌드 |
+| 스크립트                   | 설명                   |
+| -------------------------- | ---------------------- |
+| `bin/build-jar.bat`        | Maven JAR 패키징       |
+| `bin/build-jar-gradle.bat` | Gradle JAR 패키징      |
+| `bin/pull-and-build.bat`   | develop 동기화 후 빌드 |
 
 **접속 URL**
 
@@ -95,36 +95,36 @@ bin\run-tpc-util.bat get MSG001
 
 ### 4-1. 레거시·공통
 
-| URL | 설명 |
-|-----|------|
-| `/home/login` | 로그인 (ID: admin, PW: 1234) |
-| `/home` | 메인 포털 |
-| `/messages` | 메시지 등록 화면 |
-| `/files` | 파일 관리 화면 |
-| `/transactionmgr` | 트랜잭션 전문 이력 조회 |
-| `/api/v1/messages` | 메시지 목록·등록 API |
-| `/api/v1/messages/{messageId}` | 메시지 상세·수정·삭제 |
-| `/api/v1/files` | 파일 업로드·목록·다운로드 |
-| `/api/v1/transaction-logs` | 트랜잭션 로그 API |
-| `/tracedump` | JVM 덤프·로그 증거 분석 |
-| `/oominspector` | OOM Risk Inspector |
-| `/traceenvironment` | 통합 환경설정 비교 |
-| `/operations` | 운영·연계·Health Check |
-| `/actuator/health` | Health Check |
+| URL                            | 설명                         |
+| ------------------------------ | ---------------------------- |
+| `/home/login`                  | 로그인 (ID: admin, PW: 1234) |
+| `/home`                        | 메인 포털                    |
+| `/messages`                    | 메시지 등록 화면             |
+| `/files`                       | 파일 관리 화면               |
+| `/transactionmgr`              | 트랜잭션 전문 이력 조회      |
+| `/api/v1/messages`             | 메시지 목록·등록 API         |
+| `/api/v1/messages/{messageId}` | 메시지 상세·수정·삭제        |
+| `/api/v1/files`                | 파일 업로드·목록·다운로드    |
+| `/api/v1/transaction-logs`     | 트랜잭션 로그 API            |
+| `/tracedump`                   | JVM 덤프·로그 증거 분석      |
+| `/oominspector`                | OOM Risk Inspector           |
+| `/traceenvironment`            | 통합 환경설정 비교           |
+| `/operations`                  | 운영·연계·Health Check       |
+| `/actuator/health`             | Health Check                 |
 
 로컬 파일 저장: `./data/nsight-files/yyyy/MM/dd/{uuid}.{ext}`  
 입·출력 전문 파일: `./data/nsight-messages/{yyyyMMdd}/{GUID}/...`
 
 ### 4-2. Xpilot 모듈 (AC/AS/DC)
 
-| 화면 | API (예) |
-|------|----------|
-| `/xpilotmessaging/messages` | `POST/GET /api/xpilotmessaging/messages` |
-| `/xpilotfile/files` | `/api/xpilotfile/files` |
-| `/xpilottransactionmgr` | `/api/xpilottransactionmgr/transaction-logs` |
-| `/xpilotstyleguide/users` | `/api/xpilotstyleguide/users` |
-| `/xpcapacitymgr/plan` | `GET /api/xpcapacitymgr/defaults`, `POST /api/xpcapacitymgr/calculate` |
-| `/xpilot` | `/api/xpilot/pilot`, `/api/xpilot/environment` |
+| 화면                        | API (예)                                                               |
+| --------------------------- | ---------------------------------------------------------------------- |
+| `/xpilotmessaging/messages` | `POST/GET /api/xpilotmessaging/messages`                               |
+| `/xpilotfile/files`         | `/api/xpilotfile/files`                                                |
+| `/xpilottransactionmgr`     | `/api/xpilottransactionmgr/transaction-logs`                           |
+| `/xpilotstyleguide/users`   | `/api/xpilotstyleguide/users`                                          |
+| `/xpcapacitymgr/plan`       | `GET /api/xpcapacitymgr/defaults`, `POST /api/xpcapacitymgr/calculate` |
+| `/xpilot`                   | `/api/xpilot/pilot`, `/api/xpilot/environment`                         |
 
 계정 샘플: `/api/capacitymgr/account`
 
