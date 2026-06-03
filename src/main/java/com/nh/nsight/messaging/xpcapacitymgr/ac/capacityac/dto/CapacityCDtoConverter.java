@@ -3,8 +3,8 @@ package com.nh.nsight.messaging.xpcapacitymgr.ac.capacityac.dto;
 import com.nh.nsight.messaging.traceenvironment.guide.NsightCapacityDerivation;
 import com.nh.nsight.messaging.traceenvironment.guide.VmProfile;
 import com.nh.nsight.messaging.xpcapacitymgr.dc.capacitydc.dto.CapacityCalculationDDTO;
-import com.nh.nsight.messaging.xpcapacitymgr.zcommonutil.NsightDbPoolDerivation;
-import com.nh.nsight.messaging.xpcapacitymgr.zcommonutil.XpCapacityBizException;
+import com.nh.nsight.messaging.xpcapacitymgr.util.NsightDbPoolDerivation;
+import com.nh.nsight.messaging.xpcapacitymgr.util.XpCapacityBizException;
 
 import java.util.ArrayList;
 import java.util.Comparator;

@@ -1,4 +1,4 @@
-package com.nh.nsight.messaging.xpilot.zcommonutil;
+package com.nh.nsight.messaging.xpilot.util;
 
 import com.nh.nsight.messaging.xpilot.dc.pilotdc.Pilot;
 import com.nh.nsight.messaging.xpilot.dc.pilotdc.dto.PilotDDTO;

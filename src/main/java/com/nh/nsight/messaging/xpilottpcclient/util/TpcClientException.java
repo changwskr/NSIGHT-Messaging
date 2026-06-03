@@ -1,4 +1,4 @@
-package com.nh.nsight.messaging.xpilottpcclient.zcommonutil;
+package com.nh.nsight.messaging.xpilottpcclient.util;
 
 /**
  * xpilottpcclient — xpilotmessaging HTTP 호출 실패.

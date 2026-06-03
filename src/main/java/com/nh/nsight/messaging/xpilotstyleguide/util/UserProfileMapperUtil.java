@@ -1,4 +1,4 @@
-package com.nh.nsight.messaging.xpilotstyleguide.zcommonutil;
+package com.nh.nsight.messaging.xpilotstyleguide.util;
 
 import com.nh.nsight.messaging.xpilotstyleguide.dc.userdc.UserProfile;
 import com.nh.nsight.messaging.xpilotstyleguide.dc.userdc.dto.UserProfileDDTO;

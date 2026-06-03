@@ -10,7 +10,7 @@ import com.nh.nsight.messaging.xpilotfile.ac.fileac.dto.FileCDtoConverter;
 import com.nh.nsight.messaging.xpilotfile.ac.fileac.dto.FileSearchCDTO;
 import com.nh.nsight.messaging.xpilotfile.dc.filedc.DCFile;
 import com.nh.nsight.messaging.xpilotfile.dc.filedc.dto.FileDDTO;
-import com.nh.nsight.messaging.xpilotfile.zcommonutil.XpilotFileStorageSupport;
+import com.nh.nsight.messaging.xpilotfile.util.XpilotFileStorageSupport;
 
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;

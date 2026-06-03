@@ -8,8 +8,8 @@ import com.nh.nsight.messaging.xpilotfile.ac.fileac.dto.FileCDTO;
 import com.nh.nsight.messaging.xpilotfile.ac.fileac.dto.FileCDtoConverter;
 import com.nh.nsight.messaging.xpilotfile.dc.filedc.DCFile;
 import com.nh.nsight.messaging.xpilotfile.dc.filedc.dto.FileDDTO;
-import com.nh.nsight.messaging.xpilotfile.zcommonutil.XpilotFileRule;
-import com.nh.nsight.messaging.xpilotfile.zcommonutil.XpilotFileStorageSupport;
+import com.nh.nsight.messaging.xpilotfile.util.XpilotFileRule;
+import com.nh.nsight.messaging.xpilotfile.util.XpilotFileStorageSupport;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

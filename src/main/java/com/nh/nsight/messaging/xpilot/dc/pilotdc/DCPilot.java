@@ -6,8 +6,8 @@ import com.nh.nsight.messaging.traceenvironment.service.EnvironmentAssessmentSer
 import com.nh.nsight.messaging.traceenvironment.service.TraceEnvironmentService;
 import com.nh.nsight.messaging.xpilot.dc.pilotdc.dto.PilotDDTO;
 import com.nh.nsight.messaging.xpilot.dc.pilotdc.repository.PilotRepository;
-import com.nh.nsight.messaging.xpilot.zcommonutil.PilotMapperUtil;
-import com.nh.nsight.messaging.xpilot.zcommonutil.XpilotBizException;
+import com.nh.nsight.messaging.xpilot.util.PilotMapperUtil;
+import com.nh.nsight.messaging.xpilot.util.XpilotBizException;
 
 import org.springframework.stereotype.Repository;
 

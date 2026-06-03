@@ -1,4 +1,4 @@
-package com.nh.nsight.messaging.xpilottpcclient.zcommonutil;
+package com.nh.nsight.messaging.xpilottpcclient.util;
 
 import com.nh.nsight.messaging.xpilotmessaging.ac.messageac.dto.MessageCDTO;
 import com.nh.nsight.messaging.xpilotmessaging.ac.messageac.dto.MessageCreateCDTO;

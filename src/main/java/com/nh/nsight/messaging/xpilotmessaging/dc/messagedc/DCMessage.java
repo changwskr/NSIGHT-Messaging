@@ -5,7 +5,7 @@ import com.nh.nsight.messaging.common.error.ErrorCode;
 import com.nh.nsight.messaging.xpilotmessaging.dc.messagedc.dto.MessageDDTO;
 import com.nh.nsight.messaging.xpilotmessaging.dc.messagedc.dto.MessageSearchDDTO;
 import com.nh.nsight.messaging.xpilotmessaging.dc.messagedc.repository.MessageRepository;
-import com.nh.nsight.messaging.xpilotmessaging.zcommonutil.MessageMapperUtil;
+import com.nh.nsight.messaging.xpilotmessaging.util.MessageMapperUtil;
 
 import org.springframework.stereotype.Repository;
 

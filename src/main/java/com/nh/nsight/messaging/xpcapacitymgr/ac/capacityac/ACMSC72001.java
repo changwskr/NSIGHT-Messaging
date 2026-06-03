@@ -11,7 +11,7 @@ import com.nh.nsight.messaging.xpcapacitymgr.ac.capacityac.dto.CapacityApiRespon
 import com.nh.nsight.messaging.xpcapacitymgr.ac.capacityac.dto.WasThreadOnlyCDTO;
 import com.nh.nsight.messaging.xpcapacitymgr.ac.capacityac.dto.WasThreadResultCDTO;
 import com.nh.nsight.messaging.xpcapacitymgr.as.capacityas.ASMSC72001;
-import com.nh.nsight.messaging.xpcapacitymgr.zcommonutil.XpCapacityBizException;
+import com.nh.nsight.messaging.xpcapacitymgr.util.XpCapacityBizException;
 
 @RestController
 @RequestMapping("/api/xpcapacitymgr/was-thread")

@@ -3,7 +3,7 @@ package com.nh.nsight.messaging.xpilotstyleguide.ac.userac;
 import com.nh.nsight.messaging.xpilotstyleguide.ac.userac.dto.UserApiResponse;
 import com.nh.nsight.messaging.xpilotstyleguide.ac.userac.dto.UserProfileCDTO;
 import com.nh.nsight.messaging.xpilotstyleguide.as.useras.ASMSU71001;
-import com.nh.nsight.messaging.xpilotstyleguide.zcommonutil.StyleGuideBizException;
+import com.nh.nsight.messaging.xpilotstyleguide.util.StyleGuideBizException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;

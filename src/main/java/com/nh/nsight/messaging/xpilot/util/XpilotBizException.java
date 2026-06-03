@@ -1,4 +1,4 @@
-package com.nh.nsight.messaging.xpilot.zcommonutil;
+package com.nh.nsight.messaging.xpilot.util;
 
 /**
  * xpilot 업무 예외.

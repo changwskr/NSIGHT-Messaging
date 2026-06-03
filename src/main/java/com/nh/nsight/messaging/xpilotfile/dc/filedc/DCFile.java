@@ -5,7 +5,7 @@ import com.nh.nsight.messaging.common.error.ErrorCode;
 import com.nh.nsight.messaging.xpilotfile.dc.filedc.dto.FileDDTO;
 import com.nh.nsight.messaging.xpilotfile.dc.filedc.dto.FileSearchDDTO;
 import com.nh.nsight.messaging.xpilotfile.dc.filedc.repository.FileRepository;
-import com.nh.nsight.messaging.xpilotfile.zcommonutil.FileMapperUtil;
+import com.nh.nsight.messaging.xpilotfile.util.FileMapperUtil;
 
 import org.springframework.stereotype.Repository;
 

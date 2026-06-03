@@ -7,8 +7,8 @@ import com.nh.nsight.messaging.xpcapacitymgr.ac.capacityac.dto.CapacityScenarioR
 import com.nh.nsight.messaging.xpcapacitymgr.ac.capacityac.dto.DbPoolResultCDTO;
 import com.nh.nsight.messaging.xpcapacitymgr.ac.capacityac.dto.WasThreadResultCDTO;
 import com.nh.nsight.messaging.xpcapacitymgr.dc.capacitydc.dto.CapacityCalculationDDTO;
-import com.nh.nsight.messaging.xpcapacitymgr.zcommonutil.CapacityCalcStep;
-import com.nh.nsight.messaging.xpcapacitymgr.zcommonutil.NsightDbPoolDerivation;
+import com.nh.nsight.messaging.xpcapacitymgr.util.CapacityCalcStep;
+import com.nh.nsight.messaging.xpcapacitymgr.util.NsightDbPoolDerivation;
 
 import org.springframework.stereotype.Component;
 

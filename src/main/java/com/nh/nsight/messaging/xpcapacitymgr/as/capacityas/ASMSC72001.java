@@ -5,7 +5,7 @@ import com.nh.nsight.messaging.xpcapacitymgr.ac.capacityac.dto.CapacityCDtoConve
 import com.nh.nsight.messaging.xpcapacitymgr.ac.capacityac.dto.WasThreadOnlyCDTO;
 import com.nh.nsight.messaging.xpcapacitymgr.ac.capacityac.dto.WasThreadResultCDTO;
 import com.nh.nsight.messaging.xpcapacitymgr.dc.capacitydc.DCCapacity;
-import com.nh.nsight.messaging.xpcapacitymgr.zcommonutil.XpCapacityBizException;
+import com.nh.nsight.messaging.xpcapacitymgr.util.XpCapacityBizException;
 
 import org.springframework.stereotype.Service;
 

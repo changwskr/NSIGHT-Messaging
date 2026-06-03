@@ -8,7 +8,7 @@ import com.nh.nsight.messaging.transactionmgr.dto.TransactionLogDeleteResponse;
 import com.nh.nsight.messaging.transactionmgr.thing.TransactionLog;
 import com.nh.nsight.messaging.xpilottransactionmgr.dc.transactiondc.DCTransactionLog;
 import com.nh.nsight.messaging.xpilottransactionmgr.dc.transactiondc.XptTransactionLog;
-import com.nh.nsight.messaging.xpilottransactionmgr.zcommonutil.TransactionLogMapperUtil;
+import com.nh.nsight.messaging.xpilottransactionmgr.util.TransactionLogMapperUtil;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

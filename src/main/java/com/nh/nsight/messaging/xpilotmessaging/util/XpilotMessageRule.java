@@ -1,4 +1,4 @@
-package com.nh.nsight.messaging.xpilotmessaging.zcommonutil;
+package com.nh.nsight.messaging.xpilotmessaging.util;
 
 import com.nh.nsight.messaging.common.error.BusinessException;
 import com.nh.nsight.messaging.common.error.ErrorCode;

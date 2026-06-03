@@ -4,7 +4,7 @@ import com.nh.nsight.messaging.capacitymgr.ac.accountac.dto.AccountCDTO;
 import com.nh.nsight.messaging.capacitymgr.ac.accountac.dto.AccountCDtoConverter;
 import com.nh.nsight.messaging.capacitymgr.dc.accountdc.DCAccount;
 import com.nh.nsight.messaging.capacitymgr.dc.accountdc.dto.AccountDDTO;
-import com.nh.nsight.messaging.capacitymgr.zcommonutil.CapacityBizException;
+import com.nh.nsight.messaging.capacitymgr.util.CapacityBizException;
 
 import org.springframework.stereotype.Service;
 

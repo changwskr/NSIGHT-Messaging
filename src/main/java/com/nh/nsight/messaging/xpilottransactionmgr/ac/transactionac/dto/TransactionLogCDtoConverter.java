@@ -3,7 +3,7 @@ package com.nh.nsight.messaging.xpilottransactionmgr.ac.transactionac.dto;
 import com.nh.nsight.messaging.transactionmgr.dto.TransactionLogResponse;
 import com.nh.nsight.messaging.xpilottransactionmgr.dc.transactiondc.XptTransactionLog;
 import com.nh.nsight.messaging.xpilottransactionmgr.dc.transactiondc.dto.TransactionLogSearchDDTO;
-import com.nh.nsight.messaging.xpilottransactionmgr.zcommonutil.TransactionLogMapperUtil;
+import com.nh.nsight.messaging.xpilottransactionmgr.util.TransactionLogMapperUtil;
 
 import java.util.List;
 
