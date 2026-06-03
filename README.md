@@ -1,5 +1,7 @@
 # NSIGHT-Messaging
 
+remote-readme
+
 NSIGHT 정보계 기준 **메시징 관리 서비스** 샘플 프로젝트입니다.
 
 - **Java 17** · **Spring Boot 3.3.5** · **MyBatis** · H2(in-memory)
