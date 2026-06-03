@@ -313,7 +313,8 @@ public class DCCapacity {
             return db.getStatusMessage();
         }
         int apTpsPerVm = requiredAp > 0
-                ? (int) Math.ceil((double) targetTps / requiredAp) : targetTps;
+                ? (int) Math.ceil((double) targetTps / requiredAp)
+                : targetTps;
         return switch (status) {
             case "CRITICAL" -> step.includesAp()
                     ? "클러스터 TPS " + targetTps + " > VM최대(" + input.vmCores() + "C×40)×AP "

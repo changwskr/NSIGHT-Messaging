@@ -29,12 +29,11 @@ public class ACMXPF73001 {
     @PutMapping("/{fileId}/use-yn")
     public StandardResponse<FileResponse> updateUseYn(
             @PathVariable Long fileId,
-            @RequestParam String useYn
-    ) {
+            @RequestParam String useYn) {
         System.out.println("★★★★★★★ [" + AC + "] updateUseYn START fileId=" + fileId + " useYn=" + useYn);
         FileResponse response = FileCDtoConverter.toResponse(asmxpf73001.updateUseYn(fileId, useYn), storageSupport);
-        StandardResponse<FileResponse> result =
-                StandardResponse.success("XPF-UPDATE-001", "xpilotFileUpdate", response);
+        StandardResponse<FileResponse> result = StandardResponse.success("XPF-UPDATE-001", "xpilotFileUpdate",
+                response);
         System.out.println("★★★★★★★ [" + AC + "] updateUseYn END fileId=" + fileId);
         return result;
     }
