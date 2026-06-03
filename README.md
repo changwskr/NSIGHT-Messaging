@@ -1,6 +1,7 @@
 # NSIGHT-Messaging
 
 remote-readme
+local-modified
 
 NSIGHT 정보계 기준 **메시징 관리 서비스** 샘플 프로젝트입니다.
 
