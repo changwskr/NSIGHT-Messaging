@@ -3,7 +3,11 @@
 remote-readme
 local-modified
 remote-modified
+<<<<<<< HEAD
 local-modified
+=======
+remote-modified2
+>>>>>>> a7ec95bc3bf78040471a23a1d9bc14b3cc24b7f0
 
 NSIGHT 정보계 기준 **메시징 관리 서비스** 샘플 프로젝트입니다.
 
