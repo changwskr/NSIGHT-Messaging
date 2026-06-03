@@ -89,7 +89,6 @@ public class ConfigParserService {
         return entries;
     }
 
-    @SuppressWarnings("unchecked")
     private void deepMerge(Map<String, Object> target, Map<String, Object> source) {
         for (Map.Entry<String, Object> e : source.entrySet()) {
             String key = e.getKey();
@@ -97,7 +96,7 @@ public class ConfigParserService {
             if (val instanceof Map<?, ?> nested) {
                 Object existing = target.get(key);
                 if (existing instanceof Map<?, ?> existingMap) {
-                    deepMerge((Map<String, Object>) castMap(existingMap), castMap(nested));
+                    deepMerge(castMap(existingMap), castMap(nested));
                 } else {
                     target.put(key, new LinkedHashMap<>(castMap(nested)));
                 }
@@ -107,14 +106,13 @@ public class ConfigParserService {
         }
     }
 
-    @SuppressWarnings("unchecked")
     private void flattenMap(String fileName, String prefix, Map<String, Object> map,
                             List<ParsedConfigEntry> out, int lineHint) {
         for (Map.Entry<String, Object> e : map.entrySet()) {
             String key = prefix.isEmpty() ? e.getKey() : prefix + "." + e.getKey();
             Object val = e.getValue();
             if (val instanceof Map<?, ?> nested) {
-                flattenMap(fileName, key, (Map<String, Object>) castMap(nested), out, lineHint);
+                flattenMap(fileName, key, castMap(nested), out, lineHint);
             } else if (val != null) {
                 out.add(new ParsedConfigEntry(
                         fileName, key, String.valueOf(val), normalizeKey(key), lineHint
