@@ -1,0 +1,32 @@
+{
+  "java.debug.settings.onBuildFailureProceed": true,
+  "java.errors.incompleteClasspath.severity": "ignore",
+  "java.codeGeneration.generateComments": false,
+  "java.debug.settings.forceBuildBeforeLaunch": true,
+  "java.debug.settings.hotCodeReplace": "auto",
+  "java.import.maven.enabled": true,
+  "java.import.gradle.enabled": true,
+  "java.import.gradle.wrapper.enabled": true,
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "java.project.importOnFirstTimeStartup": "automatic",
+  "java.project.resourceFilters": [
+    "node_modules",
+    ".git",
+    "build",
+    ".gradle"
+  ],
+  "maven.terminal.useJavaHome": true,
+  "maven.pomfile.globPattern": "pom.xml",
+  "java.configuration.maven.defaultMojoExecutionAction": "execute",
+  "java.import.exclusions": [
+    "**/build/**",
+    "**/.gradle/**",
+    "**/gradle/**"
+  ],
+  "files.watcherExclude": {
+    "**/build/**": true,
+    "**/.gradle/**": true
+  },
+  "java.compile.nullAnalysis.mode": "automatic",
+  "java.jdt.ls.javac.enabled": "on"
+}

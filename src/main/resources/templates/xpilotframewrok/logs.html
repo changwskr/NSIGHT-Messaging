@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>NSIGHT Xpilot Framework 로그관리</title>
+    <link rel="stylesheet" href="/css/nsight.css"/>
+</head>
+<body>
+<header class="topbar">
+    <div>
+        <h1>NSIGHT Xpilot Framework Log Manager</h1>
+        <p>전처리·후처리 파이프라인 기반 거래상태 / 성능로그 / 감사로그 (AC/AS/DC)</p>
+    </div>
+    <div class="topbar-right">
+        <nav th:replace="~{fragments/main-nav :: mainNav('xpilotframewrok')}"></nav>
+        <div class="badge">XPFW</div>
+    </div>
+</header>
+
+<div id="statusBar" class="status-bar hidden" role="status"></div>
+
+<main class="crud-layout">
+    <section class="card form-card">
+        <div class="card-title">
+            <h2>탭 선택</h2>
+            <p>성능로그·감사로그 조회 및 전후처리 파이프라인 실행을 제공합니다.</p>
+        </div>
+        <div class="actions">
+            <button type="button" class="tab-btn active" data-tab="perf">성능 로그</button>
+            <button type="button" class="tab-btn" data-tab="audit">감사 로그</button>
+            <button type="button" class="tab-btn" data-tab="process">파이프라인 실행</button>
+        </div>
+    </section>
+
+    <section class="card form-card tab-panel" id="panel-perf">
+        <div class="card-title"><h2>성능 로그 조회</h2></div>
+        <form id="perfSearchForm" class="grid-form">
+            <label>GUID <input name="guid" id="perfGuid"/></label>
+            <label>Trace ID <input name="traceId" id="perfTraceId"/></label>
+            <label>Service ID <input name="serviceId" id="perfServiceId" placeholder="xpilotFrameworkProcess"/></label>
+            <label>결과 코드
+                <select name="resultCode" id="perfResultCode">
+                    <option value="">전체</option>
+                    <option value="COM-0000">COM-0000</option>
+                    <option value="FAIL">FAIL</option>
+                </select>
+            </label>
+            <label>User ID <input name="userId" id="perfUserId" placeholder="ARCHITECT"/></label>
+            <div class="actions wide">
+                <button type="submit">조회</button>
+                <button type="button" class="secondary" id="perfResetBtn">초기화</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="card form-card tab-panel hidden" id="panel-audit">
+        <div class="card-title"><h2>감사 로그 조회</h2></div>
+        <form id="auditSearchForm" class="grid-form">
+            <label>GUID <input name="guid" id="auditGuid"/></label>
+            <label>User ID <input name="userId" id="auditUserId"/></label>
+            <label>Action Type <input name="actionType" id="auditActionType" placeholder="INQUIRY"/></label>
+            <div class="actions wide">
+                <button type="submit">조회</button>
+                <button type="button" class="secondary" id="auditResetBtn">초기화</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="card form-card tab-panel hidden" id="panel-process">
+        <div class="card-title">
+            <h2>전후처리 파이프라인 실행 (MXPFW76001)</h2>
+            <p>PRE-002~014 → 업무 → POST-006~009 순서로 실행됩니다.</p>
+        </div>
+        <form id="processForm" class="grid-form">
+            <label>Transaction ID <input name="transactionId" id="procTxId" value="XPFW-DEMO-001" required/></label>
+            <label>Service ID <input name="serviceId" id="procServiceId" value="xpilotFrameworkProcess" required/></label>
+            <label>Idempotency Key <input name="idempotencyKey" id="procIdemKey" placeholder="선택"/></label>
+            <label>Action Type <input name="actionType" id="procActionType" value="INQUIRY"/></label>
+            <label>Menu ID <input name="menuId" id="procMenuId" value="FW-LOG"/></label>
+            <label>Function ID <input name="functionId" id="procFuncId" value="MXPFW76001"/></label>
+            <label>Request URI <input name="requestUri" id="procUri" value="/api/xpilotframewrok/process"/></label>
+            <label>HTTP Method <input name="httpMethod" id="procMethod" value="POST"/></label>
+            <div class="actions wide">
+                <button type="submit">실행</button>
+            </div>
+        </form>
+        <pre id="processResult" class="tx-detail-box">실행 결과가 여기에 표시됩니다.</pre>
+    </section>
+
+    <section class="card tab-panel" id="detail-perf">
+        <div class="card-title"><h2>성능 로그 상세</h2></div>
+        <div id="perfDetailBox" class="tx-detail-box">
+            <p class="tx-detail-placeholder">목록에서 항목을 선택하세요.</p>
+        </div>
+    </section>
+</main>
+
+<section class="card full tab-panel" id="list-perf">
+    <div class="card-title row-title">
+        <div>
+            <h2>성능 로그 목록</h2>
+            <p id="perfListSummary">전체 0건</p>
+        </div>
+    </div>
+    <div class="table-wrap">
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>GUID</th>
+                <th>Service</th>
+                <th>결과</th>
+                <th>Total(ms)</th>
+                <th>로그시각</th>
+                <th class="col-actions">작업</th>
+            </tr>
+            </thead>
+            <tbody id="perfTableBody">
+            <tr><td colspan="7" class="empty-row">조회 버튼을 눌러 주세요.</td></tr>
+            </tbody>
+        </table>
+    </div>
+    <nav id="perfPagination" class="pagination" aria-label="성능 로그 페이지"></nav>
+</section>
+
+<section class="card full tab-panel hidden" id="list-audit">
+    <div class="card-title row-title">
+        <div>
+            <h2>감사 로그 목록</h2>
+            <p id="auditListSummary">전체 0건</p>
+        </div>
+    </div>
+    <div class="table-wrap">
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>GUID</th>
+                <th>User</th>
+                <th>Action</th>
+                <th>Function</th>
+                <th>결과</th>
+                <th>감사시각</th>
+            </tr>
+            </thead>
+            <tbody id="auditTableBody">
+            <tr><td colspan="7" class="empty-row">조회 버튼을 눌러 주세요.</td></tr>
+            </tbody>
+        </table>
+    </div>
+    <nav id="auditPagination" class="pagination" aria-label="감사 로그 페이지"></nav>
+</section>
+
+<div id="deleteModal" class="modal hidden" aria-hidden="true">
+    <div class="modal-backdrop" data-close="true"></div>
+    <div class="modal-panel" role="dialog" aria-labelledby="deleteModalTitle">
+        <h3 id="deleteModalTitle">성능 로그 삭제</h3>
+        <p id="deleteModalText">선택한 성능 로그를 삭제하시겠습니까?</p>
+        <div class="modal-actions">
+            <button type="button" class="danger" id="confirmDeleteBtn">삭제</button>
+            <button type="button" class="secondary" data-close="true">취소</button>
+        </div>
+    </div>
+</div>
+
+<script src="/js/xpilotframewrok.js"></script>
+</body>
+</html>

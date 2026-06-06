@@ -14,7 +14,8 @@ import org.springframework.context.annotation.Configuration;
         "com.nh.nsight.messaging.xpilotfile.dc.filedc.mapper",
         "com.nh.nsight.messaging.xpilottransactionmgr.dc.transactiondc.mapper",
         "com.nh.nsight.messaging.xpilotstyleguide.dc.userdc.mapper",
-        "com.nh.nsight.messaging.junmun.dc.junmundc.mapper"
+        "com.nh.nsight.messaging.junmun.dc.junmundc.mapper",
+        "com.nh.nsight.messaging.xpilotframewrok.dc.frameworkdc.mapper"
 })
 public class MybatisConfig {
 }

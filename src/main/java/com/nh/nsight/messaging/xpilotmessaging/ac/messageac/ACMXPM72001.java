@@ -29,6 +29,7 @@ public class ACMXPM72001 {
 
     @GetMapping("/{messageId}")
     public StandardResponse<MessageResponse> getMessage(@PathVariable Long messageId) {
+
         System.out.println("-------3[" + AC + "] getMessage START messageId=" + messageId);
         MessageResponse response = MessageCDtoConverter.toResponse(asmxpm72001.get(messageId));
         StandardResponse<MessageResponse> result = StandardResponse.success("XPM-DETAIL-001", "xpilotMessageDetail",

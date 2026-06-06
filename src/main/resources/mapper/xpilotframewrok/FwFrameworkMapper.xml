@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nh.nsight.messaging.xpilotframewrok.dc.frameworkdc.mapper.FwFrameworkMapper">
+
+    <resultMap id="FwTxStatusResultMap" type="com.nh.nsight.messaging.xpilotframewrok.dc.frameworkdc.FwTxStatus">
+        <id property="txStatusId" column="TX_STATUS_ID"/>
+        <result property="guid" column="GUID"/>
+        <result property="traceId" column="TRACE_ID"/>
+        <result property="transactionId" column="TRANSACTION_ID"/>
+        <result property="serviceId" column="SERVICE_ID"/>
+        <result property="userId" column="USER_ID"/>
+        <result property="branchId" column="BRANCH_ID"/>
+        <result property="channelId" column="CHANNEL_ID"/>
+        <result property="status" column="STATUS"/>
+        <result property="resultCode" column="RESULT_CODE"/>
+        <result property="errorCode" column="ERROR_CODE"/>
+        <result property="requestTime" column="REQUEST_TIME"/>
+        <result property="startTime" column="START_TIME"/>
+        <result property="endTime" column="END_TIME"/>
+        <result property="elapsedTime" column="ELAPSED_TIME"/>
+        <result property="idempotencyKey" column="IDEMPOTENCY_KEY"/>
+        <result property="retryYn" column="RETRY_YN"/>
+        <result property="retryCount" column="RETRY_COUNT"/>
+        <result property="createdAt" column="CREATED_AT"/>
+        <result property="updatedAt" column="UPDATED_AT"/>
+    </resultMap>
+
+    <resultMap id="FwTxLogResultMap" type="com.nh.nsight.messaging.xpilotframewrok.dc.frameworkdc.FwTxLog">
+        <id property="logId" column="LOG_ID"/>
+        <result property="guid" column="GUID"/>
+        <result property="traceId" column="TRACE_ID"/>
+        <result property="serviceId" column="SERVICE_ID"/>
+        <result property="userId" column="USER_ID"/>
+        <result property="requestUri" column="REQUEST_URI"/>
+        <result property="httpMethod" column="HTTP_METHOD"/>
+        <result property="resultCode" column="RESULT_CODE"/>
+        <result property="errorCode" column="ERROR_CODE"/>
+        <result property="apId" column="AP_ID"/>
+        <result property="dbTime" column="DB_TIME"/>
+        <result property="extTime" column="EXT_TIME"/>
+        <result property="totalTime" column="TOTAL_TIME"/>
+        <result property="logTime" column="LOG_TIME"/>
+    </resultMap>
+
+    <resultMap id="FwAuditLogResultMap" type="com.nh.nsight.messaging.xpilotframewrok.dc.frameworkdc.FwAuditLog">
+        <id property="auditId" column="AUDIT_ID"/>
+        <result property="guid" column="GUID"/>
+        <result property="userId" column="USER_ID"/>
+        <result property="branchId" column="BRANCH_ID"/>
+        <result property="menuId" column="MENU_ID"/>
+        <result property="functionId" column="FUNCTION_ID"/>
+        <result property="customerId" column="CUSTOMER_ID"/>
+        <result property="actionType" column="ACTION_TYPE"/>
+        <result property="accessPurpose" column="ACCESS_PURPOSE"/>
+        <result property="maskingLevel" column="MASKING_LEVEL"/>
+        <result property="resultCode" column="RESULT_CODE"/>
+        <result property="clientIp" column="CLIENT_IP"/>
+        <result property="auditTime" column="AUDIT_TIME"/>
+    </resultMap>
+
+    <insert id="insertTxStatus" useGeneratedKeys="true" keyProperty="txStatusId">
+        INSERT INTO TB_FW_TX_STATUS (
+            GUID, TRACE_ID, TRANSACTION_ID, SERVICE_ID, USER_ID, BRANCH_ID, CHANNEL_ID,
+            STATUS, RESULT_CODE, ERROR_CODE, REQUEST_TIME, START_TIME, END_TIME, ELAPSED_TIME,
+            IDEMPOTENCY_KEY, RETRY_YN, RETRY_COUNT
+        ) VALUES (
+            #{guid}, #{traceId}, #{transactionId}, #{serviceId}, #{userId}, #{branchId}, #{channelId},
+            #{status}, #{resultCode}, #{errorCode}, #{requestTime}, #{startTime}, #{endTime}, #{elapsedTime},
+            #{idempotencyKey}, #{retryYn}, #{retryCount}
+        )
+    </insert>
+
+    <update id="updateTxStatus">
+        UPDATE TB_FW_TX_STATUS SET
+            STATUS = #{status},
+            RESULT_CODE = #{resultCode},
+            ERROR_CODE = #{errorCode},
+            START_TIME = #{startTime},
+            END_TIME = #{endTime},
+            ELAPSED_TIME = #{elapsedTime},
+            RETRY_YN = #{retryYn},
+            RETRY_COUNT = #{retryCount},
+            UPDATED_AT = CURRENT_TIMESTAMP
+        WHERE TX_STATUS_ID = #{txStatusId}
+    </update>
+
+    <select id="selectTxStatusByGuid" resultMap="FwTxStatusResultMap">
+        SELECT * FROM TB_FW_TX_STATUS WHERE GUID = #{guid} ORDER BY TX_STATUS_ID DESC LIMIT 1
+    </select>
+
+    <select id="selectTxStatusByIdempotencyKey" resultMap="FwTxStatusResultMap">
+        SELECT * FROM TB_FW_TX_STATUS WHERE IDEMPOTENCY_KEY = #{idempotencyKey} ORDER BY TX_STATUS_ID DESC LIMIT 1
+    </select>
+
+    <select id="selectTxStatusByKeys" resultMap="FwTxStatusResultMap">
+        SELECT * FROM TB_FW_TX_STATUS
+        WHERE 1=1
+        <if test="guid != null and guid != ''">AND GUID = #{guid}</if>
+        <if test="transactionId != null and transactionId != ''">AND TRANSACTION_ID = #{transactionId}</if>
+        <if test="idempotencyKey != null and idempotencyKey != ''">AND IDEMPOTENCY_KEY = #{idempotencyKey}</if>
+        ORDER BY TX_STATUS_ID DESC LIMIT 1
+    </select>
+
+    <insert id="insertTxLog" useGeneratedKeys="true" keyProperty="logId">
+        INSERT INTO TB_FW_TX_LOG (
+            GUID, TRACE_ID, SERVICE_ID, USER_ID, REQUEST_URI, HTTP_METHOD,
+            RESULT_CODE, ERROR_CODE, AP_ID, DB_TIME, EXT_TIME, TOTAL_TIME
+        ) VALUES (
+            #{guid}, #{traceId}, #{serviceId}, #{userId}, #{requestUri}, #{httpMethod},
+            #{resultCode}, #{errorCode}, #{apId}, #{dbTime}, #{extTime}, #{totalTime}
+        )
+    </insert>
+
+    <select id="selectTxLogById" resultMap="FwTxLogResultMap">
+        SELECT * FROM TB_FW_TX_LOG WHERE LOG_ID = #{logId}
+    </select>
+
+    <sql id="txLogWhere">
+        <where>
+            <if test="guid != null and guid != ''">AND GUID = #{guid}</if>
+            <if test="traceId != null and traceId != ''">AND TRACE_ID = #{traceId}</if>
+            <if test="serviceId != null and serviceId != ''">AND SERVICE_ID = #{serviceId}</if>
+            <if test="userId != null and userId != ''">AND USER_ID = #{userId}</if>
+            <if test="resultCode != null and resultCode != ''">AND RESULT_CODE = #{resultCode}</if>
+        </where>
+    </sql>
+
+    <select id="selectTxLogs" resultMap="FwTxLogResultMap">
+        SELECT * FROM TB_FW_TX_LOG
+        <include refid="txLogWhere"/>
+        ORDER BY LOG_ID DESC
+        OFFSET #{offset} ROWS FETCH NEXT #{safePageSize} ROWS ONLY
+    </select>
+
+    <select id="countTxLogs" resultType="long">
+        SELECT COUNT(*) FROM TB_FW_TX_LOG
+        <include refid="txLogWhere"/>
+    </select>
+
+    <delete id="deleteTxLogById">
+        DELETE FROM TB_FW_TX_LOG WHERE LOG_ID = #{logId}
+    </delete>
+
+    <insert id="insertAuditLog" useGeneratedKeys="true" keyProperty="auditId">
+        INSERT INTO TB_FW_AUDIT_LOG (
+            GUID, USER_ID, BRANCH_ID, MENU_ID, FUNCTION_ID, CUSTOMER_ID,
+            ACTION_TYPE, ACCESS_PURPOSE, MASKING_LEVEL, RESULT_CODE, CLIENT_IP
+        ) VALUES (
+            #{guid}, #{userId}, #{branchId}, #{menuId}, #{functionId}, #{customerId},
+            #{actionType}, #{accessPurpose}, #{maskingLevel}, #{resultCode}, #{clientIp}
+        )
+    </insert>
+
+    <sql id="auditLogWhere">
+        <where>
+            <if test="guid != null and guid != ''">AND GUID = #{guid}</if>
+            <if test="userId != null and userId != ''">AND USER_ID = #{userId}</if>
+            <if test="actionType != null and actionType != ''">AND ACTION_TYPE = #{actionType}</if>
+        </where>
+    </sql>
+
+    <select id="selectAuditLogs" resultMap="FwAuditLogResultMap">
+        SELECT * FROM TB_FW_AUDIT_LOG
+        <include refid="auditLogWhere"/>
+        ORDER BY AUDIT_ID DESC
+        OFFSET #{offset} ROWS FETCH NEXT #{safePageSize} ROWS ONLY
+    </select>
+
+    <select id="countAuditLogs" resultType="long">
+        SELECT COUNT(*) FROM TB_FW_AUDIT_LOG
+        <include refid="auditLogWhere"/>
+    </select>
+</mapper>

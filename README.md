@@ -3,7 +3,7 @@
 NSIGHT 정보계 기준 **메시징 관리 서비스** 샘플 프로젝트입니다.
 
 - **Java 17** · **Spring Boot 3.3.5** · **MyBatis** · H2(in-memory)
-- 빌드: **Maven** (`pom.xml`) · **Gradle** (`build.gradle`) 병행
+- 빌드: **Maven** (`pom.xml`) 우선 · **Gradle** (`build.gradle`) 병행 (IDE/Cursor는 Maven import)
 
 ## 1. 목적
 
@@ -37,14 +37,17 @@ NSIGHT 정보계 기준 **메시징 관리 서비스** 샘플 프로젝트입니
 
 ### 3-1. 서버 기동
 
-**Maven**
+**Maven (권장 · IDE 기본)**
 
 ```bash
 cd nsight-message-mgmt-service
 mvn spring-boot:run
+# Windows: bin\run-app.bat  (Gradle build/ 제거 후 Maven 기동)
 ```
 
-**Gradle**
+**Cursor / VS Code:** `Ctrl+Shift+B` 또는 `main` 위 **Run** (Extension Pack for Java) · 필요 시 `Java: Clean Java Language Server Workspace` 후 Reload
+
+**Gradle** (CI/보조)
 
 ```bash
 cd nsight-message-mgmt-service
@@ -58,6 +61,7 @@ cd nsight-message-mgmt-service
 | -------------------------- | ---------------------- |
 | `bin/build-jar.bat`        | Maven JAR 패키징       |
 | `bin/build-jar-gradle.bat` | Gradle JAR 패키징      |
+| `bin/run-app.bat`          | Maven `spring-boot:run` (IDE 권장) |
 | `bin/pull-and-build.bat`   | develop 동기화 후 빌드 |
 
 **Git 스크립트 (`bin/gitcmd/`)**
