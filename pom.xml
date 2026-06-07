@@ -99,6 +99,15 @@
                     <mainClass>com.nh.nsight.messaging.xpilottpcclient.TpcUtil</mainClass>
                     <classpathScope>compile</classpathScope>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>mn-test</id>
+                        <configuration>
+                            <mainClass>com.nh.nsight.messaging.zpilotfwk.mn.MN_SP_COMMON</mainClass>
+                            <classpathScope>compile</classpathScope>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

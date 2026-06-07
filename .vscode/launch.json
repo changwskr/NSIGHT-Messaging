@@ -1,0 +1,24 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Spring Boot (Maven Debug)",
+      "request": "launch",
+      "mainClass": "com.nh.nsight.messaging.NsightMessageMgmtApplication",
+      "cwd": "${workspaceFolder}",
+      "preLaunchTask": "Maven: compile",
+      "vmArgs": "-Dfile.encoding=UTF-8 -Dstdout.encoding=UTF-8 -Dstderr.encoding=UTF-8 -Dspring.profiles.active=local"
+    },
+    {
+      "type": "java",
+      "name": "MN_SP_COMMON main",
+      "request": "launch",
+      "mainClass": "com.nh.nsight.messaging.zpilotfwk.mn.MN_SP_COMMON",
+      "projectName": "nsight-message-mgmt-service",
+      "cwd": "${workspaceFolder}",
+      "args": ["container"],
+      "vmArgs": "-Dfile.encoding=UTF-8 -Dstdout.encoding=UTF-8 -Dstderr.encoding=UTF-8"
+    }
+  ]
+}

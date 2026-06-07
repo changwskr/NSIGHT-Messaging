@@ -1,0 +1,81 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Maven: compile",
+      "type": "shell",
+      "command": "mvn",
+      "args": ["-q", "compile", "-DskipTests"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Maven: spring-boot:run",
+      "type": "shell",
+      "command": "mvn",
+      "args": [
+        "spring-boot:run",
+        "-DskipTests",
+        "-Dspring-boot.run.jvmArguments=-Dfile.encoding=UTF-8 -Dspring.profiles.active=local"
+      ],
+      "options": { "cwd": "${workspaceFolder}" },
+      "dependsOn": ["Maven: compile"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "focus": true
+      },
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "maven-run",
+        "pattern": { "regexp": "^$" },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".",
+          "endsPattern": "Started NsightMessageMgmtApplication"
+        }
+      }
+    },
+    {
+      "label": "Run: MN_SP_COMMON test main",
+      "type": "shell",
+      "command": "${workspaceFolder}/bin/run-mn-test.bat",
+      "args": ["container"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "focus": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Run: bin/run-app.bat (확장 불필요)",
+      "type": "shell",
+      "command": "${workspaceFolder}/bin/run-app.bat",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "focus": true
+      },
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "run-app",
+        "pattern": { "regexp": "^$" },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".",
+          "endsPattern": "Started NsightMessageMgmtApplication"
+        }
+      }
+    }
+  ]
+}

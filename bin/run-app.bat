@@ -7,12 +7,13 @@ set "PROJECT_ROOT=%BIN_DIR%.."
 cd /d "%PROJECT_ROOT%"
 
 echo ==^> Project: %CD%
-echo ==^> Remove Gradle build/ (Maven classpath only)
-if exist "%PROJECT_ROOT%\build" (
-  rmdir /s /q "%PROJECT_ROOT%\build"
-  echo     deleted build/
+echo ==^> Maven spring-boot:run (extension not required)
+
+call mvn -q compile -DskipTests
+if errorlevel 1 (
+  echo ==^> compile FAILED
+  exit /b 1
 )
 
-echo ==^> mvn spring-boot:run
-call mvn spring-boot:run -DskipTests
+call mvn spring-boot:run -DskipTests "-Dspring-boot.run.jvmArguments=-Dfile.encoding=UTF-8 -Dspring.profiles.active=local"
 exit /b %ERRORLEVEL%

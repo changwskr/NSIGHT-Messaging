@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8"/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <title>NSIGHT ZpilotFWK SP_COMMON</title>
+
+    <link rel="stylesheet" href="/css/nsight.css"/>
+
+</head>
+
+<body>
+
+<header class="topbar">
+
+    <div>
+
+        <h1>ZpilotFWK SP_COMMON 테스트</h1>
+
+        <p>DB 없이 AC → TCF → SP_COMMON 입·출력 확인</p>
+
+    </div>
+
+    <div class="topbar-right">
+
+        <nav th:replace="~{fragments/main-nav :: mainNav('zpilotfwk')}"></nav>
+
+        <div class="badge">ZFWK</div>
+
+    </div>
+
+</header>
+
+
+
+<div id="statusBar" class="status-bar hidden" role="status"></div>
+
+
+
+<main class="crud-layout">
+
+    <section class="card form-card">
+
+        <div class="card-title">
+
+            <h2>요청 입력</h2>
+
+            <p>값을 입력하고 [실행]을 누르면 AC_SP_COMMON → TCF 파이프라인이 호출됩니다.</p>
+
+        </div>
+
+
+
+        <form id="executeForm" class="grid-form">
+
+            <div class="card-title wide">
+
+                <h3>common (EPlatonCommonDTO)</h3>
+
+                <p>requestBody.common 영역 — 날짜·시간은 비워두면 서버에서 자동 설정됩니다.</p>
+
+            </div>
+
+            <label>terminalID
+
+                <input name="terminalID" id="commonTerminalID" maxlength="20" value="TERM001"/>
+
+            </label>
+
+            <label>terminalType
+
+                <input name="terminalType" id="commonTerminalType" maxlength="10" value="WEB"/>
+
+            </label>
+
+            <label>xmlSeq
+
+                <input name="xmlSeq" id="commonXmlSeq" maxlength="10" value="1"/>
+
+            </label>
+
+            <label>bankCode
+
+                <input name="bankCode" id="commonBankCode" maxlength="2" value="11"/>
+
+            </label>
+
+            <label>branchCode
+
+                <input name="branchCode" id="commonBranchCode" maxlength="4" value="0001"/>
+
+            </label>
+
+            <label>glPostBranchCode
+
+                <input name="glPostBranchCode" id="commonGlPostBranchCode" maxlength="4" value="0001"/>
+
+            </label>
+
+            <label>channelType
+
+                <input name="channelType" id="commonChannelType" maxlength="10" value="ONL"/>
+
+            </label>
+
+            <label>userID
+
+                <input name="userID" id="commonUserID" maxlength="20" value="TESTER"/>
+
+            </label>
+
+            <label>eventNo
+
+                <input name="eventNo" id="commonEventNo" maxlength="10" value="71001" required/>
+
+            </label>
+
+            <label>nation
+
+                <input name="nation" id="commonNation" maxlength="3" value="KR"/>
+
+            </label>
+
+            <label>regionCode
+
+                <input name="regionCode" id="commonRegionCode" maxlength="4" value="01"/>
+
+            </label>
+
+            <label>timeZone
+
+                <input name="timeZone" id="commonTimeZone" maxlength="30" value="Asia/Seoul"/>
+
+            </label>
+
+            <label>fxRateCount
+
+                <input name="fxRateCount" id="commonFxRateCount" type="number" min="0" value="0"/>
+
+            </label>
+
+            <label>reqName
+
+                <input name="reqName" id="commonReqName" maxlength="50" value="SP_COMMON_TEST"/>
+
+            </label>
+
+            <label>systemDate
+
+                <input name="systemDate" id="commonSystemDate" maxlength="8" placeholder="YYYYMMDD (비우면 자동)"/>
+
+            </label>
+
+            <label>businessDate
+
+                <input name="businessDate" id="commonBusinessDate" maxlength="8" placeholder="YYYYMMDD (비우면 자동)"/>
+
+            </label>
+
+            <label>systemInTime
+
+                <input name="systemInTime" id="commonSystemInTime" maxlength="6" placeholder="HHMMSS (비우면 자동)"/>
+
+            </label>
+
+            <label>systemOutTime
+
+                <input name="systemOutTime" id="commonSystemOutTime" maxlength="6" value="*" placeholder="*"/>
+
+            </label>
+
+            <label>transactionNo
+
+                <input name="transactionNo" id="commonTransactionNo" maxlength="20" value="*"/>
+
+            </label>
+
+            <label>baseCurrency
+
+                <input name="baseCurrency" id="commonBaseCurrency" maxlength="3" value="KRW"/>
+
+            </label>
+
+            <label>multiPL
+
+                <input name="multiPL" id="commonMultiPL" maxlength="1" value="N"/>
+
+            </label>
+
+            <label>userLevel
+
+                <input name="userLevel" id="commonUserLevel" type="number" min="0" value="0"/>
+
+            </label>
+
+            <label>ipAddress
+
+                <input name="ipAddress" id="commonIpAddress" maxlength="45" value="127.0.0.1"/>
+
+            </label>
+
+            <label>systemName
+
+                <input name="systemName" id="commonSystemName" maxlength="30" value="WEB"/>
+
+            </label>
+
+            <label>operationName
+
+                <input name="operationName" id="commonOperationName" maxlength="50" value="WEB.sp-common.execute"/>
+
+            </label>
+
+            <label>tpfq
+
+                <input name="tpfq" id="commonTpfq" maxlength="10" value="200"/>
+
+            </label>
+
+            <label>txTimer
+
+                <input name="txTimer" id="commonTxTimer" maxlength="10" value="60"/>
+
+            </label>
+
+            <label>hostseq
+
+                <input name="hostseq" id="commonHostseq" maxlength="20" value="HOST-0001"/>
+
+            </label>
+
+            <label>orgseq
+
+                <input name="orgseq" id="commonOrgseq" maxlength="20" value="ORG-0001"/>
+
+            </label>
+
+
+
+            <label>트랜잭션 모드
+
+                <select name="transactionMode" id="transactionMode">
+
+                    <option value="container" th:selected="${defaultTransactionMode == 'container'}">container</option>
+
+                    <option value="usertransaction" th:selected="${defaultTransactionMode == 'usertransaction'}">usertransaction</option>
+
+                </select>
+
+            </label>
+
+
+
+            <div class="card-title wide">
+
+                <h3>bizData (업무 데이터)</h3>
+
+                <p>requestBody.bizData 영역 — 샘플: 이름·나이·전화번호</p>
+
+            </div>
+
+            <label>이름
+
+                <input name="name" id="bizName" maxlength="50" value="홍길동" required/>
+
+            </label>
+
+            <label>나이
+
+                <input name="age" id="bizAge" type="number" min="0" max="150" value="30" required/>
+
+            </label>
+
+            <label>전화번호
+
+                <input name="phoneNumber" id="bizPhoneNumber" maxlength="20" value="010-1234-5678" required/>
+
+            </label>
+
+            <div class="actions wide">
+
+                <button type="submit" id="executeBtn">실행</button>
+
+                <button type="button" class="secondary" id="resetBtn">초기화</button>
+
+            </div>
+
+        </form>
+
+    </section>
+
+
+
+    <section class="card">
+
+        <div class="card-title row-title">
+
+            <div>
+
+                <h2>실행 입·출력</h2>
+
+                <p id="resultSummary">실행 전입니다.</p>
+
+            </div>
+
+            <span id="resultBadge" class="mode-badge create hidden">—</span>
+
+        </div>
+
+        <div class="card-title">
+
+            <h3>실행 입력</h3>
+
+            <p>AC_SP_COMMON으로 전송한 요청 정보입니다.</p>
+
+        </div>
+
+        <pre id="inputBox" class="result-box">입력 정보가 여기에 표시됩니다.</pre>
+
+        <div class="card-title">
+
+            <h3>실행 결과</h3>
+
+            <p>서버 응답 JSON입니다.</p>
+
+        </div>
+
+        <pre id="resultBox" class="result-box">결과가 여기에 표시됩니다.</pre>
+
+    </section>
+
+</main>
+
+
+
+<section class="card full">
+
+    <div class="card-title">
+
+        <h2>호출 경로</h2>
+
+        <p>화면 → <code>POST /zpilotfwk/sp-common/execute</code> → AC_SP_COMMON → TCF → SP_COMMON</p>
+
+    </div>
+
+</section>
+
+
+
+<script th:inline="javascript">
+
+    window.ZPILOTFWK_DEFAULT_TX_MODE = /*[[${defaultTransactionMode}]]*/ 'container';
+
+</script>
+
+<script src="/js/zpilotfwk-sp-common.js"></script>
+
+</body>
+
+</html>
+

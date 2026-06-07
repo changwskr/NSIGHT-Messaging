@@ -83,6 +83,10 @@ logging:
     com.nh.nsight.messaging.message.mapper: DEBUG
     com.nh.nsight.messaging.file.mapper: DEBUG
 
+zpilotfwk:
+  transaction:
+    default-mode: container
+
 nsight:
   ap-id: MSG-LOCAL-AP01
   async:

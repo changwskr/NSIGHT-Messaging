@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nh.nsight.messaging.zpilotfwk.common.dc.mapper.SpCommonMapper">
+
+    <resultMap id="SpCommonResultMap" type="com.nh.nsight.messaging.zpilotfwk.common.dc.entity.SpCommonEntity">
+        <id property="id" column="ID"/>
+        <result property="name" column="NAME"/>
+        <result property="age" column="AGE"/>
+        <result property="phoneNumber" column="PHONE_NUMBER"/>
+        <result property="createdAt" column="CREATED_AT"/>
+        <result property="updatedAt" column="UPDATED_AT"/>
+    </resultMap>
+
+    <sql id="spCommonColumns">
+        ID,
+        NAME,
+        AGE,
+        PHONE_NUMBER,
+        CREATED_AT,
+        UPDATED_AT
+    </sql>
+
+    <select id="selectById" resultMap="SpCommonResultMap">
+        SELECT <include refid="spCommonColumns"/>
+        FROM TB_ZPF_SP_COMMON
+        WHERE ID = #{id}
+    </select>
+
+    <select id="selectAll" resultMap="SpCommonResultMap">
+        SELECT <include refid="spCommonColumns"/>
+        FROM TB_ZPF_SP_COMMON
+        <where>
+            <if test="criteria != null and criteria.name != null and criteria.name != ''">
+                AND NAME LIKE CONCAT('%', #{criteria.name}, '%')
+            </if>
+        </where>
+        ORDER BY ID
+        OFFSET #{criteria.offset} ROWS FETCH NEXT #{criteria.safePageSize} ROWS ONLY
+    </select>
+
+    <select id="countAll" resultType="long">
+        SELECT COUNT(*)
+        FROM TB_ZPF_SP_COMMON
+        <where>
+            <if test="criteria != null and criteria.name != null and criteria.name != ''">
+                AND NAME LIKE CONCAT('%', #{criteria.name}, '%')
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert"
+            parameterType="com.nh.nsight.messaging.zpilotfwk.common.dc.entity.SpCommonEntity"
+            useGeneratedKeys="true"
+            keyProperty="id"
+            keyColumn="ID">
+        INSERT INTO TB_ZPF_SP_COMMON (
+            NAME, AGE, PHONE_NUMBER, CREATED_AT, UPDATED_AT
+        ) VALUES (
+            #{name}, #{age}, #{phoneNumber}, #{createdAt}, #{updatedAt}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.nh.nsight.messaging.zpilotfwk.common.dc.entity.SpCommonEntity">
+        UPDATE TB_ZPF_SP_COMMON
+        SET NAME = #{name},
+            AGE = #{age},
+            PHONE_NUMBER = #{phoneNumber},
+            UPDATED_AT = #{updatedAt}
+        WHERE ID = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM TB_ZPF_SP_COMMON
+        WHERE ID = #{id}
+    </delete>
+
+</mapper>

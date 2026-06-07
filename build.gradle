@@ -39,7 +39,21 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
+springBoot {
+    mainClass = 'com.nh.nsight.messaging.NsightMessageMgmtApplication'
+}
+
 tasks.named('bootRun') {
+    jvmArgs '-Dfile.encoding=UTF-8', '-Dstdout.encoding=UTF-8', '-Dstderr.encoding=UTF-8'
+}
+
+tasks.register('runMnTest', JavaExec) {
+    group = 'application'
+    description = 'Run MN_SP_COMMON test main (full runtime classpath)'
+    dependsOn classes
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'com.nh.nsight.messaging.zpilotfwk.mn.MN_SP_COMMON'
+    args = project.hasProperty('mnArgs') ? mnArgs.split(',') : ['container']
     jvmArgs '-Dfile.encoding=UTF-8', '-Dstdout.encoding=UTF-8', '-Dstderr.encoding=UTF-8'
 }
 

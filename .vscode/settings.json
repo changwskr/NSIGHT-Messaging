@@ -1,12 +1,13 @@
 {
   "java.debug.settings.onBuildFailureProceed": true,
-  "java.errors.incompleteClasspath.severity": "ignore",
+  "java.errors.incompleteClasspath.severity": "warning",
   "java.codeGeneration.generateComments": false,
   "java.debug.settings.forceBuildBeforeLaunch": true,
   "java.debug.settings.hotCodeReplace": "auto",
   "java.import.maven.enabled": true,
-  "java.import.gradle.enabled": true,
-  "java.import.gradle.wrapper.enabled": true,
+  "java.import.gradle.enabled": false,
+  "java.import.gradle.wrapper.enabled": false,
+  "gradle.javaDebug": false,
   "java.configuration.updateBuildConfiguration": "automatic",
   "java.project.importOnFirstTimeStartup": "automatic",
   "java.project.resourceFilters": [
@@ -17,16 +18,22 @@
   ],
   "maven.terminal.useJavaHome": true,
   "maven.pomfile.globPattern": "pom.xml",
+  "maven.executable.preferMavenWrapper": false,
   "java.configuration.maven.defaultMojoExecutionAction": "execute",
   "java.import.exclusions": [
     "**/build/**",
     "**/.gradle/**",
-    "**/gradle/**"
+    "**/gradle/**",
+    "**/gradlew",
+    "**/gradlew.bat",
+    "**/build.gradle",
+    "**/settings.gradle"
   ],
   "files.watcherExclude": {
     "**/build/**": true,
     "**/.gradle/**": true
   },
   "java.compile.nullAnalysis.mode": "automatic",
-  "java.jdt.ls.javac.enabled": "on"
+  "java.jdt.ls.javac.enabled": "off",
+  "java.dependency.packagePresentation": "hierarchical"
 }
