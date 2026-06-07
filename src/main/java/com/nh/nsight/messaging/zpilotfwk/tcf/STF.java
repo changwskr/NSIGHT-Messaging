@@ -201,15 +201,7 @@ public class STF {
       /*************************************************************************
        * 영업일자을 설정한다.
        ************************************************************************/
-      /*
-       * if( (businessDate=STF_SPgetbusinessdate()) == null ){
-       * STF_SPerror("EFWK0016",this.getClass().getName()+
-       * ".STF_SPinit()::get business date error");
-       * log().printf(4,(EPlatonEvent)eplevent,"error to get businessDate");
-       * }
-       * else
-       * commonDTO.setBusinessDate(businessDate);
-       */
+     
 
       if ((businessDate = commonManagementSB.getBusinessDate("11")) == null) {
         STF_SPerror("EFWK0005", this.getClass().getName() + ".STF_SPinit()::get business date error");
@@ -238,96 +230,7 @@ public class STF {
   public boolean STF_SPmiddle() {
     try {
 
-      /*************************************************************************
-       * 클라이언트에서 요청한 트랜잭션 정보를 구한다
-       ************************************************************************/
-      log().printf(4, (EPlatonEvent) eplevent, "Get Transaction Level::");
-
-      int tpinfomode = 99;
-
-      /*************************************************************************
-       * container의 경우에는 트랜잭션에 상관없는 구조로 한다.
-       * tpinfomode
-       * - 6 트랜잭션 모드가 없는 경우 - No Transaction
-       * - 0 이미 트랜잭션 모드가 있는 경우 - Active
-       * - -1 에러가 발생한 경우
-       ************************************************************************/
-      if (!"usertransaction".equals(transaction_type)) {
-        tpinfomode = TPMSVCAPI.getInstance().TPinfo();
-      } else {
-        tpinfomode = TPMSVCAPI.getInstance().TPinfo(this.tx);
-      }
-
-      switch (tpinfomode) {
-        case -1:
-          STF_SPerror("EFWK0006", this.getClass().getName() + ".STF_SPmiddle()::TPinfo() Exception");
-          break;
-        case 0:
-          /*********************************************************************
-           * 이미 트랜잭션을 시작한 상태이므로 트랜잭션을 시작하지 않고 현재의 트랜잭션
-           * 을 유지해 준다
-           * 주의 : CMP인경우에는 TPinfo()메소드는 항상 0을 반환할 것이다(세션빈의 메소드가 required
-           * 라면) 그러므로 각 세션별로 각 빈별로 commit/rollback을 관리해주어도 된다.
-           *
-           ********************************************************************/
-          log().printf(4, (EPlatonEvent) eplevent, "Transaction Level       : [Already Transaction started]");
-          log().printf(4, (EPlatonEvent) eplevent, "Transaction TPinfo mode : [" + tpinfomode + "]");
-
-          // 최초클라이언트에서 올라온 경우에는 타임아웃을 정해준다.
-          // tpfq가 200인 최초의 ejb 서버만 트랜잭션의 commit/rollback을 관리한다.
-          if (!"usertransaction".equals(transaction_type)) {
-            if (!tpsvcinfoDTO.getTpfq().equals("100")) {
-              if (TPMSVCAPI.getInstance().TPbegin(tpsvcinfoDTO.getTx_timer())) {
-                setSTF_SPtxinfo(1);
-                log().printf(4, (EPlatonEvent) eplevent, "TPbegin() 성공");
-              } else {
-                STF_SPerror("EFWK0007", this.getClass().getName() + ".STF_SPmiddle()::TPbegin()시에 에러발생");
-                log().printf(4, (EPlatonEvent) eplevent, "TPbegin() 실패");
-              }
-            }
-          }
-
-          break;
-        case 1: // Marked Rollback
-          STF_SPerror("EFWK0009", "TPinfo() Marked Rollback ");
-          log().printf(4, (EPlatonEvent) eplevent, "TPinfo() Marked Rollback ");
-          break;
-        case 6:
-          /*********************************************************************
-           * 클라이언트 화면에서 올라온 Transaction Timer (seconds) 값을 가지고
-           * UserTransaction을 시작한다.
-           ********************************************************************/
-          log().printf(4, (EPlatonEvent) eplevent, "Transaction Level       : [Not started]");
-          log().printf(4, (EPlatonEvent) eplevent, "Transaction TPinfo mode : [" + tpinfomode + "]");
-
-          if (!"usertransaction".equals(transaction_type)) {
-            log().printf(4, (EPlatonEvent) eplevent, "Transaction type      : [container]");
-            if (TPMSVCAPI.getInstance().TPbegin(tpsvcinfoDTO.getTx_timer())) {
-              setSTF_SPtxinfo(1);
-              log().printf(4, (EPlatonEvent) eplevent, "TPbegin() 성공");
-            } else {
-              STF_SPerror("EFWK0007", this.getClass().getName() + ".STF_SPmiddle()::TPbegin()시에 에러발생");
-              log().printf(4, (EPlatonEvent) eplevent, "TPbegin() 실패");
-            }
-          } else {
-            log().printf(4, (EPlatonEvent) eplevent, "Transaction type      : [bean]");
-            if (TPMSVCAPI.getInstance().TPbegin(this.tx, CommonUtil.Str2Int(tpsvcinfoDTO.getTx_timer()))) {
-              log().printf(4, (EPlatonEvent) eplevent, "TPbegin() 성공");
-              setSTF_SPtxinfo(1);
-            } else {
-              STF_SPerror("EFWK0007", this.getClass().getName() + ".STF_SPmiddle()::TPbegin()시에 에러발생");
-              log().printf(4, (EPlatonEvent) eplevent, "TPbegin() 실패");
-            }
-          }
-          log().printf(4, (EPlatonEvent) eplevent, "Transaction TPbegin mode       : [" + this.giTXInfoflag + "]");
-          break;
-        default:
-          STF_SPerror("EFWK0010", "TPinfo() Nothing ");
-          log().printf(4, (EPlatonEvent) eplevent, "TPinfo() Marked Nothing ");
-          break;
-      }
-
-      if (isErr()) {
+      if (!STF_SPmiddleTransaction()) {
         return false;
       }
 
@@ -343,7 +246,7 @@ public class STF {
        * 단지 여기서는 TPSrecv모듈에서 구한 시퀀스를 확인하고 TPSVCINFODTO 객체 셋팅하는 것
        * 으로 한다.
        ************************************************************************/
-      if (!tpsvcinfoDTO.getTpfq().equals("100"))
+      if (!"100".equals(tpfq()))
         tpsvcinfoDTO.setOrgseq(tpsvcinfoDTO.getHostseq());
       commonDTO.setTransactionNo(tpsvcinfoDTO.getHostseq());
       log().printf(4, (EPlatonEvent) eplevent,
@@ -1095,6 +998,76 @@ public class STF {
       ex.printStackTrace();
     }
     return "1";
+  }
+
+  /**
+   * TPMSVCAPI로 트랜잭션 상태(TPinfo)만 점검한다.
+   * commit/rollback은 TCF {@code @Transactional}(Spring)에서 수행한다.
+   */
+  private boolean STF_SPmiddleTransaction() {
+    log().printf(4, (EPlatonEvent) eplevent, "Get Transaction Level::");
+
+    TPMSVCAPI tpmsvc = TPMSVCAPI.getInstance();
+    int tpinfomode = "usertransaction".equals(transaction_type)
+        ? tpmsvc.TPinfo(this.tx)
+        : tpmsvc.TPinfo();
+
+    if (tpmsvc.isSpringManagedTransaction()) {
+      log().printf(4, (EPlatonEvent) eplevent, "Transaction backend    : [Spring @Transactional]");
+      log().printf(4, (EPlatonEvent) eplevent,
+          "Transaction commit/rollback : [delegated to Spring TCF]");
+    }
+
+    switch (tpinfomode) {
+      case -1:
+        STF_SPerror("EFWK0006", this.getClass().getName() + ".STF_SPmiddle()::TPinfo() Exception");
+        return false;
+      case 1:
+        STF_SPerror("EFWK0009", "TPinfo() Marked Rollback ");
+        log().printf(4, (EPlatonEvent) eplevent, "TPinfo() Marked Rollback ");
+        return false;
+      case 0:
+        log().printf(4, (EPlatonEvent) eplevent, "Transaction Level       : [Already Transaction started]");
+        log().printf(4, (EPlatonEvent) eplevent, "Transaction TPinfo mode : [0]");
+        return registerTransactionInspection(tpmsvc);
+      case 6:
+        log().printf(4, (EPlatonEvent) eplevent, "Transaction Level       : [Not started]");
+        log().printf(4, (EPlatonEvent) eplevent, "Transaction TPinfo mode : [6]");
+        if (tpmsvc.isSpringManagedTransaction()) {
+          log().printf(4, (EPlatonEvent) eplevent,
+              "Transaction inspect note : [Spring tx expected from TCF boundary]");
+        }
+        return registerTransactionInspection(tpmsvc);
+      default:
+        STF_SPerror("EFWK0010", "TPinfo() Nothing ");
+        log().printf(4, (EPlatonEvent) eplevent, "TPinfo() Marked Nothing ");
+        return false;
+    }
+  }
+
+  /** tpfq=100(중계) 제외, 트랜잭션 점검 등록만 수행 (실제 begin/commit/rollback 없음) */
+  private boolean registerTransactionInspection(TPMSVCAPI tpmsvc) {
+    if ("100".equals(tpfq())) {
+      log().printf(4, (EPlatonEvent) eplevent,
+          "Transaction inspect skipped (tpfq=100 relay hop)");
+      return !isErr();
+    }
+
+    log().printf(4, (EPlatonEvent) eplevent, "Transaction type      : [" + transaction_type + "]");
+    if (tpmsvc.TPbegin(tpsvcinfoDTO.getTx_timer())) {
+      setSTF_SPtxinfo(1);
+      log().printf(4, (EPlatonEvent) eplevent, "Transaction inspect registered");
+      log().printf(4, (EPlatonEvent) eplevent, "Transaction TPinspect mode : [" + giTXInfoflag + "]");
+      return true;
+    }
+
+    STF_SPerror("EFWK0007", this.getClass().getName() + ".STF_SPmiddle()::transaction inspect failed");
+    return false;
+  }
+
+  private String tpfq() {
+    String value = tpsvcinfoDTO != null ? tpsvcinfoDTO.getTpfq() : null;
+    return value != null ? value : "";
   }
 
   public void setSTF_SPtxinfo(int offset) {

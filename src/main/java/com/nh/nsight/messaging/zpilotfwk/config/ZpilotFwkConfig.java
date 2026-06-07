@@ -11,8 +11,6 @@ import org.springframework.context.annotation.Import;
 import com.nh.nsight.messaging.zpilotfwk.tcf.LOGEJ;
 
 import com.nh.nsight.messaging.zpilotfwk.tcf.config.TcfConfig;
-import com.nh.nsight.messaging.zpilotfwk.tcf.support.DefaultCommonManagementSB;
-import com.nh.nsight.messaging.zpilotfwk.tcf.support.ICommonManagementSB;
 import com.nh.nsight.messaging.zpilotfwk.tcf.support.TransactionControlDAO;
 
 @Configuration
@@ -22,14 +20,6 @@ import com.nh.nsight.messaging.zpilotfwk.tcf.support.TransactionControlDAO;
 @Import(TcfConfig.class)
 
 public class ZpilotFwkConfig {
-
-    @Bean
-
-    ICommonManagementSB commonManagementSB() {
-
-        return new DefaultCommonManagementSB();
-
-    }
 
     @Bean
 

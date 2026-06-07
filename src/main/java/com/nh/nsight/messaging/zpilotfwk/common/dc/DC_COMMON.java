@@ -1,10 +1,10 @@
 package com.nh.nsight.messaging.zpilotfwk.common.dc;
 
-import com.nh.nsight.messaging.zpilotfwk.common.as.ZpilotFwkBizException;
 import com.nh.nsight.messaging.zpilotfwk.common.dc.dto.SpCommon7001BIZDDTO;
 import com.nh.nsight.messaging.zpilotfwk.common.dc.entity.SpCommonEntity;
 import com.nh.nsight.messaging.zpilotfwk.common.dc.repository.SpCommonRepository;
 import com.nh.nsight.messaging.zpilotfwk.common.dc.util.SpCommonDcMapperUtil;
+import com.nh.nsight.messaging.zpilotfwk.tcf.ZpilotFwkBizException;
 
 import org.springframework.stereotype.Repository;
 

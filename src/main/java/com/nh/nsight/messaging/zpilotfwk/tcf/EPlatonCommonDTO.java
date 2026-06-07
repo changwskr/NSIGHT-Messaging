@@ -325,7 +325,7 @@ public class EPlatonCommonDTO {
         dto.setGlPostBranchCode("0001");
         dto.setChannelType("ONL");
         dto.setUserID("TESTER");
-        dto.setEventNo("71001");
+        dto.setEventNo("SP_COMMON7001");
         dto.setNation("KR");
         dto.setRegionCode("01");
         dto.setTimeZone("Asia/Seoul");
@@ -341,7 +341,7 @@ public class EPlatonCommonDTO {
         dto.setUserLevel(0);
         dto.setIPAddress("127.0.0.1");
         dto.setSystemName("WEB");
-        dto.setOperationName("WEB.sp-common.execute");
+        dto.setOperationName("AC_SP_COMMON.execute");
         dto.setTpfq("200");
         dto.setTxTimer("60");
         dto.setHostseq("HOST-0001");

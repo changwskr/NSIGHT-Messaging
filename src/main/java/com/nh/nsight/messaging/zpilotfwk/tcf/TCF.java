@@ -8,39 +8,38 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
-import com.nh.nsight.messaging.zpilotfwk.common.as.SP_COMMON;
 import com.nh.nsight.messaging.zpilotfwk.config.ZpilotFwkProperties;
+import com.nh.nsight.messaging.zpilotfwk.tcf.routing.SpServiceRegistry;
+import com.nh.nsight.messaging.zpilotfwk.tcf.routing.SpServiceRoutingException;
 import com.nh.nsight.messaging.zpilotfwk.tcf.support.CommonUtil;
 import com.nh.nsight.messaging.zpilotfwk.tcf.support.SessionContext;
 import com.nh.nsight.messaging.zpilotfwk.tcf.support.TxHelper;
 
 /**
- * TCF(Transaction Control Framework) - STF - BTF - ETF ???????.
+ * TCF(Transaction Control Framework) ? STF ? BTF ? ETF ???????.
+ * commit/rollback? {@link #executeInTransaction} / {@link #executeInNewTransaction}?
+ * {@code @Transactional} ????? ????. STF/ETF? TPinfo ??? ????.
  */
 @Service
 public class TCF {
 
-  private final ISpService businessService;
+  private final SpServiceRegistry serviceRegistry;
   private final ZpilotFwkProperties properties;
   private final TCF self;
 
   private String activeTransactionMode = "container";
 
   @Autowired
-  public TCF(SP_COMMON spCommon, ZpilotFwkProperties properties, @Lazy TCF self) {
-    this.businessService = spCommon;
+  public TCF(SpServiceRegistry serviceRegistry, ZpilotFwkProperties properties, @Lazy TCF self) {
+    this.serviceRegistry = serviceRegistry;
     this.properties = properties;
     this.self = self;
   }
 
-  public TCF(ISpService businessService) {
-    this.businessService = businessService;
+  public TCF(SpServiceRegistry serviceRegistry) {
+    this.serviceRegistry = serviceRegistry;
     this.properties = null;
     this.self = null;
-  }
-
-  public String getBusinessServiceName() {
-    return businessService.getClass().getSimpleName();
   }
 
   public EPlatonEvent execute(EPlatonEvent event, SessionContext sessionContext) {
@@ -53,6 +52,8 @@ public class TCF {
   public EPlatonEvent execute(EPlatonEvent event, SessionContext sessionContext, String transactionMode) {
     String mode = resolveTransactionMode(transactionMode);
     activeTransactionMode = mode;
+    System.out.println("***** [TCF] activeTransactionMode=" + activeTransactionMode
+        + " requestedMode=" + transactionMode);
     try {
       if (self == null) {
         return runOrchestration(event, sessionContext, mode);
@@ -88,8 +89,6 @@ public class TCF {
   }
 
   private EPlatonEvent runOrchestration(EPlatonEvent event, SessionContext sessionContext, String transactionMode) {
-    String serviceName = businessService.getClass().getSimpleName();
-
     LOGEJ.getInstance().printf(5, event,
         "====================================================================[TCF] start");
 
@@ -100,10 +99,25 @@ public class TCF {
     LOGEJ.getInstance().printf(5, event, "====================================================[STF] end");
 
     if (isSuccess(event)) {
+      ISpService businessService;
+      try {
+        businessService = serviceRegistry.resolve(event);
+      } catch (SpServiceRoutingException ex) {
+        applyRoutingError(event, ex);
+        return event;
+      }
+
+      String serviceName = businessService.serviceId();
+      LOGEJ.getInstance().printf(5, event,
+          "====================================================[TCF route] serviceId=" + serviceName);
       LOGEJ.getInstance().printf(5, event,
           "====================================================[" + serviceName + "] start");
       markPhase(event, serviceName, true);
-      event = businessService.execute(event);
+      try {
+        event = businessService.execute(event);
+      } catch (ZpilotFwkBizException ex) {
+        applyBusinessError(event, ex);
+      }
       markPhase(event, serviceName, false);
       LOGEJ.getInstance().printf(5, event,
           "====================================================[" + serviceName + "] end errorcode="
@@ -118,10 +132,38 @@ public class TCF {
     markPhase(event, "ETF", false);
     LOGEJ.getInstance().printf(5, event, "====================================================[ETF] end");
 
-    logTrace(event, serviceName);
+    logTrace(event, resolveServiceNameForTrace(event));
     LOGEJ.getInstance().printf(5, event,
         "====================================================================[TCF] end");
     return event;
+  }
+
+  private String resolveServiceNameForTrace(EPlatonEvent event) {
+    try {
+      return serviceRegistry.resolve(event).serviceId();
+    } catch (SpServiceRoutingException ex) {
+      return "UNKNOWN";
+    }
+  }
+
+  private void applyRoutingError(EPlatonEvent event, SpServiceRoutingException ex) {
+    if (event == null || event.getTPSVCINFODTO() == null) {
+      return;
+    }
+    String errorCode = ex.getErrorCode() != null ? ex.getErrorCode() : "ETCF0003";
+    event.getTPSVCINFODTO().setErrorcode(errorCode);
+    event.getTPSVCINFODTO().setError_message(ex.getMessage());
+    event.setErr(EPlatonErrDTO.of(errorCode, ex.getMessage()));
+  }
+
+  private void applyBusinessError(EPlatonEvent event, ZpilotFwkBizException ex) {
+    if (event == null || event.getTPSVCINFODTO() == null) {
+      return;
+    }
+    String code = "EBTF0001";
+    event.getTPSVCINFODTO().setErrorcode(code);
+    event.getTPSVCINFODTO().setError_message(ex.getMessage());
+    event.setErr(EPlatonErrDTO.of(code, ex.getMessage()));
   }
 
   private String resolveTransactionMode(String transactionMode) {

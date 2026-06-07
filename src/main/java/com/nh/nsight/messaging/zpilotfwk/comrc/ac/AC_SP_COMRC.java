@@ -1,17 +1,17 @@
-package com.nh.nsight.messaging.zpilotfwk.common.ac;
+package com.nh.nsight.messaging.zpilotfwk.comrc.ac;
 
+import com.nh.nsight.messaging.zpilotfwk.comrc.ac.dto.SpComrc7201REQCDTO;
+import com.nh.nsight.messaging.zpilotfwk.comrc.ac.dto.SpComrc7201RESCDTO;
+import com.nh.nsight.messaging.zpilotfwk.comrc.ac.dto.SpComrcApiResponse;
+import com.nh.nsight.messaging.zpilotfwk.comrc.dc.dto.SpComrc7201BIZDDTO;
 import com.nh.nsight.messaging.zpilotfwk.config.ZpilotFwkProperties;
-import com.nh.nsight.messaging.zpilotfwk.common.ac.dto.SpCommonApiResponse;
-import com.nh.nsight.messaging.zpilotfwk.common.dc.dto.SpCommon7001BIZDDTO;
-import com.nh.nsight.messaging.zpilotfwk.common.ac.dto.SpCommon7001REQCDTO;
-import com.nh.nsight.messaging.zpilotfwk.common.ac.dto.SpCommon7001RESCDTO;
-import com.nh.nsight.messaging.zpilotfwk.tcf.support.CommonUtil;
-import com.nh.nsight.messaging.zpilotfwk.tcf.support.SessionContext;
 import com.nh.nsight.messaging.zpilotfwk.tcf.EPlatonCommonDTO;
 import com.nh.nsight.messaging.zpilotfwk.tcf.EPlatonErrDTO;
 import com.nh.nsight.messaging.zpilotfwk.tcf.EPlatonEvent;
 import com.nh.nsight.messaging.zpilotfwk.tcf.LOGEJ;
 import com.nh.nsight.messaging.zpilotfwk.tcf.TCF;
+import com.nh.nsight.messaging.zpilotfwk.tcf.support.CommonUtil;
+import com.nh.nsight.messaging.zpilotfwk.tcf.support.SessionContext;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,30 +20,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * AC(Application Controller) ? SP_COMMON ?? ???.
- */
 @RestController
-@RequestMapping("/api/zpilotfwk/sp-common")
-public class AC_SP_COMMON {
+@RequestMapping("/api/zpilotfwk/sp-comrc")
+public class AC_SP_COMRC {
 
-    private static final String AC = "AC_SP_COMMON";
-    private static final String DEFAULT_EVENT_NO = "SP_COMMON7001";
+    private static final String AC = "AC_SP_COMRC";
+    private static final String DEFAULT_EVENT_NO = "SP_COMRC7201";
 
     private final TCF tcf;
     private final ZpilotFwkProperties properties;
 
-    public AC_SP_COMMON(TCF tcf, ZpilotFwkProperties properties) {
+    public AC_SP_COMRC(TCF tcf, ZpilotFwkProperties properties) {
         this.tcf = tcf;
         this.properties = properties;
     }
 
     @PostMapping("/execute")
-    public ResponseEntity<SpCommonApiResponse<SpCommon7001RESCDTO>> execute(
-            @RequestBody(required = false) SpCommon7001REQCDTO request,
+    public ResponseEntity<SpComrcApiResponse<SpComrc7201RESCDTO>> execute(
+            @RequestBody(required = false) SpComrc7201REQCDTO request,
             @RequestParam(required = false) String transactionMode) {
         String mode = resolveTransactionMode(transactionMode);
-        System.out.println("????? [" + AC + "] execute START mode=" + mode);
+        System.out.println("***** [" + AC + "] execute START mode=" + mode);
 
         EPlatonEvent event = null;
         try {
@@ -55,38 +52,19 @@ public class AC_SP_COMMON {
 
             if (!prepare(event)) {
                 acError(event, "EAC0002", "prepare() failed");
-                SpCommon7001RESCDTO data = toResult(event);
-                LOGEJ.getInstance().printf(5, event,
-                        "====================================================================[AC] end");
-                return ResponseEntity.ok(SpCommonApiResponse.ok(data));
+                return ResponseEntity.ok(SpComrcApiResponse.ok(toResult(event)));
             }
 
-            LOGEJ.getInstance().printf(5, event,
-                    "====================================================[AC->TCF] execute call mode=" + mode);
-
             EPlatonEvent result = tcf.execute(event, sessionContext, mode);
-
-            LOGEJ.getInstance().printf(5, result,
-                    "====================================================[AC->TCF] execute return errorcode="
-                            + result.getTPSVCINFODTO().getErrorcode());
-
-            SpCommon7001RESCDTO data = toResult(result);
-
-            System.out.println("????? [" + AC + "] execute END errorcode="
-                    + (data.getErr() != null ? data.getErr().getErrcode() : "-"));
-            LOGEJ.getInstance().printf(5, result,
-                    "====================================================================[AC] end");
-            return ResponseEntity.ok(SpCommonApiResponse.ok(data));
+            return ResponseEntity.ok(SpComrcApiResponse.ok(toResult(result)));
         } catch (Exception ex) {
             if (event != null) {
                 acError(event, "EAC0003", getClass().getName() + ".execute():" + ex);
-                LOGEJ.getInstance().eprintf(10, event, ex);
                 return ResponseEntity.internalServerError()
-                        .body(SpCommonApiResponse.ok(toResult(event)));
+                        .body(SpComrcApiResponse.ok(toResult(event)));
             }
-            System.out.println("????? [" + AC + "] execute FAIL " + ex.getMessage());
             return ResponseEntity.internalServerError()
-                    .body(SpCommonApiResponse.fail(ex.getMessage()));
+                    .body(SpComrcApiResponse.fail(ex.getMessage()));
         }
     }
 
@@ -98,33 +76,23 @@ public class AC_SP_COMMON {
     }
 
     private boolean prepare(EPlatonEvent event) {
-        try {
-            if (event == null || event.getTPSVCINFODTO() == null) {
-                return false;
-            }
-            if (event.getCommon() == null) {
-                event.setCommon(new EPlatonCommonDTO());
-            }
-
-            EPlatonCommonDTO common = event.getCommon();
-            if (common.getSystemInTime() == null || "*".equals(common.getSystemInTime())) {
-                common.setSystemInTime(CommonUtil.GetSysTime());
-            }
-            if (common.getSystemDate() == null || "*".equals(common.getSystemDate())) {
-                common.setSystemDate(CommonUtil.GetSysDate());
-            }
-
-            String errorCode = event.getErr().getErrcode();
-            if (errorCode == null || errorCode.isEmpty()) {
-                event.setErr(EPlatonErrDTO.of("IZZ000", ""));
-            }
-
-            LOGEJ.getInstance().printf(4, event, "AC prepare success eventNo=" + common.getEventNo());
-            return true;
-        } catch (Exception ex) {
-            LOGEJ.getInstance().eprintf(10, event, ex);
+        if (event == null || event.getTPSVCINFODTO() == null) {
             return false;
         }
+        if (event.getCommon() == null) {
+            event.setCommon(new EPlatonCommonDTO());
+        }
+        EPlatonCommonDTO common = event.getCommon();
+        if (common.getSystemInTime() == null || "*".equals(common.getSystemInTime())) {
+            common.setSystemInTime(CommonUtil.GetSysTime());
+        }
+        if (common.getSystemDate() == null || "*".equals(common.getSystemDate())) {
+            common.setSystemDate(CommonUtil.GetSysDate());
+        }
+        if (event.getErr().getErrcode() == null || event.getErr().getErrcode().isEmpty()) {
+            event.setErr(EPlatonErrDTO.of("IZZ000", ""));
+        }
+        return true;
     }
 
     private void acError(EPlatonEvent event, String errorCode, String message) {
@@ -143,17 +111,15 @@ public class AC_SP_COMMON {
         event.setErr(err);
     }
 
-    private EPlatonEvent toEvent(SpCommon7001REQCDTO request) {
+    private EPlatonEvent toEvent(SpComrc7201REQCDTO request) {
         EPlatonEvent event = new EPlatonEvent();
         EPlatonCommonDTO common = event.getCommon();
 
         if (request != null && request.getCommon() != null) {
             EPlatonCommonDTO.copyTo(common, request.getCommon());
         } else {
-            EPlatonCommonDTO.copyTo(common, commonSample());
+            EPlatonCommonDTO.copyTo(common, comrcCommonSample());
         }
-
-        normalizeCommonForRouting(common);
 
         if (isBlankOrStar(common.getSystemDate())) {
             common.setSystemDate(CommonUtil.GetSysDate());
@@ -171,12 +137,19 @@ public class AC_SP_COMMON {
         event.setErr(EPlatonErrDTO.of("IZZ000", ""));
         syncTpmsvcFromCommon(event, common);
 
-        SpCommon7001BIZDDTO requestDto = request != null && request.getBizData() != null
+        SpComrc7201BIZDDTO requestDto = request != null && request.getBizData() != null
                 ? request.getBizData()
-                : SpCommon7001BIZDDTO.sample();
+                : SpComrc7201BIZDDTO.sample();
         event.setRequest(requestDto);
-
         return event;
+    }
+
+    private static EPlatonCommonDTO comrcCommonSample() {
+        EPlatonCommonDTO dto = EPlatonCommonDTO.sample();
+        dto.setEventNo(DEFAULT_EVENT_NO);
+        dto.setReqName("SP_COMRC_TEST");
+        dto.setOperationName(AC + ".execute");
+        return dto;
     }
 
     private void syncTpmsvcFromCommon(EPlatonEvent event, EPlatonCommonDTO common) {
@@ -188,8 +161,8 @@ public class AC_SP_COMMON {
         event.getTPSVCINFODTO().setOrgseq(valueOrDefault(common.getOrgseq(), "ORG-0001"));
     }
 
-    private SpCommon7001RESCDTO toResult(EPlatonEvent result) {
-        SpCommon7001RESCDTO data = new SpCommon7001RESCDTO();
+    private SpComrc7201RESCDTO toResult(EPlatonEvent result) {
+        SpComrc7201RESCDTO data = new SpComrc7201RESCDTO();
         if (result == null) {
             data.setErr(EPlatonErrDTO.of("EAC0001", "result is null"));
             return data;
@@ -201,36 +174,13 @@ public class AC_SP_COMMON {
             EPlatonCommonDTO.copyTo(commonEcho, result.getCommon());
             data.setCommon(commonEcho);
         }
-
-        SpCommon7001BIZDDTO responseDto = result.getResponseAs(SpCommon7001BIZDDTO.class);
+        SpComrc7201BIZDDTO responseDto = result.getResponseAs(SpComrc7201BIZDDTO.class);
         if (responseDto != null) {
             data.setBizData(responseDto);
         } else {
-            data.setBizData(result.getRequestAs(SpCommon7001BIZDDTO.class));
+            data.setBizData(result.getRequestAs(SpComrc7201BIZDDTO.class));
         }
         return data;
-    }
-
-    private static EPlatonCommonDTO commonSample() {
-        EPlatonCommonDTO dto = EPlatonCommonDTO.sample();
-        dto.setEventNo(DEFAULT_EVENT_NO);
-        dto.setReqName("SP_COMMON_TEST");
-        dto.setOperationName(AC + ".execute");
-        return dto;
-    }
-
-    private static void normalizeCommonForRouting(EPlatonCommonDTO common) {
-        if ("71001".equals(trim(common.getEventNo()))) {
-            common.setEventNo(DEFAULT_EVENT_NO);
-        }
-        String operationName = trim(common.getOperationName());
-        if (operationName == null || operationName.isBlank() || operationName.startsWith("WEB.")) {
-            common.setOperationName(AC + ".execute");
-        }
-    }
-
-    private static String trim(String value) {
-        return value == null ? null : value.trim();
     }
 
     private static boolean isBlankOrStar(String value) {

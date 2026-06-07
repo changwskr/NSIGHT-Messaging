@@ -4,7 +4,7 @@ import com.nh.nsight.messaging.zpilotfwk.common.dc.dto.SpCommon7001BIZDDTO;
 import com.nh.nsight.messaging.zpilotfwk.common.dc.entity.SpCommonEntity;
 
 /**
- * {@link SpCommon7001BIZDDTO} ??{@link SpCommonEntity} 변??
+ * {@link SpCommon7001BIZDDTO} ↔ {@link SpCommonEntity} 변환.
  */
 public final class SpCommonDcMapperUtil {
 

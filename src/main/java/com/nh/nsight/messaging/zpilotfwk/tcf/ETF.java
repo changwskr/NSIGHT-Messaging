@@ -187,89 +187,10 @@ public class ETF {
       LOGEJ.getInstance().printf(4, (EPlatonEvent) eplevent, "==================[ETF_SPcommonLog() END] (true)");
 
       /***************************************************************************
-       * 트랜잭션에 대한 Commit / Rollback 을 관리한다
-       * 현재 UserTransaction을 걸기위한 Tx Data Source 부분을 STF,ETF부분에서사용할수
-       * 있는 구조를 설계해야 된다.
-       * 일단은 구조만 가지고 간다. (향후변경)
+       * 트랜잭션 상태 점검 (commit/rollback은 Spring TCF @Transactional)
        **************************************************************************/
       if (giTXInfoflag == 1) {
-        LOGEJ.getInstance().printf(4, (EPlatonEvent) eplevent, "==================[TProllback/TPcommit START]");
-        LOGEJ.getInstance().printf(4, (EPlatonEvent) eplevent,
-            "Business Error Code : [" + tpsvcinfoDTO.getErrorcode() + "]");
-
-        if ((!"usertransaction".equals(transaction_type))) {
-
-          /*********************************************************************
-           * 트랜잭션 타입이 container 타입인경우의 트랜잭션을 완료하기 위한 로직
-           ******************************* 7
-           **************************************/
-          switch (tpsvcinfoDTO.getErrorcode().charAt(0)) {
-            case 'E':
-              LOGEJ.getInstance().printf(4, (EPlatonEvent) eplevent, "Call - container TProllback()");
-              if (TPMSVCAPI.getInstance().TProllback(ctx, eplevent))
-                LOGEJ.getInstance().printf(10, (EPlatonEvent) eplevent, "TProllback-success");
-              else {
-                LOGEJ.getInstance().printf(10, (EPlatonEvent) eplevent, "TProllback call error ctx-" + ctx);
-                ETF_SPerror("EFWK0030", this.getClass().getName() + ".ETF_SPend():TProllback() Exception");
-              }
-              break;
-            case 'I':
-              LOGEJ.getInstance().printf(4, (EPlatonEvent) eplevent, "Call - TPcommit()");
-              if (TPMSVCAPI.getInstance().TPcommit())
-                LOGEJ.getInstance().printf(10, (EPlatonEvent) eplevent, "TPcommit-success");
-              else {
-                LOGEJ.getInstance().printf(10, (EPlatonEvent) eplevent, "TPcommit-error");
-                ETF_SPerror("EFWK0031", this.getClass().getName() + ".ETF_SPend():TPcommit() Exception");
-              }
-              break;
-            default:
-              LOGEJ.getInstance().printf(4, (EPlatonEvent) eplevent, "DEFAULT Call - TProllback() - default");
-              if (TPMSVCAPI.getInstance().TProllback(ctx))
-                LOGEJ.getInstance().printf(10, (EPlatonEvent) eplevent, "TProllback-success");
-              else {
-                LOGEJ.getInstance().printf(10, (EPlatonEvent) eplevent, "TProllback-error");
-                ETF_SPerror("EFWK0031", this.getClass().getName() + ".ETF_SPend():TProllback() Exception");
-              }
-              break;
-          }
-
-        } else {
-          /*********************************************************************
-           * 트랜잭션 타입이 usertransaction 타입인경우의 트랜잭션을 완료하기 위한 로직
-           *********************************************************************/
-          switch (tpsvcinfoDTO.getErrorcode().charAt(0)) {
-            case 'E':
-              LOGEJ.getInstance().printf(4, (EPlatonEvent) eplevent, "Call - TProllback()");
-              if (TPMSVCAPI.getInstance().TProllback(tx))
-                LOGEJ.getInstance().printf(10, (EPlatonEvent) eplevent, "TProllback-success");
-              else {
-                LOGEJ.getInstance().printf(10, (EPlatonEvent) eplevent, "TProllback-error");
-                ETF_SPerror("EFWK0030", this.getClass().getName() + ".ETF_SPend():TProllback() Exception");
-              }
-              break;
-            case 'I':
-              LOGEJ.getInstance().printf(4, (EPlatonEvent) eplevent, "Call - TPcommit()");
-              if (TPMSVCAPI.getInstance().TPcommit(tx))
-                LOGEJ.getInstance().printf(10, (EPlatonEvent) eplevent, "TPcommit-success");
-              else {
-                LOGEJ.getInstance().printf(10, (EPlatonEvent) eplevent, "TPcommit-error");
-                ETF_SPerror("EFWK0031", this.getClass().getName() + ".ETF_SPend():TPcommit() Exception");
-              }
-              break;
-            default:
-              LOGEJ.getInstance().printf(4, (EPlatonEvent) eplevent, "Call - TProllback() - default");
-              if (TPMSVCAPI.getInstance().TProllback(tx))
-                LOGEJ.getInstance().printf(10, (EPlatonEvent) eplevent, "TProllback-success-default");
-              else {
-                LOGEJ.getInstance().printf(4, (EPlatonEvent) eplevent, "TProllback-error-default");
-                ETF_SPerror("EFWK0031", this.getClass().getName() + ".ETF_SPend():TProllback() Exception");
-              }
-              break;
-          }
-        }
-        LOGEJ.getInstance().printf(4, (EPlatonEvent) eplevent,
-            "==================[TProllback/TPcommit END]-(" + this.giTXInfoflag + ")");
-
+        ETF_SPinspectTransaction();
       }
 
       return true;
@@ -439,6 +360,22 @@ public class ETF {
       return;
     }
     return;
+  }
+
+  private void ETF_SPinspectTransaction() {
+    TPMSVCAPI tpmsvc = TPMSVCAPI.getInstance();
+    LOGEJ.getInstance().printf(4, (EPlatonEvent) eplevent, "==================[Transaction inspect START]");
+    LOGEJ.getInstance().printf(4, (EPlatonEvent) eplevent,
+        "Business Error Code : [" + tpsvcinfoDTO.getErrorcode() + "]");
+    LOGEJ.getInstance().printf(4, (EPlatonEvent) eplevent,
+        "Transaction TPinfo  : [" + tpmsvc.describeTransactionStatus() + "]");
+    LOGEJ.getInstance().printf(4, (EPlatonEvent) eplevent,
+        "Transaction type    : [" + transaction_type + "]");
+    LOGEJ.getInstance().printf(4, (EPlatonEvent) eplevent,
+        "Transaction action  : [commit/rollback delegated to Spring TCF @Transactional]");
+    tpmsvc.clearInspectionState();
+    LOGEJ.getInstance().printf(4, (EPlatonEvent) eplevent,
+        "==================[Transaction inspect END]-(" + giTXInfoflag + ")");
   }
 
   public void setETF_SPtxinfo(int offset) {

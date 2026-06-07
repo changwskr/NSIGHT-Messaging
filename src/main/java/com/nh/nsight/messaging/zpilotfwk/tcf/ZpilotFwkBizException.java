@@ -1,4 +1,4 @@
-package com.nh.nsight.messaging.zpilotfwk.common.as;
+package com.nh.nsight.messaging.zpilotfwk.tcf;
 
 /**
  * zpilotfwk 공통 업무 예외.

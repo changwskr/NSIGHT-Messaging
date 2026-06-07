@@ -9,10 +9,7 @@ import com.nh.nsight.messaging.zpilotfwk.tcf.EPlatonEvent;
 import com.nh.nsight.messaging.zpilotfwk.tcf.LOGEJ;
 import com.nh.nsight.messaging.zpilotfwk.tcf.TCF;
 import com.nh.nsight.messaging.zpilotfwk.tcf.support.CommonUtil;
-import com.nh.nsight.messaging.zpilotfwk.tcf.support.DefaultCommonManagementSB;
-import com.nh.nsight.messaging.zpilotfwk.tcf.support.ICommonManagementSB;
 import com.nh.nsight.messaging.zpilotfwk.tcf.support.SessionContext;
-import com.nh.nsight.messaging.zpilotfwk.tcf.support.TPMSVCAPI;
 import com.nh.nsight.messaging.zpilotfwk.tcf.support.TransactionControlDAO;
 import com.nh.nsight.messaging.zpilotfwk.tcf.support.ZpilotFwkContext;
 
@@ -142,7 +139,7 @@ public class MN_SP_COMMON {
 
         try {
             ZpilotFwkProperties properties = ctx.getBean(ZpilotFwkProperties.class);
-            bootstrapLocalEnvironment(properties);
+            bootstrapLocalEnvironment();
 
             MN_SP_COMMON mn = new MN_SP_COMMON(ctx.getBean(TCF.class), properties);
             SessionContext sessionContext = new SessionContext();
@@ -160,11 +157,9 @@ public class MN_SP_COMMON {
         System.out.println("★★★★★ [" + MN + "] main END");
     }
 
-    private static void bootstrapLocalEnvironment(ZpilotFwkProperties properties) {
-        ZpilotFwkContext.registerLocalBean(ICommonManagementSB.class, new DefaultCommonManagementSB());
+    private static void bootstrapLocalEnvironment() {
         ZpilotFwkContext.registerLocalBean(TransactionControlDAO.class, new TransactionControlDAO());
         LOGEJ.bindInstance(LOGEJ.forLocalMain());
-        TPMSVCAPI.createLocal(properties.getTransaction().getDefaultMode());
     }
 
     private static EPlatonEvent createSampleEvent() {

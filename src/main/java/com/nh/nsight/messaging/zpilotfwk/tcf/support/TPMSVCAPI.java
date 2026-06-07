@@ -1,28 +1,43 @@
 package com.nh.nsight.messaging.zpilotfwk.tcf.support;
 
+import com.nh.nsight.messaging.zpilotfwk.config.ZpilotFwkProperties;
 import com.nh.nsight.messaging.zpilotfwk.tcf.EPlatonEvent;
 
+import jakarta.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
+
 /**
- * 트랜잭션 API 스텁. Spring import 없이 main()에서도 로드·실행 가능하다.
+ * 레거시 STF/ETF 트랜잭션 정보 API.
+ * commit/rollback은 TCF {@code @Transactional} 경계(Spring)에서만 수행한다.
+ * 이 클래스는 TPinfo·참여 상태 추적(점검) 용도로만 사용한다.
  */
+@Service
 public class TPMSVCAPI {
 
-    public interface TransactionBridge {
-        Object beginTransaction();
+    private static final Object INSPECTION_MARKER = new Object();
 
-        void commit(Object handle);
+    private static TPMSVCAPI instance;
 
-        void rollback(Object handle);
-    }
-
-    private static TPMSVCAPI instance = new TPMSVCAPI("container");
-
-    private String defaultTransactionMode;
-    private TransactionBridge transactionBridge;
+    private final String defaultTransactionMode;
     private final ThreadLocal<Object> transactionHandle = new ThreadLocal<>();
 
+    @Autowired
+    public TPMSVCAPI(ZpilotFwkProperties properties) {
+        this.defaultTransactionMode = properties.getTransaction().getDefaultMode();
+    }
+
+    /** {@code main()} 로컬 실행용 — Spring Bean 없이 초기화 */
     private TPMSVCAPI(String defaultTransactionMode) {
         this.defaultTransactionMode = defaultTransactionMode;
+    }
+
+    @PostConstruct
+    void bindSpringInstance() {
+        instance = this;
     }
 
     public static TPMSVCAPI createLocal(String defaultTransactionMode) {
@@ -33,14 +48,6 @@ public class TPMSVCAPI {
 
     public static void bindInstance(TPMSVCAPI api) {
         instance = api;
-    }
-
-    public void attachTransactionBridge(TransactionBridge bridge) {
-        this.transactionBridge = bridge;
-    }
-
-    void setDefaultTransactionMode(String defaultTransactionMode) {
-        this.defaultTransactionMode = defaultTransactionMode;
     }
 
     public static TPMSVCAPI getInstance() {
@@ -59,25 +66,29 @@ public class TPMSVCAPI {
     }
 
     public int TPinfo() {
-        return TxHelper.getTransactionManager().getStatus();
+        return TPinfo(null);
     }
 
     public int TPinfo(UserTransaction tx) {
-        return TPinfo();
+        try {
+            if (isSpringTransactionActive()) {
+                if (TransactionAspectSupport.currentTransactionStatus().isRollbackOnly()) {
+                    return Transaction.STATUS_MARKED_ROLLBACK;
+                }
+                return Transaction.STATUS_ACTIVE;
+            }
+        } catch (Exception ex) {
+            return Transaction.STATUS_ERROR;
+        }
+        return TxHelper.getTransactionManager().getStatus();
     }
 
+    /** 트랜잭션 점검 등록. 실제 begin/commit/rollback은 Spring이 수행한다. */
     public boolean TPbegin(String timer) {
         if (transactionHandle.get() != null) {
             return true;
         }
-        Object handle;
-        if (transactionBridge != null) {
-            handle = transactionBridge.beginTransaction();
-        } else {
-            handle = Boolean.TRUE;
-        }
-        transactionHandle.set(handle);
-        TxHelper.getTransactionManager().bindActive(defaultTransactionMode, handle);
+        bindInspectionMarker();
         return true;
     }
 
@@ -85,16 +96,14 @@ public class TPMSVCAPI {
         return TPbegin(String.valueOf(timer));
     }
 
+    /** 점검 등록 상태만 해제 (commit 아님) */
+    public void clearInspectionState() {
+        clearInspectionMarker();
+    }
+
+    /** @deprecated commit은 Spring TCF에서 수행. {@link #clearInspectionState()} 사용 */
     public boolean TPcommit() {
-        Object handle = transactionHandle.get();
-        if (handle == null) {
-            return true;
-        }
-        if (transactionBridge != null) {
-            transactionBridge.commit(handle);
-        }
-        transactionHandle.remove();
-        TxHelper.getTransactionManager().clear();
+        clearInspectionMarker();
         return true;
     }
 
@@ -102,6 +111,7 @@ public class TPMSVCAPI {
         return TPcommit();
     }
 
+    /** rollback은 Spring TCF {@code @Transactional} 경계에서 수행 — 여기서는 추적 상태만 정리 */
     public boolean TProllback(SessionContext ctx) {
         return TProllback();
     }
@@ -115,15 +125,30 @@ public class TPMSVCAPI {
     }
 
     private boolean TProllback() {
-        Object handle = transactionHandle.get();
-        if (handle == null) {
-            return true;
-        }
-        if (transactionBridge != null) {
-            transactionBridge.rollback(handle);
-        }
+        clearInspectionMarker();
+        return true;
+    }
+
+    public String describeTransactionStatus() {
+        return TxHelper.status2String(TPinfo());
+    }
+
+    /** STF/ETF에서 Spring {@code @Transactional} 경계 여부 판단용 */
+    public boolean isSpringManagedTransaction() {
+        return isSpringTransactionActive();
+    }
+
+    private void bindInspectionMarker() {
+        transactionHandle.set(INSPECTION_MARKER);
+        TxHelper.getTransactionManager().bindActive(defaultTransactionMode, INSPECTION_MARKER);
+    }
+
+    private void clearInspectionMarker() {
         transactionHandle.remove();
         TxHelper.getTransactionManager().clear();
-        return true;
+    }
+
+    private boolean isSpringTransactionActive() {
+        return TransactionSynchronizationManager.isActualTransactionActive();
     }
 }

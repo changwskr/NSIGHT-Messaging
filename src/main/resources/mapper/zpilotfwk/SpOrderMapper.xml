@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nh.nsight.messaging.zpilotfwk.order.dc.mapper.SpOrderMapper">
+
+    <resultMap id="SpOrderResultMap" type="com.nh.nsight.messaging.zpilotfwk.order.dc.entity.SpOrderEntity">
+        <id property="id" column="ID"/>
+        <result property="orderNo" column="ORDER_NO"/>
+        <result property="customerName" column="CUSTOMER_NAME"/>
+        <result property="amount" column="AMOUNT"/>
+        <result property="status" column="STATUS"/>
+        <result property="createdAt" column="CREATED_AT"/>
+        <result property="updatedAt" column="UPDATED_AT"/>
+    </resultMap>
+
+    <sql id="spOrderColumns">
+        ID,
+        ORDER_NO,
+        CUSTOMER_NAME,
+        AMOUNT,
+        STATUS,
+        CREATED_AT,
+        UPDATED_AT
+    </sql>
+
+    <select id="selectById" resultMap="SpOrderResultMap">
+        SELECT <include refid="spOrderColumns"/>
+        FROM TB_ZPF_SP_ORDER
+        WHERE ID = #{id}
+    </select>
+
+    <select id="selectAll" resultMap="SpOrderResultMap">
+        SELECT <include refid="spOrderColumns"/>
+        FROM TB_ZPF_SP_ORDER
+        <where>
+            <if test="criteria != null and criteria.orderNo != null and criteria.orderNo != ''">
+                AND ORDER_NO LIKE CONCAT('%', #{criteria.orderNo}, '%')
+            </if>
+            <if test="criteria != null and criteria.customerName != null and criteria.customerName != ''">
+                AND CUSTOMER_NAME LIKE CONCAT('%', #{criteria.customerName}, '%')
+            </if>
+            <if test="criteria != null and criteria.status != null and criteria.status != ''">
+                AND STATUS = #{criteria.status}
+            </if>
+        </where>
+        ORDER BY ID DESC
+        OFFSET #{criteria.offset} ROWS FETCH NEXT #{criteria.safePageSize} ROWS ONLY
+    </select>
+
+    <select id="countAll" resultType="long">
+        SELECT COUNT(*)
+        FROM TB_ZPF_SP_ORDER
+        <where>
+            <if test="criteria != null and criteria.orderNo != null and criteria.orderNo != ''">
+                AND ORDER_NO LIKE CONCAT('%', #{criteria.orderNo}, '%')
+            </if>
+            <if test="criteria != null and criteria.customerName != null and criteria.customerName != ''">
+                AND CUSTOMER_NAME LIKE CONCAT('%', #{criteria.customerName}, '%')
+            </if>
+            <if test="criteria != null and criteria.status != null and criteria.status != ''">
+                AND STATUS = #{criteria.status}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert"
+            parameterType="com.nh.nsight.messaging.zpilotfwk.order.dc.entity.SpOrderEntity"
+            useGeneratedKeys="true"
+            keyProperty="id"
+            keyColumn="ID">
+        INSERT INTO TB_ZPF_SP_ORDER (
+            ORDER_NO, CUSTOMER_NAME, AMOUNT, STATUS, CREATED_AT, UPDATED_AT
+        ) VALUES (
+            #{orderNo}, #{customerName}, #{amount}, #{status}, #{createdAt}, #{updatedAt}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.nh.nsight.messaging.zpilotfwk.order.dc.entity.SpOrderEntity">
+        UPDATE TB_ZPF_SP_ORDER
+        SET ORDER_NO = #{orderNo},
+            CUSTOMER_NAME = #{customerName},
+            AMOUNT = #{amount},
+            STATUS = #{status},
+            UPDATED_AT = #{updatedAt}
+        WHERE ID = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM TB_ZPF_SP_ORDER
+        WHERE ID = #{id}
+    </delete>
+
+</mapper>
