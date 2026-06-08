@@ -50,6 +50,11 @@ public class ETF {
     this.ctx = ctx;
   }
 
+  /** TCF 연동용 — STF 트랜잭션 점검 플래그를 이어받아 ETF 생성 */
+  public static ETF create(String transactionType, int txStartInfo, SessionContext sessionContext) {
+    return new ETF(transactionType, txStartInfo, sessionContext);
+  }
+
   public ETF(UserTransaction tx, int tx_start_info) {
     this.tx = tx;
     this.giTXInfoflag = tx_start_info;

@@ -27,8 +27,6 @@ public class TCF {
   private final ZpilotFwkProperties properties;
   private final TCF self;
 
-  private String activeTransactionMode = "container";
-
   @Autowired
   public TCF(SpServiceRegistry serviceRegistry, ZpilotFwkProperties properties, @Lazy TCF self) {
     this.serviceRegistry = serviceRegistry;
@@ -51,23 +49,18 @@ public class TCF {
 
   public EPlatonEvent execute(EPlatonEvent event, SessionContext sessionContext, String transactionMode) {
     String mode = resolveTransactionMode(transactionMode);
-    activeTransactionMode = mode;
-    System.out.println("***** [TCF] activeTransactionMode=" + activeTransactionMode
+    System.out.println("***** [TCF] transactionMode=" + mode
         + " requestedMode=" + transactionMode);
-    try {
-      if (self == null) {
-        return runOrchestration(event, sessionContext, mode);
-      }
-
-      logTransactionStatus("before", mode);
-      EPlatonEvent result = "usertransaction".equals(mode)
-          ? self.executeInNewTransaction(event, sessionContext)
-          : self.executeInTransaction(event, sessionContext);
-      logTransactionStatus("after", mode);
-      return result;
-    } finally {
-      activeTransactionMode = "container";
+    if (self == null) {
+      return runOrchestration(event, sessionContext, mode);
     }
+
+    logTransactionStatus("before", mode);
+    EPlatonEvent result = "usertransaction".equals(mode)
+        ? self.executeInNewTransaction(event, sessionContext, mode)
+        : self.executeInTransaction(event, sessionContext, mode);
+    logTransactionStatus("after", mode);
+    return result;
   }
 
   public EPlatonEvent execute_sample(EPlatonEvent event, SessionContext sessionContext, String transactionMode) {
@@ -75,15 +68,15 @@ public class TCF {
   }
 
   @Transactional(rollbackFor = Exception.class)
-  public EPlatonEvent executeInTransaction(EPlatonEvent event, SessionContext sessionContext) {
-    EPlatonEvent result = runOrchestration(event, sessionContext, activeTransactionMode);
+  public EPlatonEvent executeInTransaction(EPlatonEvent event, SessionContext sessionContext, String transactionMode) {
+    EPlatonEvent result = runOrchestration(event, sessionContext, transactionMode);
     applyRollbackByErrorCode(result);
     return result;
   }
 
   @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
-  public EPlatonEvent executeInNewTransaction(EPlatonEvent event, SessionContext sessionContext) {
-    EPlatonEvent result = runOrchestration(event, sessionContext, activeTransactionMode);
+  public EPlatonEvent executeInNewTransaction(EPlatonEvent event, SessionContext sessionContext, String transactionMode) {
+    EPlatonEvent result = runOrchestration(event, sessionContext, transactionMode);
     applyRollbackByErrorCode(result);
     return result;
   }
@@ -94,7 +87,8 @@ public class TCF {
 
     markPhase(event, "STF", true);
     LOGEJ.getInstance().printf(5, event, "====================================================[STF] start");
-    event = STF.create(transactionMode, sessionContext).execute(event);
+    STF stf = STF.create(transactionMode, sessionContext);
+    event = stf.execute(event);
     markPhase(event, "STF", false);
     LOGEJ.getInstance().printf(5, event, "====================================================[STF] end");
 
@@ -129,6 +123,7 @@ public class TCF {
     if (event.getCommon() != null && event.getCommon().getSystemOutTime() == null) {
       event.getCommon().setSystemOutTime(CommonUtil.GetSysTime());
     }
+    event = ETF.create(transactionMode, stf.getSTF_SPtxinfo(), sessionContext).execute(event);
     markPhase(event, "ETF", false);
     LOGEJ.getInstance().printf(5, event, "====================================================[ETF] end");
 
@@ -177,7 +172,7 @@ public class TCF {
   }
 
   private void applyRollbackByErrorCode(EPlatonEvent event) {
-    if (!isSuccess(event)) {
+    if (!isSuccess(event) && TransactionSynchronizationManager.isActualTransactionActive()) {
       TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
     }
   }

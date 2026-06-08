@@ -4,15 +4,12 @@ import java.math.BigDecimal;
 
 import com.nh.nsight.messaging.zpilotfwk.common.dc.DC_COMMON;
 import com.nh.nsight.messaging.zpilotfwk.common.dc.dto.SpCommon7001BIZDDTO;
-import com.nh.nsight.messaging.zpilotfwk.order.ac.AC_SP_ORDER;
-import com.nh.nsight.messaging.zpilotfwk.order.ac.dto.SpOrder7101REQCDTO;
+import com.nh.nsight.messaging.zpilotfwk.order.as.SP_ORDER;
 import com.nh.nsight.messaging.zpilotfwk.order.dc.dto.SpOrder7101BIZDDTO;
-import com.nh.nsight.messaging.zpilotfwk.tcf.EPlatonCommonDTO;
 import com.nh.nsight.messaging.zpilotfwk.tcf.EPlatonEvent;
 import com.nh.nsight.messaging.zpilotfwk.tcf.ISpService;
 import com.nh.nsight.messaging.zpilotfwk.tcf.ZpilotFwkBizException;
 
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,11 +19,11 @@ public class SP_COMMON implements ISpService {
     private static final String LINKED_ORDER_EVENT_NO = "SP_ORDER7101";
 
     private final DC_COMMON dcCommon;
-    private final AC_SP_ORDER acSpOrder;
+    private final SP_ORDER spOrder;
 
-    public SP_COMMON(DC_COMMON dcCommon, @Lazy AC_SP_ORDER acSpOrder) {
+    public SP_COMMON(DC_COMMON dcCommon, SP_ORDER spOrder) {
         this.dcCommon = dcCommon;
-        this.acSpOrder = acSpOrder;
+        this.spOrder = spOrder;
     }
 
     @Override
@@ -45,13 +42,11 @@ public class SP_COMMON implements ISpService {
 
         validateEvent(event);
 
-        ///////////////////////////////////////////////////
         EPlatonEvent orderResult = invokeSpOrder(event);
         if (!isSuccess(orderResult)) {
             return orderResult;
         }
         event = orderResult;
-        ///////////////////////////////////////////////////
 
         SpCommon7001BIZDDTO requestDto = event.getRequestAs(SpCommon7001BIZDDTO.class);
         if (requestDto != null) {
@@ -69,8 +64,8 @@ public class SP_COMMON implements ISpService {
     }
 
     /**
-     * 공통 등록 전 연계 주문을 생성한다.
-     * {@code bizData.name}을 고객명으로 매핑해 {@code AC_SP_ORDER} → TCF → SP_ORDER 경로로 호출한다.
+     * 공통 등록 전 연계 주문(BTF)을 생성한다.
+     * 동일 TCF 트랜잭션 안에서 {@code SP_ORDER}를 직접 호출한다.
      */
     private EPlatonEvent invokeSpOrder(EPlatonEvent event) {
         SpCommon7001BIZDDTO commonRequest = event.getRequestAs(SpCommon7001BIZDDTO.class);
@@ -78,46 +73,26 @@ public class SP_COMMON implements ISpService {
             return event;
         }
 
-        SpOrder7101BIZDDTO orderBizData = toOrderRequest(commonRequest);
-        SpOrder7101REQCDTO orderRequest = toOrderAcRequest(event, orderBizData);
+        String originalEventNo = event.getCommon().getEventNo();
+        SpOrder7101BIZDDTO orderRequest = toOrderRequest(commonRequest);
 
-        System.out.println("***** [" + AS + "] invoke AC_SP_ORDER eventNo=" + LINKED_ORDER_EVENT_NO
-                + " orderNo=" + orderBizData.getOrderNo());
-        EPlatonEvent orderResult = acSpOrder.executeInternal(orderRequest, null);
+        event.getCommon().setEventNo(LINKED_ORDER_EVENT_NO);
+        event.setRequest(orderRequest);
 
-        mergeOrderOutcome(event, orderResult);
+        System.out.println("***** [" + AS + "] invoke SP_ORDER eventNo=" + LINKED_ORDER_EVENT_NO
+                + " orderNo=" + orderRequest.getOrderNo());
+        EPlatonEvent orderResult = spOrder.execute(event);
+
+        event.getCommon().setEventNo(originalEventNo);
+        event.setRequest(commonRequest);
 
         SpOrder7101BIZDDTO orderResponse = orderResult.getResponseAs(SpOrder7101BIZDDTO.class);
         if (orderResponse != null) {
-            System.out.println("***** [" + AS + "] AC_SP_ORDER linked orderId=" + orderResponse.getId()
+            System.out.println("***** [" + AS + "] SP_ORDER linked orderId=" + orderResponse.getId()
                     + " orderNo=" + orderResponse.getOrderNo());
         }
 
-        return event;
-    }
-
-    private SpOrder7101REQCDTO toOrderAcRequest(EPlatonEvent event, SpOrder7101BIZDDTO orderBizData) {
-        SpOrder7101REQCDTO request = new SpOrder7101REQCDTO();
-        EPlatonCommonDTO orderCommon = new EPlatonCommonDTO();
-        EPlatonCommonDTO.copyTo(orderCommon, event.getCommon());
-        orderCommon.setEventNo(LINKED_ORDER_EVENT_NO);
-        orderCommon.setOperationName("AC_SP_ORDER.execute");
-        request.setCommon(orderCommon);
-        request.setBizData(orderBizData);
-        return request;
-    }
-
-    private void mergeOrderOutcome(EPlatonEvent event, EPlatonEvent orderResult) {
-        if (event == null || orderResult == null || event.getTPSVCINFODTO() == null
-                || orderResult.getTPSVCINFODTO() == null) {
-            return;
-        }
-        event.getTPSVCINFODTO().setErrorcode(orderResult.getTPSVCINFODTO().getErrorcode());
-        event.getTPSVCINFODTO().setError_message(orderResult.getTPSVCINFODTO().getError_message());
-        event.setErr(orderResult.getErr());
-        if (isSuccess(orderResult)) {
-            event.setResponse(orderResult.getResponse());
-        }
+        return orderResult;
     }
 
     private SpOrder7101BIZDDTO toOrderRequest(SpCommon7001BIZDDTO commonRequest) {

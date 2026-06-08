@@ -23,6 +23,12 @@ public class SpComrcApiResponse<T> {
         return response;
     }
 
+    public static <T> SpComrcApiResponse<T> fail(String message, T data) {
+        SpComrcApiResponse<T> response = fail(message);
+        response.data = data;
+        return response;
+    }
+
     public boolean isSuccess() {
         return success;
     }

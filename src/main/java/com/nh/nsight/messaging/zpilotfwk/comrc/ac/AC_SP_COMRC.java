@@ -61,7 +61,7 @@ public class AC_SP_COMRC {
             if (event != null) {
                 acError(event, "EAC0003", getClass().getName() + ".execute():" + ex);
                 return ResponseEntity.internalServerError()
-                        .body(SpComrcApiResponse.ok(toResult(event)));
+                        .body(SpComrcApiResponse.fail(ex.getMessage(), toResult(event)));
             }
             return ResponseEntity.internalServerError()
                     .body(SpComrcApiResponse.fail(ex.getMessage()));
@@ -89,7 +89,9 @@ public class AC_SP_COMRC {
         if (common.getSystemDate() == null || "*".equals(common.getSystemDate())) {
             common.setSystemDate(CommonUtil.GetSysDate());
         }
-        if (event.getErr().getErrcode() == null || event.getErr().getErrcode().isEmpty()) {
+        EPlatonErrDTO err = event.getErr();
+        String errorCode = err != null ? err.getErrcode() : null;
+        if (errorCode == null || errorCode.isEmpty()) {
             event.setErr(EPlatonErrDTO.of("IZZ000", ""));
         }
         return true;
@@ -100,12 +102,16 @@ public class AC_SP_COMRC {
             return;
         }
         EPlatonErrDTO err = event.getErr();
-        char first = err.getErrcode().charAt(0);
+        String currentErrorCode = err != null ? err.getErrcode() : null;
+        if (currentErrorCode == null || currentErrorCode.isEmpty()) {
+            currentErrorCode = "IZZ000";
+        }
+        char first = currentErrorCode.charAt(0);
         if (first == 'I') {
             err.setErrcode(errorCode);
             err.setErrorMessage(message);
         } else if (first == 'E') {
-            err.setErrcode(errorCode + "|" + err.getErrcode());
+            err.setErrcode(errorCode + "|" + currentErrorCode);
             err.setErrorMessage(message);
         }
         event.setErr(err);
@@ -168,7 +174,9 @@ public class AC_SP_COMRC {
             return data;
         }
         EPlatonErrDTO err = result.getErr();
-        data.setErr(EPlatonErrDTO.of(err.getErrcode(), err.getErrorMessage()));
+        String errorCode = err != null ? err.getErrcode() : null;
+        String errorMessage = err != null ? err.getErrorMessage() : "";
+        data.setErr(EPlatonErrDTO.of(valueOrDefault(errorCode, "EAC0001"), errorMessage));
         if (result.getCommon() != null) {
             EPlatonCommonDTO commonEcho = new EPlatonCommonDTO();
             EPlatonCommonDTO.copyTo(commonEcho, result.getCommon());
